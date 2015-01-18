@@ -1,25 +1,35 @@
 package com.simjessimsol.simcv;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
-public class LauncherActivity extends ActionBarActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class LauncherActivity extends Activity implements CvCameraViewListener2 {
 
     private CameraBridgeViewBase cameraView;
     private final static String TAG = "com.simjessimsol.simcv";
-    private int cameraIndex = 0;
+
+    private final static String STATE_CAMERA_INDEX = "cameraIndex";
+
+    private int cameraIndex;
+    private boolean isCameraFrontFacing;
+    private int numberOfCameras;
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -42,10 +52,39 @@ public class LauncherActivity extends ActionBarActivity implements CameraBridgeV
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        cameraView = new JavaCameraView(this, cameraIndex);
+        setContentView(R.layout.activity_launcher);
+
+        if (savedInstanceState != null) {
+            cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
+        } else {
+            cameraIndex = 0;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            CameraInfo cameraInfo = new CameraInfo();
+            Camera.getCameraInfo(cameraIndex, cameraInfo);
+            isCameraFrontFacing = (cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT);
+            numberOfCameras = Camera.getNumberOfCameras();
+        } else {
+            isCameraFrontFacing = false;
+            numberOfCameras = 1;
+        }
+
+        if (numberOfCameras < 2) {
+            ImageButton changeCameraButton = (ImageButton) findViewById(R.id.changeCameraButton);
+            changeCameraButton.setEnabled(false);
+        }
+
+        cameraView = (CameraBridgeViewBase) findViewById(R.id.OpenCVCamView);
+        cameraView.setVisibility(SurfaceView.VISIBLE);
+        cameraView.setCameraIndex(cameraIndex);
         cameraView.setCvCameraViewListener(this);
-        cameraView.enableFpsMeter();
-        setContentView(cameraView);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_CAMERA_INDEX, cameraIndex);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -71,31 +110,9 @@ public class LauncherActivity extends ActionBarActivity implements CameraBridgeV
             Log.d(TAG, "OpenCV Manager used");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, loaderCallback);
         } else {
-            Log.d(TAG, "Found OpenCV in the app");
+            Log.d(TAG, "Found OpenCv lib in the package");
             loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_launcher, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -112,5 +129,16 @@ public class LauncherActivity extends ActionBarActivity implements CameraBridgeV
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat rgba = inputFrame.rgba();
         return rgba;
+    }
+
+    public void changeCameraClick(View view) {
+        if (cameraIndex == 0) {
+            cameraIndex = 1;
+            cameraView.setCameraIndex(cameraIndex);
+        } else {
+            cameraIndex = 0;
+            cameraView.setCameraIndex(cameraIndex);
+        }
+        recreate();
     }
 }
