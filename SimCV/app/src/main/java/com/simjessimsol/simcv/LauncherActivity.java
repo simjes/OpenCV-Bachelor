@@ -8,9 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -72,7 +73,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
 
         if (numberOfCameras < 2) {
             ImageButton changeCameraButton = (ImageButton) findViewById(R.id.changeCameraButton);
-            changeCameraButton.setEnabled(false);
+            changeCameraButton.setVisibility(View.GONE);
         }
 
         cameraView = (CameraBridgeViewBase) findViewById(R.id.OpenCVCamView);
