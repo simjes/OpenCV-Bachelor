@@ -22,4 +22,14 @@
         android:onClick="changeCameraClick"
         style="?android:attr/borderlessButtonStyle" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/detectFaceButton"
+        android:src="@drawable/ic_action_person"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/changeCameraButton"
+        android:onClick="detectFaceClick"
+        style="?android:attr/borderlessButtonStyle" />
+
 </RelativeLayout>

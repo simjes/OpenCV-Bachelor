@@ -1,6 +1,7 @@
 package com.simjessimsol.simcv;
 
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.os.Build;
@@ -11,13 +12,28 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class LauncherActivity extends Activity implements CvCameraViewListener2 {
 
@@ -25,10 +41,21 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     private final static String TAG = "com.simjessimsol.simcv";
 
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
+    private final static String STATE_TRACKING_FILTER = "trackingFilter";
 
     private int cameraIndex;
+    private String trackingFilter;
     private boolean isCameraFrontFacing;
     private int numberOfCameras;
+
+    private Mat inputFrame;
+
+    //Face detection
+    private Mat grayscaleImg;
+    private Mat faceDetectedImage;
+    File cascadeFile;
+    CascadeClassifier detector;
+
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -36,6 +63,27 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                     Log.d(TAG, "OpenCV loaded successfully");
+                    try {
+                        InputStream inputStream = getResources().openRawResource(R.raw.lbpcascade_frontalface);
+                        File cascadeDir = getDir("haarcascade", Context.MODE_PRIVATE);
+                        cascadeFile = new File(cascadeDir, "haarcascade_face.xml");
+                        FileOutputStream outputStream = new FileOutputStream(cascadeFile);
+
+                        byte[] buffer = new byte[4096];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+                        inputStream.close();
+                        outputStream.close();
+
+                        detector = new CascadeClassifier(cascadeFile.getAbsolutePath());
+
+                        cascadeDir.delete();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e(TAG, "Cascade failed to load: " + e);
+                    }
                     cameraView.enableView();
                     break;
                 default:
@@ -55,8 +103,10 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
 
         if (savedInstanceState != null) {
             cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
+            trackingFilter = savedInstanceState.getString(STATE_TRACKING_FILTER);
         } else {
             cameraIndex = 0;
+            trackingFilter = "none";
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
@@ -83,6 +133,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CAMERA_INDEX, cameraIndex);
+        outState.putString(STATE_TRACKING_FILTER, trackingFilter);
         super.onSaveInstanceState(outState);
     }
 
@@ -125,9 +176,20 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     }
 
     @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        Mat rgba = inputFrame.rgba();
-        return rgba;
+    public Mat onCameraFrame(CvCameraViewFrame inFrame) {
+        inputFrame = inFrame.rgba();
+        if (isCameraFrontFacing) {
+            Core.flip(inputFrame, inputFrame, 1);
+        }
+        switch (trackingFilter) {
+            case "none":
+                return inputFrame;
+            case "detectFace":
+                faceDetectedImage = findFaces(inputFrame);
+                return faceDetectedImage;
+            default:
+                return inputFrame;
+        }
     }
 
     public void changeCameraClick(View view) {
@@ -139,5 +201,32 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             cameraView.setCameraIndex(cameraIndex);
         }
         recreate();
+    }
+
+    public void detectFaceClick(View view) {
+        if (trackingFilter.equals("detectFace")) {
+            trackingFilter = "none";
+            Toast.makeText(this, "No filter", Toast.LENGTH_SHORT).show();
+        } else {
+            trackingFilter = "detectFace";
+            Toast.makeText(this, "Face detection", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private Mat findFaces(Mat originalImage) {
+        grayscaleImg = new Mat();
+
+        Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
+        Imgproc.resize(grayscaleImg, grayscaleImg, new Size(originalImage.size().width / 2, originalImage.size().height / 2));
+        Imgproc.equalizeHist(grayscaleImg, grayscaleImg);
+
+        MatOfRect detectedFaces = new MatOfRect();
+        detector.detectMultiScale(grayscaleImg, detectedFaces);
+
+        for (Rect r : detectedFaces.toArray()) {
+            Core.rectangle(originalImage, new Point(r.x * 2, r.y * 2), new Point((r.x + r.width) * 2, (r.y + r.height) * 2), new Scalar(0, 0, 255), 3);
+        }
+
+        return originalImage;
     }
 }
