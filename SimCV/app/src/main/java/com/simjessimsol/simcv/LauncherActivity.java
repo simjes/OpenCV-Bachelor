@@ -13,12 +13,14 @@ import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
 public class LauncherActivity extends Activity implements CvCameraViewListener2 {
@@ -134,13 +136,17 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        Mat rgba = inputFrame.rgba();
+        if (isCameraFrontFacing) {
+            Core.flip(rgba, rgba, 1);
+        }
         switch (trackingFilter) {
             case "none":
-                return null;
+                return rgba;
             case "detectFace":
-                return null;
+                return rgba;
             default:
-                return null;
+                return rgba;
         }
     }
 
@@ -156,7 +162,14 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     }
 
     public void detectFaceClick(View view) {
-        trackingFilter = "detectFace";
+        if (trackingFilter.equals("detectFace")) {
+            trackingFilter = "none";
+            Toast.makeText(this, "no filter", Toast.LENGTH_SHORT).show();
+        } else {
+            trackingFilter = "detectFace";
+            Toast.makeText(this, "FaceDetection", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 }
