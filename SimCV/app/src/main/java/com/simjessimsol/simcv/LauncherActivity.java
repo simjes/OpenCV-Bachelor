@@ -27,10 +27,13 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     private final static String TAG = "com.simjessimsol.simcv";
 
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
+    private final static String STATE_TRACKING_FILTER = "trackingFilter";
 
     private int cameraIndex;
+    private String trackingFilter;
     private boolean isCameraFrontFacing;
     private int numberOfCameras;
+
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -57,8 +60,10 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
 
         if (savedInstanceState != null) {
             cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
+            trackingFilter = savedInstanceState.getString(STATE_TRACKING_FILTER);
         } else {
             cameraIndex = 0;
+            trackingFilter = "none";
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
@@ -85,6 +90,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CAMERA_INDEX, cameraIndex);
+        outState.putString(STATE_TRACKING_FILTER, trackingFilter);
         super.onSaveInstanceState(outState);
     }
 
@@ -128,8 +134,14 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        Mat rgba = inputFrame.rgba();
-        return rgba;
+        switch (trackingFilter) {
+            case "none":
+                return null;
+            case "detectFace":
+                return null;
+            default:
+                return null;
+        }
     }
 
     public void changeCameraClick(View view) {
@@ -141,5 +153,10 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             cameraView.setCameraIndex(cameraIndex);
         }
         recreate();
+    }
+
+    public void detectFaceClick(View view) {
+        trackingFilter = "detectFace";
+
     }
 }
