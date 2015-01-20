@@ -64,10 +64,9 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
                 case LoaderCallbackInterface.SUCCESS:
                     Log.d(TAG, "OpenCV loaded successfully");
                     try {
-                        //TODO: sjekk kode
                         InputStream inputStream = getResources().openRawResource(R.raw.lbpcascade_frontalface);
-                        File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
-                        cascadeFile = new File(cascadeDir, "lbpcascade_frontalface_alt.xml");
+                        File cascadeDir = getDir("haarcascade", Context.MODE_PRIVATE);
+                        cascadeFile = new File(cascadeDir, "haarcascade_face.xml");
                         FileOutputStream outputStream = new FileOutputStream(cascadeFile);
 
                         byte[] buffer = new byte[4096];
@@ -79,6 +78,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
                         outputStream.close();
 
                         detector = new CascadeClassifier(cascadeFile.getAbsolutePath());
+
                         cascadeDir.delete();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -206,24 +206,25 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     public void detectFaceClick(View view) {
         if (trackingFilter.equals("detectFace")) {
             trackingFilter = "none";
-            Toast.makeText(this, "no filter", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No filter", Toast.LENGTH_SHORT).show();
         } else {
             trackingFilter = "detectFace";
-            Toast.makeText(this, "FaceDetection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Face detection", Toast.LENGTH_SHORT).show();
         }
     }
 
     private Mat findFaces(Mat originalImage) {
         grayscaleImg = new Mat();
+
         Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
-        //Imgproc.resize(grayscaleImg, grayscaleImg, new Size(originalImage.size().width / 2, originalImage.size().height / 2));
+        Imgproc.resize(grayscaleImg, grayscaleImg, new Size(originalImage.size().width / 2, originalImage.size().height / 2));
         Imgproc.equalizeHist(grayscaleImg, grayscaleImg);
 
         MatOfRect detectedFaces = new MatOfRect();
         detector.detectMultiScale(grayscaleImg, detectedFaces);
 
         for (Rect r : detectedFaces.toArray()) {
-            Core.rectangle(originalImage, r.tl(), r.br(), new Scalar(0, 0, 255), 3);
+            Core.rectangle(originalImage, new Point(r.x * 2, r.y * 2), new Point((r.x + r.width) * 2, (r.y + r.height) * 2), new Scalar(0, 0, 255), 3);
         }
 
         return originalImage;
