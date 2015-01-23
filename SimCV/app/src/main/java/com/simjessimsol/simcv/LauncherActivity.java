@@ -53,8 +53,9 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     //Face detection
     private Mat grayscaleImg;
     private Mat faceDetectedImage;
-    File cascadeFile;
-    CascadeClassifier detector;
+    private File cascadeFile;
+    private CascadeClassifier detector;
+    private final int SCALE = 2;
 
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
@@ -217,14 +218,14 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         grayscaleImg = new Mat();
 
         Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
-        Imgproc.resize(grayscaleImg, grayscaleImg, new Size(originalImage.size().width / 2, originalImage.size().height / 2));
+        Imgproc.resize(grayscaleImg, grayscaleImg, new Size(originalImage.size().width / SCALE, originalImage.size().height / SCALE));
         Imgproc.equalizeHist(grayscaleImg, grayscaleImg);
 
         MatOfRect detectedFaces = new MatOfRect();
         detector.detectMultiScale(grayscaleImg, detectedFaces);
 
         for (Rect r : detectedFaces.toArray()) {
-            Core.rectangle(originalImage, new Point(r.x * 2, r.y * 2), new Point((r.x + r.width) * 2, (r.y + r.height) * 2), new Scalar(0, 0, 255), 3);
+            Core.rectangle(originalImage, new Point(r.x * SCALE, r.y * SCALE), new Point((r.x + r.width) * SCALE, (r.y + r.height) * SCALE), new Scalar(0, 0, 255), 3);
         }
 
         return originalImage;
