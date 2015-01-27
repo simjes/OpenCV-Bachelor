@@ -255,6 +255,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         grayscaleImg = new Mat();
         Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
         Imgproc.GaussianBlur(grayscaleImg, grayscaleImg, new Size(9, 9), 2, 2);
+        Imgproc.Canny(grayscaleImg, grayscaleImg, 10, 30);
 
         Mat circles = new Mat();
         Imgproc.HoughCircles(grayscaleImg, circles, Imgproc.CV_HOUGH_GRADIENT, 1, grayscaleImg.rows()/8, 200, 100, 0, 0);
