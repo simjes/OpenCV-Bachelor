@@ -262,13 +262,13 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         //Log.w("circles", circles.cols()+"");
         if (circles.cols() > 0) {
             for (int x = 0; x < circles.cols(); x++) {
-                double vCircle[] = circles.get(0, x);
+                double vectorCircle[] = circles.get(0, x);
 
-                if (vCircle == null)
+                if (vectorCircle == null)
                     break;
 
-                Point pt = new Point(Math.round(vCircle[0]), Math.round(vCircle[1]));
-                int radius = (int) Math.round(vCircle[2]);
+                Point pt = new Point(Math.round(vectorCircle[0]), Math.round(vectorCircle[1]));
+                int radius = (int) Math.round(vectorCircle[2]);
 
                 Core.circle(originalImage, pt, 3, new Scalar(0, 255, 0), -1, 8, 0);
                 Core.circle(originalImage, pt, radius, new Scalar(0, 0, 255), 3, 8, 0);
