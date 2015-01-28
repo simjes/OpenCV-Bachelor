@@ -51,18 +51,12 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
 
     private Mat inputFrame;
 
-    //Face detection
     private Mat grayscaleImg;
     private Mat faceDetectedImage;
-<<<<<<< HEAD
     private File cascadeFile;
     private CascadeClassifier detector;
     private final int SCALE = 2;
-=======
     private Mat circleDetectedImage;
-    File cascadeFile;
-    CascadeClassifier detector;
->>>>>>> origin/balltracking
 
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
@@ -241,8 +235,8 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         return originalImage;
     }
 
-    public void detectCircleClick(View view){
-        if (trackingFilter.equals("detectCircle")){
+    public void detectCircleClick(View view) {
+        if (trackingFilter.equals("detectCircle")) {
             trackingFilter = "none";
             Toast.makeText(this, "No filter", Toast.LENGTH_SHORT).show();
         } else {
@@ -254,17 +248,18 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     /**
      * http://docs.opencv.org/doc/tutorials/imgproc/imgtrans/hough_circle/hough_circle.html
      * http://stackoverflow.com/questions/9445102/detecting-hough-circles-android
+     *
      * @param originalImage
      * @return
      */
-    private Mat findCircle(Mat originalImage){
+    private Mat findCircle(Mat originalImage) {
         grayscaleImg = new Mat();
         Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
         Imgproc.GaussianBlur(grayscaleImg, grayscaleImg, new Size(9, 9), 2, 2);
         Imgproc.Canny(grayscaleImg, grayscaleImg, 10, 30);
 
         Mat circles = new Mat();
-        Imgproc.HoughCircles(grayscaleImg, circles, Imgproc.CV_HOUGH_GRADIENT, 1, grayscaleImg.rows()/8, 200, 100, 0, 0);
+        Imgproc.HoughCircles(grayscaleImg, circles, Imgproc.CV_HOUGH_GRADIENT, 1, grayscaleImg.rows() / 8, 200, 100, 0, 0);
 
         //Log.w("circles", circles.cols()+"");
         if (circles.cols() > 0) {
