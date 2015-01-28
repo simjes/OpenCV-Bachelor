@@ -12,13 +12,13 @@
         opencv:show_fps="true"
         opencv:camera_id="any" />
 
-    <!-- <org.opencv.android.NativeCameraView
+    <org.opencv.android.NativeCameraView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone"
         android:id="@+id/NativeOpenCVCamView"
         opencv:show_fps="true"
-        opencv:camera_id="any" /> -->
+        opencv:camera_id="any" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -48,6 +48,17 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/detectFaceButton"
         android:onClick="detectCircleClick"
+        style="?android:attr/borderlessButtonStyle" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nativeJavaSwitch"
+        android:src="@drawable/ic_launcher"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:onClick="nativeJavaSwitchClick"
         style="?android:attr/borderlessButtonStyle" />
 
 </RelativeLayout>

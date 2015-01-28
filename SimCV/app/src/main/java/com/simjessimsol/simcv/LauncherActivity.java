@@ -41,12 +41,14 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
 
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
     private final static String STATE_TRACKING_FILTER = "trackingFilter";
+    private final static String STATE_NATIVE_OR_JAVA = "nativeOrJava";
 
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
     private String trackingFilter;
     private boolean isCameraFrontFacing;
     private int numberOfCameras;
+    private String nativeOrJava;
 
     private Mat inputFrame;
     private Mat grayscaleImg;
@@ -62,6 +64,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                     Log.d(TAG, "OpenCV loaded successfully");
+                    System.loadLibrary("nativeDetection");
                     try {
                         InputStream inputStream = getResources().openRawResource(R.raw.lbpcascade_frontalface);
                         File cascadeDir = getDir("lbpcascade", Context.MODE_PRIVATE);
@@ -77,6 +80,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
                         outputStream.close();
 
                         detector = new CascadeClassifier(cascadeFile.getAbsolutePath());
+                        NativeDetection.sendCascadeFile(cascadeFile.getAbsolutePath());
 
                         cascadeDir.delete();
                     } catch (IOException e) {
@@ -103,9 +107,11 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         if (savedInstanceState != null) {
             cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
             trackingFilter = savedInstanceState.getString(STATE_TRACKING_FILTER);
+            nativeOrJava = savedInstanceState.getString(STATE_NATIVE_OR_JAVA);
         } else {
             cameraIndex = 0;
             trackingFilter = "none";
+            nativeOrJava = "java";
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
@@ -118,12 +124,21 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             numberOfCameras = 1;
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ImageButton nativeJavaSwitch = (ImageButton) findViewById(R.id.nativeJavaSwitch);
+            nativeJavaSwitch.setVisibility(View.GONE);
+        }
+
         if (numberOfCameras < 2) {
             ImageButton changeCameraButton = (ImageButton) findViewById(R.id.changeCameraButton);
             changeCameraButton.setVisibility(View.GONE);
         }
 
-        cameraView = (CameraBridgeViewBase) findViewById(R.id.OpenCVCamView);
+        if (nativeOrJava.equals("java")) {
+            cameraView = (CameraBridgeViewBase) findViewById(R.id.OpenCVCamView);
+        } else {
+            cameraView = (CameraBridgeViewBase) findViewById(R.id.NativeOpenCVCamView);
+        }
         cameraView.setVisibility(SurfaceView.VISIBLE);
         cameraView.setCameraIndex(cameraIndex);
         cameraView.setCvCameraViewListener(this);
@@ -133,6 +148,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CAMERA_INDEX, cameraIndex);
         outState.putString(STATE_TRACKING_FILTER, trackingFilter);
+        outState.putString(STATE_NATIVE_OR_JAVA, nativeOrJava);
         super.onSaveInstanceState(outState);
     }
 
@@ -184,15 +200,25 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         if (isCameraFrontFacing) {
             Core.flip(inputFrame, inputFrame, 1);
         }
-        switch (trackingFilter) {
-            case "detectFace":
-                detectedImage = findFaces(inputFrame);
-                return detectedImage;
-            case "detectCircle":
-                detectedImage = findCircle(inputFrame);
-                return detectedImage;
-            default:
-                return inputFrame;
+        if (nativeOrJava.equals("java")) {
+            switch (trackingFilter) {
+                case "detectFace":
+                    detectedImage = findFaces(inputFrame);
+                    return detectedImage;
+                case "detectCircle":
+                    detectedImage = findCircle(inputFrame);
+                    return detectedImage;
+                default:
+                    return inputFrame;
+            }
+        } else {
+            switch (trackingFilter) {
+                case "detectFace":
+                    NativeDetection.nativeDetectFace(inputFrame.getNativeObjAddr());
+                    return inputFrame;
+                default:
+                    return inputFrame;
+            }
         }
     }
 
@@ -225,6 +251,17 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             trackingFilter = "detectCircle";
             Toast.makeText(this, "Circle detection", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void nativeJavaSwitchClick(View view) {
+        if (nativeOrJava.equals("java")) {
+            nativeOrJava = "native";
+            Toast.makeText(this, "Native Cam and methods", Toast.LENGTH_SHORT).show();
+        } else {
+            nativeOrJava = "java";
+            Toast.makeText(this, "Java Cam and methods", Toast.LENGTH_SHORT).show();
+        }
+        recreate();
     }
 
     /**
