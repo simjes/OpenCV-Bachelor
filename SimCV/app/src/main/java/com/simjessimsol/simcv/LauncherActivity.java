@@ -29,6 +29,7 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -268,14 +269,13 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
      * ====== Legge i ny classe? ======
      */
     private Mat findFaces(Mat originalImage) {
-        grayscaleImg = new Mat();
 
         Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
         Imgproc.resize(grayscaleImg, grayscaleImg, new Size(originalImage.size().width / SCALE, originalImage.size().height / SCALE));
         Imgproc.equalizeHist(grayscaleImg, grayscaleImg);
 
         MatOfRect detectedFaces = new MatOfRect();
-        detector.detectMultiScale(grayscaleImg, detectedFaces);
+        detector.detectMultiScale(grayscaleImg, detectedFaces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE, new Size(50, 50), new Size());
 
         for (Rect r : detectedFaces.toArray()) {
             Core.rectangle(originalImage, new Point(r.x * SCALE, r.y * SCALE), new Point((r.x + r.width) * SCALE, (r.y + r.height) * SCALE), new Scalar(0, 0, 255), 3);
@@ -292,7 +292,6 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
      * @return
      */
     private Mat findCircle(Mat originalImage) {
-        grayscaleImg = new Mat();
         Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
         Imgproc.GaussianBlur(grayscaleImg, grayscaleImg, new Size(9, 9), 2, 2);
         Imgproc.Canny(grayscaleImg, grayscaleImg, 10, 30);
