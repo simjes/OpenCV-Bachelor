@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Vector;
 
 public class LauncherActivity extends Activity implements CvCameraViewListener2 {
 
@@ -53,9 +54,15 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     //Face detection
     private Mat grayscaleImg;
     private Mat faceDetectedImage;
+<<<<<<< HEAD
     private File cascadeFile;
     private CascadeClassifier detector;
     private final int SCALE = 2;
+=======
+    private Mat circleDetectedImage;
+    File cascadeFile;
+    CascadeClassifier detector;
+>>>>>>> origin/balltracking
 
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
@@ -188,6 +195,9 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             case "detectFace":
                 faceDetectedImage = findFaces(inputFrame);
                 return faceDetectedImage;
+            case "detectCircle":
+                circleDetectedImage = findCircle(inputFrame);
+                return circleDetectedImage;
             default:
                 return inputFrame;
         }
@@ -226,6 +236,50 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
 
         for (Rect r : detectedFaces.toArray()) {
             Core.rectangle(originalImage, new Point(r.x * SCALE, r.y * SCALE), new Point((r.x + r.width) * SCALE, (r.y + r.height) * SCALE), new Scalar(0, 0, 255), 3);
+        }
+
+        return originalImage;
+    }
+
+    public void detectCircleClick(View view){
+        if (trackingFilter.equals("detectCircle")){
+            trackingFilter = "none";
+            Toast.makeText(this, "No filter", Toast.LENGTH_SHORT).show();
+        } else {
+            trackingFilter = "detectCircle";
+            Toast.makeText(this, "Circle detection", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * http://docs.opencv.org/doc/tutorials/imgproc/imgtrans/hough_circle/hough_circle.html
+     * http://stackoverflow.com/questions/9445102/detecting-hough-circles-android
+     * @param originalImage
+     * @return
+     */
+    private Mat findCircle(Mat originalImage){
+        grayscaleImg = new Mat();
+        Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
+        Imgproc.GaussianBlur(grayscaleImg, grayscaleImg, new Size(9, 9), 2, 2);
+        Imgproc.Canny(grayscaleImg, grayscaleImg, 10, 30);
+
+        Mat circles = new Mat();
+        Imgproc.HoughCircles(grayscaleImg, circles, Imgproc.CV_HOUGH_GRADIENT, 1, grayscaleImg.rows()/8, 200, 100, 0, 0);
+
+        //Log.w("circles", circles.cols()+"");
+        if (circles.cols() > 0) {
+            for (int x = 0; x < circles.cols(); x++) {
+                double vectorCircle[] = circles.get(0, x);
+
+                if (vectorCircle == null)
+                    break;
+
+                Point pt = new Point(Math.round(vectorCircle[0]), Math.round(vectorCircle[1]));
+                int radius = (int) Math.round(vectorCircle[2]);
+
+                Core.circle(originalImage, pt, 3, new Scalar(0, 255, 0), -1, 8, 0);
+                Core.circle(originalImage, pt, radius, new Scalar(0, 0, 255), 3, 8, 0);
+            }
         }
 
         return originalImage;
