@@ -50,13 +50,11 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     private int numberOfCameras;
 
     private Mat inputFrame;
-
     private Mat grayscaleImg;
-    private Mat faceDetectedImage;
+    private Mat detectedImage;
     private File cascadeFile;
     private CascadeClassifier detector;
     private final int SCALE = 2;
-    private Mat circleDetectedImage;
 
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
@@ -162,19 +160,23 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             Log.d(TAG, "OpenCV Manager used");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, loaderCallback);
         } else {
-            Log.d(TAG, "Found OpenCv lib in the package");
+            Log.d(TAG, "Found OpenCV lib in the package");
             loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
 
     @Override
     public void onCameraViewStarted(int width, int height) {
-
+        inputFrame = new Mat();
+        detectedImage = new Mat();
+        grayscaleImg = new Mat();
     }
 
     @Override
     public void onCameraViewStopped() {
-
+        inputFrame.release();
+        detectedImage.release();
+        grayscaleImg.release();
     }
 
     @Override
@@ -184,14 +186,12 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             Core.flip(inputFrame, inputFrame, 1);
         }
         switch (trackingFilter) {
-            case "none":
-                return inputFrame;
             case "detectFace":
-                faceDetectedImage = findFaces(inputFrame);
-                return faceDetectedImage;
+                detectedImage = findFaces(inputFrame);
+                return detectedImage;
             case "detectCircle":
-                circleDetectedImage = findCircle(inputFrame);
-                return circleDetectedImage;
+                detectedImage = findCircle(inputFrame);
+                return detectedImage;
             default:
                 return inputFrame;
         }
@@ -218,6 +218,19 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         }
     }
 
+    public void detectCircleClick(View view) {
+        if (trackingFilter.equals("detectCircle")) {
+            trackingFilter = "none";
+            Toast.makeText(this, "No filter", Toast.LENGTH_SHORT).show();
+        } else {
+            trackingFilter = "detectCircle";
+            Toast.makeText(this, "Circle detection", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * ====== Legge i ny classe? ======
+     */
     private Mat findFaces(Mat originalImage) {
         grayscaleImg = new Mat();
 
@@ -233,16 +246,6 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         }
 
         return originalImage;
-    }
-
-    public void detectCircleClick(View view) {
-        if (trackingFilter.equals("detectCircle")) {
-            trackingFilter = "none";
-            Toast.makeText(this, "No filter", Toast.LENGTH_SHORT).show();
-        } else {
-            trackingFilter = "detectCircle";
-            Toast.makeText(this, "Circle detection", Toast.LENGTH_SHORT).show();
-        }
     }
 
     /**
