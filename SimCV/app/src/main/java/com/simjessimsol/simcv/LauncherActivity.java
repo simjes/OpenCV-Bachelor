@@ -34,16 +34,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
 
 public class LauncherActivity extends Activity implements CvCameraViewListener2 {
 
-    private CameraBridgeViewBase cameraView;
     private final static String TAG = "com.simjessimsol.simcv";
 
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
     private final static String STATE_TRACKING_FILTER = "trackingFilter";
 
+    private CameraBridgeViewBase cameraView;
     private int cameraIndex;
     private String trackingFilter;
     private boolean isCameraFrontFacing;
@@ -65,8 +64,8 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
                     Log.d(TAG, "OpenCV loaded successfully");
                     try {
                         InputStream inputStream = getResources().openRawResource(R.raw.lbpcascade_frontalface);
-                        File cascadeDir = getDir("haarcascade", Context.MODE_PRIVATE);
-                        cascadeFile = new File(cascadeDir, "haarcascade_face.xml");
+                        File cascadeDir = getDir("lbpcascade", Context.MODE_PRIVATE);
+                        cascadeFile = new File(cascadeDir, "lbpcascade_face.xml");
                         FileOutputStream outputStream = new FileOutputStream(cascadeFile);
 
                         byte[] buffer = new byte[4096];
