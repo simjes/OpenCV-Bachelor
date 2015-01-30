@@ -56,7 +56,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     private Mat detectedImage;
     private File cascadeFile;
     private CascadeClassifier detector;
-    private final int SCALE = 2;
+    private final int SCALE = 3;
 
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
@@ -293,6 +293,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
      */
     private Mat findCircle(Mat originalImage) {
         Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
+        Imgproc.resize(grayscaleImg, grayscaleImg, new Size(originalImage.size().width / SCALE, originalImage.size().height / SCALE));
         Imgproc.GaussianBlur(grayscaleImg, grayscaleImg, new Size(9, 9), 2, 2);
         Imgproc.Canny(grayscaleImg, grayscaleImg, 10, 30);
 
@@ -307,8 +308,8 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
                 if (vectorCircle == null)
                     break;
 
-                Point pt = new Point(Math.round(vectorCircle[0]), Math.round(vectorCircle[1]));
-                int radius = (int) Math.round(vectorCircle[2]);
+                Point pt = new Point(Math.round(vectorCircle[0]) * SCALE, Math.round(vectorCircle[1]) * SCALE);
+                int radius = (int) Math.round(vectorCircle[2]) * SCALE;
 
                 Core.circle(originalImage, pt, 3, new Scalar(0, 255, 0), -1, 8, 0);
                 Core.circle(originalImage, pt, radius, new Scalar(0, 0, 255), 3, 8, 0);
