@@ -52,7 +52,6 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     private String nativeOrJava;
 
     private Mat inputFrame;
-    private Mat grayscaleImg;
     private Mat detectedImage;
     private File cascadeFile;
     private CascadeClassifier detector;
@@ -185,14 +184,12 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     public void onCameraViewStarted(int width, int height) {
         inputFrame = new Mat();
         detectedImage = new Mat();
-        grayscaleImg = new Mat();
     }
 
     @Override
     public void onCameraViewStopped() {
         inputFrame.release();
         detectedImage.release();
-        grayscaleImg.release();
     }
 
     @Override
@@ -204,10 +201,10 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         if (nativeOrJava.equals("java")) {
             switch (trackingFilter) {
                 case "detectFace":
-                    detectedImage = findFaces(inputFrame);
+                    detectedImage = JavaDetection.findFaces(inputFrame, SCALE, detector);
                     return detectedImage;
                 case "detectCircle":
-                    detectedImage = findCircle(inputFrame);
+                    detectedImage = JavaDetection.findCircle(inputFrame, SCALE);
                     return detectedImage;
                 default:
                     return inputFrame;
@@ -263,59 +260,5 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             Toast.makeText(this, "Java Cam and methods", Toast.LENGTH_SHORT).show();
         }
         recreate();
-    }
-
-    /**
-     * ====== Legge i ny classe? ======
-     */
-    private Mat findFaces(Mat originalImage) {
-
-        Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
-        Imgproc.resize(grayscaleImg, grayscaleImg, new Size(originalImage.size().width / SCALE, originalImage.size().height / SCALE));
-        Imgproc.equalizeHist(grayscaleImg, grayscaleImg);
-
-        MatOfRect detectedFaces = new MatOfRect();
-        detector.detectMultiScale(grayscaleImg, detectedFaces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE, new Size(50, 50), new Size());
-
-        for (Rect r : detectedFaces.toArray()) {
-            Core.rectangle(originalImage, new Point(r.x * SCALE, r.y * SCALE), new Point((r.x + r.width) * SCALE, (r.y + r.height) * SCALE), new Scalar(0, 0, 255), 3);
-        }
-
-        return originalImage;
-    }
-
-    /**
-     * http://docs.opencv.org/doc/tutorials/imgproc/imgtrans/hough_circle/hough_circle.html
-     * http://stackoverflow.com/questions/9445102/detecting-hough-circles-android
-     *
-     * @param originalImage
-     * @return
-     */
-    private Mat findCircle(Mat originalImage) {
-        Imgproc.cvtColor(originalImage, grayscaleImg, Imgproc.COLOR_RGBA2GRAY);
-        Imgproc.resize(grayscaleImg, grayscaleImg, new Size(originalImage.size().width / SCALE, originalImage.size().height / SCALE));
-        Imgproc.GaussianBlur(grayscaleImg, grayscaleImg, new Size(9, 9), 2, 2);
-        Imgproc.Canny(grayscaleImg, grayscaleImg, 10, 30);
-
-        Mat circles = new Mat();
-        Imgproc.HoughCircles(grayscaleImg, circles, Imgproc.CV_HOUGH_GRADIENT, 1, grayscaleImg.rows() / 8, 200, 100, 0, 0);
-
-        //Log.w("circles", circles.cols()+"");
-        if (circles.cols() > 0) {
-            for (int x = 0; x < circles.cols(); x++) {
-                double vectorCircle[] = circles.get(0, x);
-
-                if (vectorCircle == null)
-                    break;
-
-                Point pt = new Point(Math.round(vectorCircle[0]) * SCALE, Math.round(vectorCircle[1]) * SCALE);
-                int radius = (int) Math.round(vectorCircle[2]) * SCALE;
-
-                Core.circle(originalImage, pt, 3, new Scalar(0, 255, 0), -1, 8, 0);
-                Core.circle(originalImage, pt, radius, new Scalar(0, 0, 255), 3, 8, 0);
-            }
-        }
-
-        return originalImage;
     }
 }

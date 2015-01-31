@@ -11,6 +11,8 @@ using namespace std;
 
 CascadeClassifier cascadeFile;
 int SCALE = 2;
+Mat grayFrame;
+Size sizeOfMat;
 
 
 JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_NativeDetection_sendCascadeFile
@@ -31,12 +33,11 @@ JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_NativeDetection_nativeDetectF
 {
     vector<Rect> faces;
     Mat &colorFrame = *(Mat*) jframeAddress;
-    Mat grayFrame;
 
     cvtColor(colorFrame, grayFrame, CV_RGBA2GRAY);
     equalizeHist(grayFrame, grayFrame);
 
-    Size sizeOfMat = grayFrame.size();
+    sizeOfMat = grayFrame.size();
     resize(grayFrame, grayFrame, Size(sizeOfMat.width / SCALE, sizeOfMat.height / SCALE));
 
     cascadeFile.detectMultiScale(grayFrame, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50));
