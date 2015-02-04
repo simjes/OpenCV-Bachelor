@@ -61,4 +61,14 @@
         android:onClick="nativeJavaSwitchClick"
         style="?android:attr/borderlessButtonStyle" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/drawstuff"
+        android:src="@drawable/ic_launcher"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/nativeJavaSwitch"
+        android:onClick="drawstuffClick"
+        style="?android:attr/borderlessButtonStyle" />
+
 </RelativeLayout>
