@@ -22,7 +22,7 @@ public class JavaDetection {
         Imgproc.equalizeHist(grayscaleImage, grayscaleImage);
 
         MatOfRect detectedFaces = new MatOfRect();
-        detector.detectMultiScale(grayscaleImage, detectedFaces);//, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE, new Size(50, 50), new Size());
+        detector.detectMultiScale(grayscaleImage, detectedFaces, 1.1, 3, Objdetect.CASCADE_SCALE_IMAGE, new Size(50, 50), new Size());
 
         for (Rect r : detectedFaces.toArray()) {
             Core.rectangle(originalImage, new Point(r.x * SCALE, r.y * SCALE), new Point((r.x + r.width) * SCALE, (r.y + r.height) * SCALE), new Scalar(0, 0, 255), 3);

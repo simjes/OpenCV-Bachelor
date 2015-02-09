@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.widget.SeekBar;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -19,23 +18,27 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
-import org.opencv.objdetect.Objdetect;
 
 
 public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
-    private final static String TAG = "lol";
+    private final static String TAG = "com.simjessimsol.simcv";
 
     private CameraBridgeViewBase cameraView;
     private Mat hsvFrame;
-    private Mat tmpFrame;
+    private Mat inOutFrame;
     private Mat storeYellowPoints;
-    private Mat drawingMat = null;
+    private Mat storeBluePoints;
+    private Mat drawingMat;
 
-    public Scalar lowYellow = new Scalar(20, 100, 100);
-    public Scalar highYellow = new Scalar(30, 255, 255);
+    private Scalar lowYellow = new Scalar(20, 100, 100);
+    private Scalar highYellow = new Scalar(30, 255, 255);
+    private Scalar lowBlue = new Scalar(100, 100, 100);
+    private Scalar highBlue = new Scalar(110, 255, 255);
 
-    static int posX = 0;
-    static int posY = 0;
+    static int yellowPosX = 0;
+    static int yellowPosY = 0;
+    static int bluePosX = 0;
+    static int bluePosY = 0;
 
     /*public int lowhue = 0;
     public int lowsat = 0;
@@ -54,7 +57,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private SeekBar valueHighSeekBar;*/
 
 
-    private BaseLoaderCallback loader = new BaseLoaderCallback(this) {
+    private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
             switch (status) {
@@ -222,64 +225,85 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "OpenCV Manager used");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, loader);
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, loaderCallback);
         } else {
             Log.d(TAG, "Found OpenCV lib in the package");
-            loader.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+            loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
 
     @Override
     public void onCameraViewStarted(int width, int height) {
         hsvFrame = new Mat();
-        tmpFrame = new Mat();
+        inOutFrame = new Mat();
         storeYellowPoints = new Mat(new Size(width, height), 1);
+        storeBluePoints = new Mat(new Size(width, height), 1);
         drawingMat = new Mat(new Size(width, height), CvType.CV_8UC4);
     }
 
     @Override
     public void onCameraViewStopped() {
         hsvFrame.release();
-        tmpFrame.release();
+        inOutFrame.release();
         storeYellowPoints.release();
+        storeBluePoints.release();
         drawingMat.release();
     }
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        tmpFrame = inputFrame.rgba();
-        Imgproc.cvtColor(tmpFrame, hsvFrame, Imgproc.COLOR_RGB2HSV);
+        inOutFrame = inputFrame.rgba();
+        Imgproc.cvtColor(inOutFrame, hsvFrame, Imgproc.COLOR_RGB2HSV);
 
 
         Core.inRange(hsvFrame, lowYellow, highYellow, storeYellowPoints);
+        Core.inRange(hsvFrame, lowBlue, highBlue, storeBluePoints);
         //Imgproc.erode(storeYellowPoints, storeYellowPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
         //Imgproc.erode(storeYellowPoints, storeYellowPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
         //Imgproc.dilate(storeYellowPoints, storeYellowPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8)));
         //Imgproc.dilate(storeYellowPoints, storeYellowPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8)));
+        //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
+        //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
 
 
-        Moments myMoments = Imgproc.moments(storeYellowPoints, true);
-        double moment10 = myMoments.get_m10();
-        double moment01 = myMoments.get_m01();
+        //yellow
+        Moments yellowMoments = Imgproc.moments(storeYellowPoints, true);
+        double yellowMoment10 = yellowMoments.get_m10();
+        double yellowMoment01 = yellowMoments.get_m01();
+        double yellowArea = yellowMoments.get_m00();
 
-        double area = myMoments.get_m00();
+        int yellowLastX = yellowPosX;
+        int yellowLastY = yellowPosY;
 
-        int lastx = posX;
-        int lasty = posY;
+        yellowPosX = (int) (yellowMoment10 / yellowArea);
+        yellowPosY = (int) (yellowMoment01 / yellowArea);
 
-        posX = (int) (moment10 / area);
-        posY = (int) (moment01 / area);
-
-        Log.i(TAG, "posx: " + posX + ", posy: " + posY + ", lastx: " + lastx + ", lasty: " + lasty);
-        Log.i(TAG, "drawmat: " + drawingMat.size() + ", " + drawingMat.channels() + ", tmpframe: " + tmpFrame.size() + ", " + tmpFrame.channels());
-        if (lastx > 0 && lasty > 0 && posX > 0 && posY > 0) {
-            Core.line(drawingMat, new Point(posX, posY), new Point(lastx, lasty), new Scalar(255, 255, 0), 10);
+        Log.i(TAG, "posx: " + yellowPosX + ", posy: " + yellowPosY + ", yellowLastx: " + yellowLastX + ", yellowLasty: " + yellowLastY);
+        Log.i(TAG, "drawmat: " + drawingMat.size() + ", " + drawingMat.channels() + ", tmpframe: " + inOutFrame.size() + ", " + inOutFrame.channels());
+        if (yellowLastX > 0 && yellowLastY > 0 && yellowPosX > 0 && yellowPosY > 0) {
+            Core.line(drawingMat, new Point(yellowPosX, yellowPosY), new Point(yellowLastX, yellowLastY), new Scalar(255, 255, 0), 10);
         }
 
+        //Blue
+        Moments blueMoments = Imgproc.moments(storeBluePoints, true);
+        double blueMoment10 = blueMoments.get_m10();
+        double blueMoment01 = blueMoments.get_m01();
+        double blueArea = blueMoments.get_m00();
 
-        Core.add(tmpFrame, drawingMat, tmpFrame);
+        int blueLastX = bluePosX;
+        int blueLastY = bluePosY;
 
-        return tmpFrame;
+        bluePosX = (int) (blueMoment10 / blueArea);
+        bluePosY = (int) (blueMoment01 / blueArea);
+
+        if (blueLastX > 0 && blueLastY > 0 && bluePosX > 0 && bluePosY > 0) {
+            Core.line(drawingMat, new Point(bluePosX, bluePosY), new Point(blueLastX, blueLastY), new Scalar(0, 0, 255), 10);
+        }
+
+        Core.add(inOutFrame, drawingMat, inOutFrame);
+
+        //return storeBluePoints;
+        return inOutFrame;
     }
 
 }
