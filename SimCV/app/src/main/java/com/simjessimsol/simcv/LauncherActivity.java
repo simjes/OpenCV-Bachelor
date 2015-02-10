@@ -49,7 +49,7 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     private Mat detectedImage;
     private File cascadeFile;
     private CascadeClassifier detector;
-    private final int SCALE = 3;
+    private final int SCALE = 2;
 
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
