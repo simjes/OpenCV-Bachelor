@@ -36,7 +36,15 @@
         <activity
             android:name=".Drawtivity"
             android:label="@string/title_activity_drawtivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape">
+
+        </activity>
+        <activity
+            android:name=".CircleDetection"
+            android:label="@string/title_activity_drawtivity"
+            android:screenOrientation="landscape">
+
+        </activity>
     </application>
 
 </manifest>
