@@ -25,7 +25,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +34,7 @@
         </activity>
         <activity
             android:name=".FaceDetection"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_facedetection"
             android:screenOrientation="landscape">
 
         </activity>
@@ -46,7 +46,7 @@
         </activity>
         <activity
             android:name=".CircleDetection"
-            android:label="@string/title_activity_drawtivity"
+            android:label="@string/title_activity_circledetection"
             android:screenOrientation="landscape">
 
         </activity>

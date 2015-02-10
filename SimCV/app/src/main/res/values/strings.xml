@@ -2,10 +2,11 @@
 <resources>
 
     <string name="app_name">SimCV</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_drawtivity">drawtivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_facedetection">Face Detection</string>
+    <string name="title_activity_circledetection">Circle Detection</string>
     <string name="faceDetectButton">Face Detection</string>
     <string name="circleDetectionButton">Circle Detection</string>
     <string name="drawButton">Draw</string>
