@@ -175,4 +175,15 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
         return originalImage;
     }
 
+    public void changeCameraClick(View view) {
+        if (cameraIndex == 0) {
+            cameraIndex = 1;
+            cameraView.setCameraIndex(cameraIndex);
+        } else {
+            cameraIndex = 0;
+            cameraView.setCameraIndex(cameraIndex);
+        }
+        recreate();
+    }
+
 }

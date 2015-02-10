@@ -33,42 +33,12 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/detectFaceButton"
-        android:src="@drawable/ic_action_person"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/changeCameraButton"
-        android:onClick="detectFaceClick"
-        style="?android:attr/borderlessButtonStyle" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/detectCircleButton"
-        android:src="@drawable/ic_action_gamepad"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/detectFaceButton"
-        android:onClick="detectCircleClick"
-        style="?android:attr/borderlessButtonStyle" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/nativeJavaSwitch"
         android:src="@drawable/ic_launcher"
         android:layout_marginTop="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:onClick="nativeJavaSwitchClick"
-        style="?android:attr/borderlessButtonStyle" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/drawstuff"
-        android:src="@drawable/ic_launcher"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/nativeJavaSwitch"
-        android:onClick="drawstuffClick"
         style="?android:attr/borderlessButtonStyle" />
 
 </RelativeLayout>

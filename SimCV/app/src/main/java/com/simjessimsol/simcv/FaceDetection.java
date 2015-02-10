@@ -23,33 +23,39 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class LauncherActivity extends Activity implements CvCameraViewListener2 {
+public class FaceDetection extends Activity implements CvCameraViewListener2 {
 
     private final static String TAG = "com.simjessimsol.simcv";
 
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
-    private final static String STATE_TRACKING_FILTER = "trackingFilter";
     private final static String STATE_NATIVE_OR_JAVA = "nativeOrJava";
 
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
-    private String trackingFilter;
     private boolean isCameraFrontFacing;
     private int numberOfCameras;
     private String nativeOrJava;
 
     private Mat inputFrame;
     private Mat detectedImage;
+    private Mat grayscaleImage;
     private File cascadeFile;
     private CascadeClassifier detector;
-    private final int SCALE = 2;
+    private int scale = 2;
 
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
@@ -96,15 +102,13 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_launcher);
+        setContentView(R.layout.activity_facedetection);
 
         if (savedInstanceState != null) {
             cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
-            trackingFilter = savedInstanceState.getString(STATE_TRACKING_FILTER);
             nativeOrJava = savedInstanceState.getString(STATE_NATIVE_OR_JAVA);
         } else {
             cameraIndex = 0;
-            trackingFilter = "none";
             nativeOrJava = "java";
         }
 
@@ -141,7 +145,6 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_CAMERA_INDEX, cameraIndex);
-        outState.putString(STATE_TRACKING_FILTER, trackingFilter);
         outState.putString(STATE_NATIVE_OR_JAVA, nativeOrJava);
         super.onSaveInstanceState(outState);
     }
@@ -178,12 +181,14 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
     public void onCameraViewStarted(int width, int height) {
         inputFrame = new Mat();
         detectedImage = new Mat();
+        grayscaleImage = new Mat();
     }
 
     @Override
     public void onCameraViewStopped() {
         inputFrame.release();
         detectedImage.release();
+        grayscaleImage.release();
     }
 
     @Override
@@ -193,24 +198,11 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             Core.flip(inputFrame, inputFrame, 1);
         }
         if (nativeOrJava.equals("java")) {
-            switch (trackingFilter) {
-                case "detectFace":
-                    detectedImage = JavaDetection.findFaces(inputFrame, SCALE, detector);
-                    return detectedImage;
-                case "detectCircle":
-                    detectedImage = JavaDetection.findCircle(inputFrame, SCALE);
-                    return detectedImage;
-                default:
-                    return inputFrame;
-            }
+            detectedImage = findFaces();
+            return detectedImage;
         } else {
-            switch (trackingFilter) {
-                case "detectFace":
-                    NativeDetection.nativeDetectFace(inputFrame.getNativeObjAddr());
-                    return inputFrame;
-                default:
-                    return inputFrame;
-            }
+            NativeDetection.nativeDetectFace(inputFrame.getNativeObjAddr());
+            return inputFrame;
         }
     }
 
@@ -225,31 +217,6 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
         recreate();
     }
 
-    public void drawstuffClick(View view) {
-        Intent dr = new Intent(this, Drawtivity.class);
-        startActivity(dr);
-    }
-
-    public void detectFaceClick(View view) {
-        if (trackingFilter.equals("detectFace")) {
-            trackingFilter = "none";
-            Toast.makeText(this, "No filter", Toast.LENGTH_SHORT).show();
-        } else {
-            trackingFilter = "detectFace";
-            Toast.makeText(this, "Face detection", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void detectCircleClick(View view) {
-        if (trackingFilter.equals("detectCircle")) {
-            trackingFilter = "none";
-            Toast.makeText(this, "No filter", Toast.LENGTH_SHORT).show();
-        } else {
-            trackingFilter = "detectCircle";
-            Toast.makeText(this, "Circle detection", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void nativeJavaSwitchClick(View view) {
         if (nativeOrJava.equals("java")) {
             nativeOrJava = "native";
@@ -259,5 +226,20 @@ public class LauncherActivity extends Activity implements CvCameraViewListener2 
             Toast.makeText(this, "Java Cam and methods", Toast.LENGTH_SHORT).show();
         }
         recreate();
+    }
+
+    private Mat findFaces() {
+        Imgproc.cvtColor(inputFrame, grayscaleImage, Imgproc.COLOR_RGBA2GRAY);
+        Imgproc.resize(grayscaleImage, grayscaleImage, new Size(inputFrame.size().width / scale, inputFrame.size().height / scale));
+        Imgproc.equalizeHist(grayscaleImage, grayscaleImage);
+
+        MatOfRect detectedFaces = new MatOfRect();
+        detector.detectMultiScale(grayscaleImage, detectedFaces, 1.1, 3, Objdetect.CASCADE_SCALE_IMAGE, new Size(50, 50), new Size());
+
+        for (Rect r : detectedFaces.toArray()) {
+            Core.rectangle(inputFrame, new Point(r.x * scale, r.y * scale), new Point((r.x + r.width) * scale, (r.y + r.height) * scale), new Scalar(0, 0, 255), 3);
+        }
+
+        return inputFrame;
     }
 }
