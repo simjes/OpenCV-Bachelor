@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -274,7 +273,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         inOutFrame = inputFrame.rgba();
 
         if (!paused) {
-            int redLastX, redLastY, blueLastX, blueLastY, greenLastX, greenLastY;
             Imgproc.cvtColor(inOutFrame, hsvFrame, Imgproc.COLOR_RGB2HSV);
 
             Core.inRange(hsvFrame, lowRed, highRed, storeRedPoints);
@@ -286,54 +284,9 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             //Imgproc.dilate(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8)));
             //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
             //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
-
-
-            //red
-            Moments redMoments = Imgproc.moments(storeRedPoints, true);
-            double redMoment10 = redMoments.get_m10();
-            double redMoment01 = redMoments.get_m01();
-            double redArea = redMoments.get_m00();
-
-            redLastX = redPosX;
-            redLastY = redPosY;
-
-            redPosX = (int) (redMoment10 / redArea);
-            redPosY = (int) (redMoment01 / redArea);
-
-            if (redLastX > 0 && redLastY > 0 && redPosX > 0 && redPosY > 0) {
-                Core.line(drawingMat, new Point(redPosX, redPosY), new Point(redLastX, redLastY), colorToDrawFromRed, 10);
-            }
-
-            //Blue
-            Moments blueMoments = Imgproc.moments(storeBluePoints, true);
-            double blueMoment10 = blueMoments.get_m10();
-            double blueMoment01 = blueMoments.get_m01();
-            double blueArea = blueMoments.get_m00();
-
-            blueLastX = bluePosX;
-            blueLastY = bluePosY;
-
-            bluePosX = (int) (blueMoment10 / blueArea);
-            bluePosY = (int) (blueMoment01 / blueArea);
-
-            if (blueLastX > 0 && blueLastY > 0 && bluePosX > 0 && bluePosY > 0) {
-                Core.line(drawingMat, new Point(bluePosX, bluePosY), new Point(blueLastX, blueLastY), colorToDrawFromBlue, 10);
-            }
-
-            //Green
-            Moments greenMoments = Imgproc.moments(storeGreenPoints, true);
-            double greenMoment10 = greenMoments.get_m10();
-            double greenMoment01 = greenMoments.get_m01();
-            double greenArea = greenMoments.get_m00();
-
-            greenLastX = greenPosX;
-            greenLastY = greenPosY;
-
-            greenPosX = (int) (greenMoment10 / greenArea);
-            greenPosY = (int) (greenMoment01 / greenArea);
-            if (greenPosX > 0 && greenPosY > 0 && greenLastX > 0 && greenLastY > 0) {
-                Core.line(drawingMat, new Point(greenPosX, greenPosY), new Point(greenLastX, greenLastY), colorToDrawFromGreen, 10);
-            }
+            findPositionAndDraw(storeRedPoints);
+            findPositionAndDraw(storeGreenPoints);
+            findPositionAndDraw(storeBluePoints);
         } else {
             redPosX = 0;
             redPosY = 0;
@@ -356,43 +309,41 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         return hsvFrame;*/
     }
 
-    public void onPauseClick(View view) {
-        if (paused) {
-            paused = false;
-            pauseButton.setImageResource(R.drawable.ic_action_pause);
+    private void findPositionAndDraw(Mat mat) {
+        Moments matMoments = Imgproc.moments(mat, true);
+        double matMoment10 = matMoments.get_m10();
+        double matMoment01 = matMoments.get_m01();
+        double matArea = matMoments.get_m00();
+
+        int matLastX;
+        int matLastY;
+
+        if (mat.equals(storeRedPoints)) {
+            matLastX = redPosX;
+            matLastY = redPosY;
+            redPosX = (int) (matMoment10 / matArea);
+            redPosY = (int) (matMoment01 / matArea);
+            drawLines(redPosX, redPosY, matLastX, matLastY, colorToDrawFromRed);
+        } else if (mat.equals(storeGreenPoints)) {
+            matLastX = greenPosX;
+            matLastY = greenPosY;
+            greenPosX = (int) (matMoment10 / matArea);
+            greenPosY = (int) (matMoment01 / matArea);
+            drawLines(greenPosX, greenPosY, matLastX, matLastY, colorToDrawFromGreen);
         } else {
-            paused = true;
-            pauseButton.setImageResource(R.drawable.ic_action_play);
+            matLastX = bluePosX;
+            matLastY = bluePosY;
+            bluePosX = (int) (matMoment10 / matArea);
+            bluePosY = (int) (matMoment01 / matArea);
+            drawLines(bluePosX, bluePosY, matLastX, matLastY, colorToDrawFromBlue);
         }
     }
 
-    public void onClearDrawingClick(View view) {
-        drawingMat = new Mat(inOutFrame.size(), CvType.CV_8UC4);
-        paused = true;
-        pauseButton.setImageResource(R.drawable.ic_action_play);
-    }
-
-    public void onTakePictureClick(View view) {
-        takePhotoClicked = true;
-        Toast.makeText(this, "Photo Saved", Toast.LENGTH_SHORT).show();
-    }
-
-    /*private void findDrawColors(Mat mat) {
-        Moments Moments = Imgproc.moments(mat, true);
-        double redMoment10 = Moments.get_m10();
-        double redMoment01 = Moments.get_m01();
-        double redArea = Moments.get_m00();
-
-        redLastX = redPosX;
-        redLastY = redPosY;
-
-        redPosX = (int) (redMoment10 / redArea);
-        redPosY = (int) (redMoment01 / redArea);
-
-        if (redLastX > 0 && redLastY > 0 && redPosX > 0 && redPosY > 0) {
-            Core.line(drawingMat, new Point(redPosX, redPosY), new Point(redLastX, redLastY), colorToDrawFromRed, 10);
+    private void drawLines(int posX, int posY, int lastPosX, int lastPosY, Scalar colorToDrawFrom) {
+        if (lastPosX > 0 && lastPosY > 0 && posX > 0 && posY > 0) {
+            Core.line(drawingMat, new Point(posX, posY), new Point(lastPosX, lastPosY), colorToDrawFrom, 10);
         }
-    }*/
+    }
 
     //TODO: Copied from Android Application Programming with OpenCV.pdf
     private void takePhoto(Mat mat) {
@@ -435,5 +386,26 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             }
             return;
         }
+    }
+
+    public void onPauseClick(View view) {
+        if (paused) {
+            paused = false;
+            pauseButton.setImageResource(R.drawable.ic_action_pause);
+        } else {
+            paused = true;
+            pauseButton.setImageResource(R.drawable.ic_action_play);
+        }
+    }
+
+    public void onClearDrawingClick(View view) {
+        drawingMat = new Mat(inOutFrame.size(), CvType.CV_8UC4);
+        paused = true;
+        pauseButton.setImageResource(R.drawable.ic_action_play);
+    }
+
+    public void onTakePictureClick(View view) {
+        takePhotoClicked = true;
+        Toast.makeText(this, "Photo Saved", Toast.LENGTH_SHORT).show();
     }
 }
