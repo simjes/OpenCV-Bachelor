@@ -412,19 +412,17 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         paused = true;
         pauseButton.setImageResource(R.drawable.ic_action_play);
         FragmentManager fragmentManager = getFragmentManager();
-        ColorPickerFragment colorPickerFragment;
+        ColorPickerFragment colorPickerFragment = new ColorPickerFragment();
+        colorPickerFragment.show(fragmentManager, "Color wheel");
         switch (view.getId()) {
             case R.id.changeRedTrackColor:
-                colorPickerFragment = new ColorPickerFragment();
-                colorPickerFragment.show(fragmentManager, "Color wheel red");
+                colorToDrawFromRed = colorPickerFragment.getNewColorToTrackScalar();
                 break;
             case R.id.changeGreenTrackColor:
-                colorPickerFragment = new ColorPickerFragment();
-                colorPickerFragment.show(fragmentManager, "Color wheel green");
+                colorToDrawFromGreen = colorPickerFragment.getNewColorToTrackScalar();
                 break;
             case R.id.changeBlueTrackColor:
-                colorPickerFragment = new ColorPickerFragment();
-                colorPickerFragment.show(fragmentManager, "Color wheel blue");
+                colorToDrawFromBlue = colorPickerFragment.getNewColorToTrackScalar();
                 break;
         }
     }
