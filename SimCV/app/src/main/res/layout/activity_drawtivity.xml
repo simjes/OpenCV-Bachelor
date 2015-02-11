@@ -22,7 +22,20 @@
         android:layout_alignParentBottom="true"
         style="?android:attr/borderlessButtonStyle" />
 
-    <!-- <SeekBar
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/clearDrawingButton"
+        android:src="@drawable/ic_action_discard"
+        android:onClick="onClearDrawingClick"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        style="?android:attr/borderlessButtonStyle" />
+
+
+    <!--
+    <SeekBar
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:id="@+id/hueLowSeekBar"
@@ -88,6 +101,8 @@
         android:progress="1"
         android:layout_alignTop="@+id/valueLowSeekBar"
         android:layout_alignRight="@+id/saturationHighSeekBar"
-        android:layout_alignEnd="@+id/saturationHighSeekBar" /> -->
+        android:layout_alignEnd="@+id/saturationHighSeekBar" />
+    -->
+
 
 </RelativeLayout>

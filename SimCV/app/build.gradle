@@ -26,16 +26,8 @@ android {
     }
 }
 
-repositories {
-    maven {
-        url "https://repo.commonsware.com.s3.amazonaws.com"
-    }
-}
-
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile project(':app:libs:opencv')
-    compile 'com.commonsware.cwac:colormixer:0.6.+'
 }

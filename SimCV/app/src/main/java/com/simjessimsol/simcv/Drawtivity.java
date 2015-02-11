@@ -19,6 +19,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
@@ -37,10 +38,11 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private boolean paused = true;
     private ImageButton pauseButton;
 
+
     private Scalar lowRed = new Scalar(163, 191, 211);
     private Scalar highRed = new Scalar(180, 255, 255);
-    private Scalar lowBlue = new Scalar(87, 200, 185);
-    private Scalar highBlue = new Scalar(104, 255, 255);
+    private Scalar lowBlue = new Scalar(64, 189, 119);
+    private Scalar highBlue = new Scalar(106, 255, 198);
     private Scalar lowGreen = new Scalar(38, 108, 125);
     private Scalar highGreen = new Scalar(73, 255, 255);
 
@@ -51,8 +53,12 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private static int greenPosX = 0;
     private static int greenPosY = 0;
 
-    /*
-    public int lowhue = 0;
+    private Scalar colorToDrawFromRed = new Scalar(255, 0, 0, 255);
+    private Scalar colorToDrawFromGreen = new Scalar(0, 255, 0, 255);
+    private Scalar colorToDrawFromBlue = new Scalar(0, 0, 255, 255);
+
+
+    /*public int lowhue = 0;
     public int lowsat = 0;
     public int lowval = 0;
     public int highhue = 0;
@@ -63,8 +69,8 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private SeekBar valueLowSeekBar;
     private SeekBar hueHighSeekBar;
     private SeekBar saturationHighSeekBar;
-    private SeekBar valueHighSeekBar;
-    */
+    private SeekBar valueHighSeekBar;*/
+
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -86,8 +92,8 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
 
         pauseButton = (ImageButton) findViewById(R.id.startDrawingButton);
 
-        /*
-        hueLowSeekBar = (SeekBar) findViewById(R.id.hueLowSeekBar);
+
+        /*hueLowSeekBar = (SeekBar) findViewById(R.id.hueLowSeekBar);
         saturationLowSeekBar = (SeekBar) findViewById(R.id.saturationLowSeekBar);
         valueLowSeekBar = (SeekBar) findViewById(R.id.valueLowSeekBar);
         hueHighSeekBar = (SeekBar) findViewById(R.id.hueHighSeekBar);
@@ -194,18 +200,13 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             public void onStopTrackingTouch(SeekBar seekBar) {
                 highval = progressVal;
             }
-        });
-        */
+        });*/
+
 
         cameraView = (CameraBridgeViewBase) findViewById(R.id.drawcam);
         cameraView.setVisibility(SurfaceView.VISIBLE);
         cameraView.setCameraIndex(0);
         cameraView.setCvCameraViewListener(this);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -289,7 +290,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             redPosY = (int) (redMoment01 / redArea);
 
             if (redLastX > 0 && redLastY > 0 && redPosX > 0 && redPosY > 0) {
-                Core.line(drawingMat, new Point(redPosX, redPosY), new Point(redLastX, redLastY), new Scalar(255, 0, 0), 10);
+                Core.line(drawingMat, new Point(redPosX, redPosY), new Point(redLastX, redLastY), colorToDrawFromRed, 10);
             }
 
             //Blue
@@ -305,7 +306,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             bluePosY = (int) (blueMoment01 / blueArea);
 
             if (blueLastX > 0 && blueLastY > 0 && bluePosX > 0 && bluePosY > 0) {
-                Core.line(drawingMat, new Point(bluePosX, bluePosY), new Point(blueLastX, blueLastY), new Scalar(0, 0, 255), 10);
+                Core.line(drawingMat, new Point(bluePosX, bluePosY), new Point(blueLastX, blueLastY), colorToDrawFromBlue, 10);
             }
 
             //Green
@@ -320,7 +321,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             greenPosX = (int) (greenMoment10 / greenArea);
             greenPosY = (int) (greenMoment01 / greenArea);
             if (greenPosX > 0 && greenPosY > 0 && greenLastX > 0 && greenLastY > 0) {
-                Core.line(drawingMat, new Point(greenPosX, greenPosY), new Point(greenLastX, greenLastY), new Scalar(0, 255, 0), 10);
+                Core.line(drawingMat, new Point(greenPosX, greenPosY), new Point(greenLastX, greenLastY), colorToDrawFromGreen, 10);
             }
         } else {
             redPosX = 0;
@@ -331,7 +332,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             bluePosY = 0;
         }
         Core.add(inOutFrame, drawingMat, inOutFrame);
-        //return storeRedPoints;
+        //return storeBluePoints;
         return inOutFrame;
 
         /*Core.inRange(hsvFrame, new Scalar(lowhue, lowsat, lowval), new Scalar(highhue, highsat, highval), hsvFrame);
@@ -346,8 +347,17 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         } else {
             paused = true;
             pauseButton.setImageResource(R.drawable.ic_action_play);
-
         }
+    }
+
+    public void onClearDrawingClick(View view) {
+        drawingMat = new Mat(inOutFrame.size(), CvType.CV_8UC4);
+        paused = true;
+        pauseButton.setImageResource(R.drawable.ic_action_play);
+    }
+
+    public void onTakePictureClick(View view) {
+        
     }
 
 }
