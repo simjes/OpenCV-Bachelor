@@ -207,6 +207,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
     }
 
     public void changeCameraClick(View view) {
+        cameraView.disableView();
         if (cameraIndex == 0) {
             cameraIndex = 1;
             cameraView.setCameraIndex(cameraIndex);
@@ -214,7 +215,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
             cameraIndex = 0;
             cameraView.setCameraIndex(cameraIndex);
         }
-        recreate();
+        cameraView.enableView();
     }
 
     public void nativeJavaSwitchClick(View view) {

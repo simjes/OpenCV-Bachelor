@@ -36,7 +36,7 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
 
     private Mat inputFrame;
     private Mat detectedImage;
-    private int scale = 2;
+    private int scale = 3;
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -176,6 +176,7 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
     }
 
     public void changeCameraClick(View view) {
+        cameraView.disableView();
         if (cameraIndex == 0) {
             cameraIndex = 1;
             cameraView.setCameraIndex(cameraIndex);
@@ -183,7 +184,7 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
             cameraIndex = 0;
             cameraView.setCameraIndex(cameraIndex);
         }
-        recreate();
+        cameraView.enableView();
     }
 
 }

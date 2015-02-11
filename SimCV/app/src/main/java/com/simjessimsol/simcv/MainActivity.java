@@ -53,4 +53,6 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, Drawtivity.class);
         startActivity(intent);
     }
+
+
 }

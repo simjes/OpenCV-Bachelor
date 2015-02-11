@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -32,6 +34,9 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private Mat storeGreenPoints;
     private Mat drawingMat;
 
+    private boolean paused = true;
+    private ImageButton pauseButton;
+
     private Scalar lowRed = new Scalar(163, 191, 211);
     private Scalar highRed = new Scalar(180, 255, 255);
     private Scalar lowBlue = new Scalar(87, 200, 185);
@@ -39,12 +44,12 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private Scalar lowGreen = new Scalar(38, 108, 125);
     private Scalar highGreen = new Scalar(73, 255, 255);
 
-    static int redPosX = 0;
-    static int redPosY = 0;
-    static int bluePosX = 0;
-    static int bluePosY = 0;
-    static int greenPosX = 0;
-    static int greenPosY = 0;
+    private static int redPosX = 0;
+    private static int redPosY = 0;
+    private static int bluePosX = 0;
+    private static int bluePosY = 0;
+    private static int greenPosX = 0;
+    private static int greenPosY = 0;
 
     /*
     public int lowhue = 0;
@@ -78,6 +83,8 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_drawtivity);
+
+        pauseButton = (ImageButton) findViewById(R.id.startDrawingButton);
 
         /*
         hueLowSeekBar = (SeekBar) findViewById(R.id.hueLowSeekBar);
@@ -197,6 +204,11 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (cameraView != null) {
@@ -209,6 +221,8 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         if (cameraView != null) {
             cameraView.disableView();
         }
+        paused = true;
+        pauseButton.setImageResource(R.drawable.ic_action_play);
         super.onPause();
     }
 
@@ -246,75 +260,94 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         inOutFrame = inputFrame.rgba();
-        Imgproc.cvtColor(inOutFrame, hsvFrame, Imgproc.COLOR_RGB2HSV);
+
+        if (!paused) {
+            int redLastX, redLastY, blueLastX, blueLastY, greenLastX, greenLastY;
+            Imgproc.cvtColor(inOutFrame, hsvFrame, Imgproc.COLOR_RGB2HSV);
+
+            Core.inRange(hsvFrame, lowRed, highRed, storeRedPoints);
+            Core.inRange(hsvFrame, lowBlue, highBlue, storeBluePoints);
+            Core.inRange(hsvFrame, lowGreen, highGreen, storeGreenPoints);
+            //Imgproc.erode(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
+            //Imgproc.erode(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
+            //Imgproc.dilate(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8)));
+            //Imgproc.dilate(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8)));
+            //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
+            //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
 
 
-        Core.inRange(hsvFrame, lowRed, highRed, storeRedPoints);
-        Core.inRange(hsvFrame, lowBlue, highBlue, storeBluePoints);
-        Core.inRange(hsvFrame, lowGreen, highGreen, storeGreenPoints);
-        //Imgproc.erode(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
-        //Imgproc.erode(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
-        //Imgproc.dilate(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8)));
-        //Imgproc.dilate(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8)));
-        //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
-        //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
+            //red
+            Moments redMoments = Imgproc.moments(storeRedPoints, true);
+            double redMoment10 = redMoments.get_m10();
+            double redMoment01 = redMoments.get_m01();
+            double redArea = redMoments.get_m00();
 
+            redLastX = redPosX;
+            redLastY = redPosY;
 
-        //red
-        Moments redMoments = Imgproc.moments(storeRedPoints, true);
-        double redMoment10 = redMoments.get_m10();
-        double redMoment01 = redMoments.get_m01();
-        double redArea = redMoments.get_m00();
+            redPosX = (int) (redMoment10 / redArea);
+            redPosY = (int) (redMoment01 / redArea);
 
-        int redLastX = redPosX;
-        int redLastY = redPosY;
+            if (redLastX > 0 && redLastY > 0 && redPosX > 0 && redPosY > 0) {
+                Core.line(drawingMat, new Point(redPosX, redPosY), new Point(redLastX, redLastY), new Scalar(255, 0, 0), 10);
+            }
 
-        redPosX = (int) (redMoment10 / redArea);
-        redPosY = (int) (redMoment01 / redArea);
+            //Blue
+            Moments blueMoments = Imgproc.moments(storeBluePoints, true);
+            double blueMoment10 = blueMoments.get_m10();
+            double blueMoment01 = blueMoments.get_m01();
+            double blueArea = blueMoments.get_m00();
 
-        if (redLastX > 0 && redLastY > 0 && redPosX > 0 && redPosY > 0) {
-            Core.line(drawingMat, new Point(redPosX, redPosY), new Point(redLastX, redLastY), new Scalar(255, 0, 0), 10);
+            blueLastX = bluePosX;
+            blueLastY = bluePosY;
+
+            bluePosX = (int) (blueMoment10 / blueArea);
+            bluePosY = (int) (blueMoment01 / blueArea);
+
+            if (blueLastX > 0 && blueLastY > 0 && bluePosX > 0 && bluePosY > 0) {
+                Core.line(drawingMat, new Point(bluePosX, bluePosY), new Point(blueLastX, blueLastY), new Scalar(0, 0, 255), 10);
+            }
+
+            //Green
+            Moments greenMoments = Imgproc.moments(storeGreenPoints, true);
+            double greenMoment10 = greenMoments.get_m10();
+            double greenMoment01 = greenMoments.get_m01();
+            double greenArea = greenMoments.get_m00();
+
+            greenLastX = greenPosX;
+            greenLastY = greenPosY;
+
+            greenPosX = (int) (greenMoment10 / greenArea);
+            greenPosY = (int) (greenMoment01 / greenArea);
+            if (greenPosX > 0 && greenPosY > 0 && greenLastX > 0 && greenLastY > 0) {
+                Core.line(drawingMat, new Point(greenPosX, greenPosY), new Point(greenLastX, greenLastY), new Scalar(0, 255, 0), 10);
+            }
+        } else {
+            redPosX = 0;
+            redPosY = 0;
+            greenPosX = 0;
+            greenPosY = 0;
+            bluePosX = 0;
+            bluePosY = 0;
         }
-
-        //Blue
-        Moments blueMoments = Imgproc.moments(storeBluePoints, true);
-        double blueMoment10 = blueMoments.get_m10();
-        double blueMoment01 = blueMoments.get_m01();
-        double blueArea = blueMoments.get_m00();
-
-        int blueLastX = bluePosX;
-        int blueLastY = bluePosY;
-
-        bluePosX = (int) (blueMoment10 / blueArea);
-        bluePosY = (int) (blueMoment01 / blueArea);
-
-        if (blueLastX > 0 && blueLastY > 0 && bluePosX > 0 && bluePosY > 0) {
-            Core.line(drawingMat, new Point(bluePosX, bluePosY), new Point(blueLastX, blueLastY), new Scalar(0, 0, 255), 10);
-        }
-
-        //Green
-        Moments greenMoments = Imgproc.moments(storeGreenPoints, true);
-        double greenMoment10 = greenMoments.get_m10();
-        double greenMoment01 = greenMoments.get_m01();
-        double greenArea = greenMoments.get_m00();
-
-        int greenLastX = greenPosX;
-        int greenLastY = greenPosY;
-
-        greenPosX = (int) (greenMoment10 / greenArea);
-        greenPosY = (int) (greenMoment01 / greenArea);
-        if (greenPosX > 0 && greenPosY > 0 && greenLastX > 0 && greenLastY > 0) {
-            Core.line(drawingMat, new Point(greenPosX, greenPosY), new Point(greenLastX, greenLastY), new Scalar(0, 255, 0), 10);
-        }
-
         Core.add(inOutFrame, drawingMat, inOutFrame);
-
         //return storeRedPoints;
         return inOutFrame;
 
         /*Core.inRange(hsvFrame, new Scalar(lowhue, lowsat, lowval), new Scalar(highhue, highsat, highval), hsvFrame);
         Log.i(TAG, "lowHue: " + lowhue + ", lowSat: " + lowsat + ", lowVal: " + lowval + "....highHue: " + highhue + ", highSat: " + highsat + ", highVal: " + highval);
         return hsvFrame;*/
+    }
+
+    public void onPauseClick(View view) {
+        if (paused) {
+            paused = false;
+            pauseButton.setImageResource(R.drawable.ic_action_pause);
+        } else {
+            paused = true;
+            pauseButton.setImageResource(R.drawable.ic_action_play);
+
+        }
     }
 
 }
