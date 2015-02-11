@@ -43,6 +43,32 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         style="?android:attr/borderlessButtonStyle" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="red"
+        android:id="@+id/changeRedTrackColor"
+        android:onClick="onColorChooserClick"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="green"
+        android:id="@+id/changeGreenTrackColor"
+        android:onClick="onColorChooserClick"
+        android:layout_below="@id/changeRedTrackColor"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Blue"
+        android:id="@+id/changeBlueTrackColor"
+        android:onClick="onColorChooserClick"
+        android:layout_below="@+id/changeGreenTrackColor"
+        android:layout_marginTop="20dp" />
     <!--
     <SeekBar
         android:layout_width="200dp"

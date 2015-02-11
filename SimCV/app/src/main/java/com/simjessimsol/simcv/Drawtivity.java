@@ -1,6 +1,7 @@
 package com.simjessimsol.simcv;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
@@ -209,7 +210,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             }
         });*/
 
-
         cameraView = (CameraBridgeViewBase) findViewById(R.id.drawcam);
         cameraView.setVisibility(SurfaceView.VISIBLE);
         cameraView.setCameraIndex(0);
@@ -384,7 +384,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             if (!photo.delete()) {
                 Log.e(TAG, "Failed to delete non-inserted photo");
             }
-            return;
         }
     }
 
@@ -407,5 +406,26 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     public void onTakePictureClick(View view) {
         takePhotoClicked = true;
         Toast.makeText(this, "Photo Saved", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onColorChooserClick(View view) {
+        paused = true;
+        pauseButton.setImageResource(R.drawable.ic_action_play);
+        FragmentManager fragmentManager = getFragmentManager();
+        ColorPickerFragment colorPickerFragment;
+        switch (view.getId()) {
+            case R.id.changeRedTrackColor:
+                colorPickerFragment = new ColorPickerFragment();
+                colorPickerFragment.show(fragmentManager, "Color wheel red");
+                break;
+            case R.id.changeGreenTrackColor:
+                colorPickerFragment = new ColorPickerFragment();
+                colorPickerFragment.show(fragmentManager, "Color wheel green");
+                break;
+            case R.id.changeBlueTrackColor:
+                colorPickerFragment = new ColorPickerFragment();
+                colorPickerFragment.show(fragmentManager, "Color wheel blue");
+                break;
+        }
     }
 }
