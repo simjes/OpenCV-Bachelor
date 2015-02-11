@@ -1,13 +1,18 @@
 package com.simjessimsol.simcv;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -23,9 +28,12 @@ import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
+import java.io.File;
+
 
 public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private final static String TAG = "com.simjessimsol.simcv";
+    private static final String PHOTO_MIME_TYPE = "image/png";
 
     private CameraBridgeViewBase cameraView;
     private Mat hsvFrame;
@@ -34,10 +42,11 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private Mat storeBluePoints;
     private Mat storeGreenPoints;
     private Mat drawingMat;
+    private Mat pictureToSave;
 
     private boolean paused = true;
     private ImageButton pauseButton;
-
+    private boolean takePhotoClicked = false;
 
     private Scalar lowRed = new Scalar(163, 191, 211);
     private Scalar highRed = new Scalar(180, 255, 255);
@@ -91,7 +100,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         setContentView(R.layout.activity_drawtivity);
 
         pauseButton = (ImageButton) findViewById(R.id.startDrawingButton);
-
 
         /*hueLowSeekBar = (SeekBar) findViewById(R.id.hueLowSeekBar);
         saturationLowSeekBar = (SeekBar) findViewById(R.id.saturationLowSeekBar);
@@ -247,6 +255,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         storeBluePoints = new Mat(new Size(width, height), 1);
         storeGreenPoints = new Mat(new Size(width, height), 1);
         drawingMat = new Mat(new Size(width, height), CvType.CV_8UC4);
+        pictureToSave = new Mat();
     }
 
     @Override
@@ -255,7 +264,9 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         inOutFrame.release();
         storeRedPoints.release();
         storeBluePoints.release();
+        storeGreenPoints.release();
         drawingMat.release();
+        pictureToSave.release();
     }
 
     @Override
@@ -332,6 +343,11 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             bluePosY = 0;
         }
         Core.add(inOutFrame, drawingMat, inOutFrame);
+
+        if (takePhotoClicked) {
+            takePhoto(inOutFrame);
+            takePhotoClicked = false;
+        }
         //return storeBluePoints;
         return inOutFrame;
 
@@ -357,7 +373,67 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     }
 
     public void onTakePictureClick(View view) {
-        
+        takePhotoClicked = true;
+        Toast.makeText(this, "Photo Saved", Toast.LENGTH_SHORT).show();
     }
 
+    /*private void findDrawColors(Mat mat) {
+        Moments Moments = Imgproc.moments(mat, true);
+        double redMoment10 = Moments.get_m10();
+        double redMoment01 = Moments.get_m01();
+        double redArea = Moments.get_m00();
+
+        redLastX = redPosX;
+        redLastY = redPosY;
+
+        redPosX = (int) (redMoment10 / redArea);
+        redPosY = (int) (redMoment01 / redArea);
+
+        if (redLastX > 0 && redLastY > 0 && redPosX > 0 && redPosY > 0) {
+            Core.line(drawingMat, new Point(redPosX, redPosY), new Point(redLastX, redLastY), colorToDrawFromRed, 10);
+        }
+    }*/
+
+    //TODO: Copied from Android Application Programming with OpenCV.pdf
+    private void takePhoto(Mat mat) {
+        long currentTimeInMilliSec = System.currentTimeMillis();
+        String appName = getString(R.string.app_name);
+        String galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+        String albumPath = galleryPath + "/" + appName;
+        String photoPath = albumPath + "/" + currentTimeInMilliSec + ".png";
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.MediaColumns.DATA, photoPath);
+        values.put(MediaStore.Images.Media.MIME_TYPE, PHOTO_MIME_TYPE);
+        values.put(MediaStore.Images.Media.TITLE, appName);
+        values.put(MediaStore.Images.Media.DESCRIPTION, appName);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, currentTimeInMilliSec);
+
+        File album = new File(albumPath);
+        if (!album.isDirectory() && !album.mkdirs()) {
+            Log.e(TAG, "Failed to create album directory at " +
+                    albumPath);
+            return;
+        }
+
+        Imgproc.cvtColor(mat, pictureToSave, Imgproc.COLOR_RGBA2BGR, 3);
+        if (!Highgui.imwrite(photoPath, pictureToSave)) {
+            Log.e(TAG, "Failed to save photo to " + photoPath);
+        }
+        Log.d(TAG, "Photo saved successfully to " + photoPath);
+
+        Uri uri;
+
+        try {
+            uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        } catch (final Exception e) {
+            Log.e(TAG, "Failed to insert photo into MediaStore");
+            e.printStackTrace();
+            // Since the insertion failed, delete the photo.
+            File photo = new File(photoPath);
+            if (!photo.delete()) {
+                Log.e(TAG, "Failed to delete non-inserted photo");
+            }
+            return;
+        }
+    }
 }
