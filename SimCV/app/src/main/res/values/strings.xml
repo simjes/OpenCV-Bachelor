@@ -12,5 +12,8 @@
     <string name="faceDetectButton">Face Detection</string>
     <string name="circleDetectionButton">Circle Detection</string>
     <string name="drawButton">Draw</string>
+    <string name="startDrawingButton">startDrawing</string>
+    <string name="clearDrawingButton">clearDrawingButton</string>
+    <string name="takePictureButton">takePhotoButton</string>
 
 </resources>

@@ -14,6 +14,7 @@
         opencv:camera_id="any" />
 
     <ImageButton
+        android:contentDescription="@string/startDrawingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/startDrawingButton"
@@ -23,6 +24,7 @@
         style="?android:attr/borderlessButtonStyle" />
 
     <ImageButton
+        android:contentDescription="@string/clearDrawingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/clearDrawingButton"
@@ -35,6 +37,7 @@
 
 
     <ImageButton
+        android:contentDescription="@string/takePictureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/takePictureButton"
@@ -45,30 +48,38 @@
         style="?android:attr/borderlessButtonStyle" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="red"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/round_button_red"
         android:id="@+id/changeRedTrackColor"
         android:onClick="onColorChooserClick"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="green"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/round_button_green"
         android:id="@+id/changeGreenTrackColor"
         android:onClick="onColorChooserClick"
         android:layout_below="@id/changeRedTrackColor"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Blue"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/round_button_blue"
         android:id="@+id/changeBlueTrackColor"
         android:onClick="onColorChooserClick"
         android:layout_below="@+id/changeGreenTrackColor"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp" />
+
+
     <!--
     <SeekBar
         android:layout_width="200dp"
