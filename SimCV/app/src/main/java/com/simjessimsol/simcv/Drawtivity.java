@@ -38,6 +38,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private static final String TAG = "com.simjessimsol.simcv";
     private static final String PHOTO_MIME_TYPE = "image/png";
     private static final String STATE_CAMERA_INDEX = "cameraIndex";
+    private static final String STATE_BYTE_MAT = "matAsByte";
 
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
@@ -49,12 +50,13 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private Mat storeGreenPoints;
     private Mat drawingMat;
     private Mat pictureToSave;
+    private byte[] byteMat;
 
     private boolean paused = true;
     private boolean erasing = false;
+    private boolean takePhotoClicked = false;
     private ImageButton pauseButton;
     private ImageButton eraserButton;
-    private boolean takePhotoClicked = false;
 
     private Scalar lowRed = new Scalar(163, 191, 211);
     private Scalar highRed = new Scalar(180, 255, 255);
@@ -113,6 +115,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
 
         if (savedInstanceState != null) {
             cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
+            byteMat = savedInstanceState.getByteArray(STATE_BYTE_MAT);
         } else {
             cameraIndex = 0;
         }
@@ -278,14 +281,25 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STATE_CAMERA_INDEX, cameraIndex);
+        outState.putByteArray(STATE_BYTE_MAT, byteMat);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCameraViewStarted(int width, int height) {
         hsvFrame = new Mat();
         inOutFrame = new Mat();
         storeRedPoints = new Mat(new Size(width, height), 1);
         storeBluePoints = new Mat(new Size(width, height), 1);
         storeGreenPoints = new Mat(new Size(width, height), 1);
-        drawingMat = new Mat(new Size(width, height), CvType.CV_8UC4);
         pictureToSave = new Mat();
+        drawingMat = new Mat(new Size(width, height), CvType.CV_8UC4);
+        if (byteMat != null) {
+            drawingMat.put(0, 0, byteMat);
+        }
+
     }
 
     @Override
@@ -295,8 +309,11 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         storeRedPoints.release();
         storeBluePoints.release();
         storeGreenPoints.release();
-        drawingMat.release();
         pictureToSave.release();
+
+        byteMat = new byte[drawingMat.channels() * drawingMat.cols() * drawingMat.rows()];
+        drawingMat.get(0, 0, byteMat);
+        drawingMat.release();
     }
 
     @Override
