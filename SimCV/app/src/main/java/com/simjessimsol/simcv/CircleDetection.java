@@ -30,13 +30,12 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
     private boolean isCameraFrontFacing;
-    private int numberOfCameras;
     private static Mat grayscaleImage;
     private static Mat circles;
 
     private Mat inputFrame;
     private Mat detectedImage;
-    private int scale = 3;
+    private int scale = 2;
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -67,6 +66,7 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
             cameraIndex = 0;
         }
 
+        int numberOfCameras;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
             Camera.getCameraInfo(cameraIndex, cameraInfo);
