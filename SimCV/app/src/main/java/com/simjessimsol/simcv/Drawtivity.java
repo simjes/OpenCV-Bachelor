@@ -45,6 +45,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private Mat pictureToSave;
 
     private boolean paused = true;
+    private boolean erasing = false;
     private ImageButton pauseButton;
     private boolean takePhotoClicked = false;
 
@@ -62,6 +63,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private static int greenPosX = 0;
     private static int greenPosY = 0;
 
+    private int thickness = 20;
     private Scalar colorToDrawFromRed = new Scalar(255, 0, 0, 255);
     private Scalar colorToDrawFromGreen = new Scalar(0, 255, 0, 255);
     private Scalar colorToDrawFromBlue = new Scalar(0, 0, 255, 255);
@@ -288,8 +290,14 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             findPositionAndDraw(storeGreenPoints);
             findPositionAndDraw(storeBluePoints);
         } else {
-            redPosX = 0;
-            redPosY = 0;
+            if (erasing) {
+                Imgproc.cvtColor(inOutFrame, hsvFrame, Imgproc.COLOR_RGB2HSV);
+                Core.inRange(hsvFrame, lowRed, highRed, storeRedPoints);
+                findPositionAndDraw(storeRedPoints);
+            } else {
+                redPosX = 0;
+                redPosY = 0;
+            }
             greenPosX = 0;
             greenPosY = 0;
             bluePosX = 0;
@@ -323,7 +331,11 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             matLastY = redPosY;
             redPosX = (int) (matMoment10 / matArea);
             redPosY = (int) (matMoment01 / matArea);
-            drawLines(redPosX, redPosY, matLastX, matLastY, colorToDrawFromRed);
+            if (erasing) {
+                drawLines(redPosX, redPosY, matLastX, matLastY, new Scalar(0, 0, 0));
+            } else {
+                drawLines(redPosX, redPosY, matLastX, matLastY, colorToDrawFromRed);
+            }
         } else if (mat.equals(storeGreenPoints)) {
             matLastX = greenPosX;
             matLastY = greenPosY;
@@ -341,7 +353,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
 
     private void drawLines(int posX, int posY, int lastPosX, int lastPosY, Scalar colorToDrawFrom) {
         if (lastPosX > 0 && lastPosY > 0 && posX > 0 && posY > 0) {
-            Core.line(drawingMat, new Point(posX, posY), new Point(lastPosX, lastPosY), colorToDrawFrom, 10);
+            Core.line(drawingMat, new Point(posX, posY), new Point(lastPosX, lastPosY), colorToDrawFrom, thickness);
         }
     }
 
@@ -388,6 +400,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     }
 
     public void onPauseClick(View view) {
+        erasing = false;
         if (paused) {
             paused = false;
             pauseButton.setImageResource(R.drawable.ic_action_pause);
@@ -400,6 +413,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     public void onClearDrawingClick(View view) {
         drawingMat = new Mat(inOutFrame.size(), CvType.CV_8UC4);
         paused = true;
+        erasing = false;
         pauseButton.setImageResource(R.drawable.ic_action_play);
     }
 
@@ -411,6 +425,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     public void onColorChooserClick(View view) {
         paused = true;
         pauseButton.setImageResource(R.drawable.ic_action_play);
+        erasing = false;
         FragmentManager fragmentManager = getFragmentManager();
         ColorPickerFragment colorPickerFragment = new ColorPickerFragment();
         colorPickerFragment.show(fragmentManager, "Color wheel");
@@ -428,6 +443,17 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
                 args.putString("color", "blue");
                 colorPickerFragment.setArguments(args);
                 break;
+        }
+    }
+
+    public void onEraserClick(View view) {
+        paused = true;
+        pauseButton.setImageResource(R.drawable.ic_action_play);
+        if (erasing) {
+            erasing = false;
+        } else {
+            erasing = true;
+            Toast.makeText(this, "Erasing by tracking red", Toast.LENGTH_SHORT).show();
         }
     }
 

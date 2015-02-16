@@ -15,5 +15,8 @@
     <string name="startDrawingButton">startDrawing</string>
     <string name="clearDrawingButton">clearDrawingButton</string>
     <string name="takePictureButton">takePhotoButton</string>
+    <string name="eraserButtonDesc">eraserButton</string>
+    <string name="title_activity_pongtivity">Pongtivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

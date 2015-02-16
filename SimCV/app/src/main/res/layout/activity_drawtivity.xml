@@ -35,7 +35,6 @@
         android:layout_alignParentBottom="true"
         style="?android:attr/borderlessButtonStyle" />
 
-
     <ImageButton
         android:contentDescription="@string/takePictureButton"
         android:layout_width="wrap_content"
@@ -45,6 +44,18 @@
         android:src="@drawable/ic_action_camera"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        style="?android:attr/borderlessButtonStyle" />
+
+    <ImageButton
+        android:contentDescription="@string/eraserButtonDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/eraseDrawingButton"
+        android:onClick="onEraserClick"
+        android:src="@drawable/eraser_icon"
+        android:layout_above="@+id/startDrawingButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         style="?android:attr/borderlessButtonStyle" />
 
     <Button

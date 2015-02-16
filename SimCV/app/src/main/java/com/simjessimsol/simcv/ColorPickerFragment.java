@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.OpacityBar;
@@ -27,14 +29,16 @@ public class ColorPickerFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.color_picker_dialog, null);
+
         colorPicker = (ColorPicker) view.findViewById(R.id.colorPickerWheel);
         SaturationBar saturationBar = (SaturationBar) view.findViewById(R.id.saturationBar);
-        ValueBar valueBar = (ValueBar) view.findViewById(R.id.valueBar);
-        OpacityBar opacityBar = (OpacityBar) view.findViewById(R.id.opacityBar);
+
+        //ValueBar valueBar = (ValueBar) view.findViewById(R.id.valueBar);
+        //OpacityBar opacityBar = (OpacityBar) view.findViewById(R.id.opacityBar);
 
         colorPicker.addSaturationBar(saturationBar);
-        colorPicker.addValueBar(valueBar);
-        colorPicker.addOpacityBar(opacityBar);
+        //colorPicker.addValueBar(valueBar);
+        //colorPicker.addOpacityBar(opacityBar);
 
         colorToChange = getArguments().getString("color");
         drawtivity = (Drawtivity) getActivity();
@@ -57,6 +61,19 @@ public class ColorPickerFragment extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Resources resources = getResources();
+        Button positiveButton = ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE);
+        positiveButton.setBackgroundColor(resources.getColor(R.color.background_material_dark));
+        positiveButton.setTextColor(Color.WHITE);
+
+        Button negativeButton = ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_NEGATIVE);
+        negativeButton.setBackgroundColor(resources.getColor(R.color.background_material_dark));
+        negativeButton.setTextColor(Color.WHITE);
+    }
+
     private DialogInterface.OnClickListener positiveClick = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
@@ -64,8 +81,7 @@ public class ColorPickerFragment extends DialogFragment {
             int redValNewColor = Color.red(newColorToTrack);
             int greenValNewColor = Color.green(newColorToTrack);
             int blueValNewColor = Color.blue(newColorToTrack);
-            int alphaValNewColor = Color.alpha(newColorToTrack);
-            Scalar newColorToTrackScalar = new Scalar(redValNewColor, greenValNewColor, blueValNewColor, alphaValNewColor);
+            Scalar newColorToTrackScalar = new Scalar(redValNewColor, greenValNewColor, blueValNewColor);
 
             switch (colorToChange) {
                 case "red":
