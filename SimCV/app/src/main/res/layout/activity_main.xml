@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/startFaceDetectionButton"
         android:onClick="startFaceDetectionClick"
-        android:text="@string/faceDetectButton"
+        android:text="@string/face_detect_button"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/startCircleDetectionButton"
         android:onClick="startCircleDetectionClick"
-        android:text="@string/circleDetectionButton"
+        android:text="@string/circle_detection_button"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/startDrawing"
         android:onClick="startDrawingClick"
-        android:text="@string/drawButton"
+        android:text="@string/draw_button"
         android:layout_below="@+id/startCircleDetectionButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="98dp" />
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/startPongGameButton"
-        android:text="@string/gameStartButton"
+        android:text="@string/pongtivity_start_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:onClick="startPongClick" />

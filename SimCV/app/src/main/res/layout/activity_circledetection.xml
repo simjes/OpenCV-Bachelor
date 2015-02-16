@@ -13,7 +13,7 @@
         opencv:camera_id="any" />
 
     <ImageButton
-        android:contentDescription="@string/changeCameraButtonDesc"
+        android:contentDescription="@string/change_camera_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/changeCameraButton"
