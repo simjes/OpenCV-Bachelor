@@ -18,5 +18,7 @@
     <string name="eraserButtonDesc">eraserButton</string>
     <string name="title_activity_pongtivity">Pongtivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="gameStartButton">Game</string>
+    <string name="changeCameraButtonDesc">changeCameraButtonDesc</string>
 
 </resources>

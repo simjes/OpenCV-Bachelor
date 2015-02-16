@@ -12,9 +12,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
-import com.larswerkman.holocolorpicker.OpacityBar;
 import com.larswerkman.holocolorpicker.SaturationBar;
-import com.larswerkman.holocolorpicker.ValueBar;
 
 import org.opencv.core.Scalar;
 
@@ -33,12 +31,7 @@ public class ColorPickerFragment extends DialogFragment {
         colorPicker = (ColorPicker) view.findViewById(R.id.colorPickerWheel);
         SaturationBar saturationBar = (SaturationBar) view.findViewById(R.id.saturationBar);
 
-        //ValueBar valueBar = (ValueBar) view.findViewById(R.id.valueBar);
-        //OpacityBar opacityBar = (OpacityBar) view.findViewById(R.id.opacityBar);
-
         colorPicker.addSaturationBar(saturationBar);
-        //colorPicker.addValueBar(valueBar);
-        //colorPicker.addOpacityBar(opacityBar);
 
         colorToChange = getArguments().getString("color");
         drawtivity = (Drawtivity) getActivity();

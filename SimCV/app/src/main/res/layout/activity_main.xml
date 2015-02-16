@@ -32,7 +32,17 @@
         android:id="@+id/startDrawing"
         android:onClick="startDrawingClick"
         android:text="@string/drawButton"
+        android:layout_below="@+id/startCircleDetectionButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="98dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/startPongGameButton"
+        android:text="@string/gameStartButton"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="startPongClick" />
 
 </RelativeLayout>

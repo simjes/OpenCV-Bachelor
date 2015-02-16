@@ -26,6 +26,7 @@
         android:id="@+id/changeCameraButton"
         android:src="@drawable/ic_action_switch_camera"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:onClick="changeCameraClick"
         style="?android:attr/borderlessButtonStyle" />

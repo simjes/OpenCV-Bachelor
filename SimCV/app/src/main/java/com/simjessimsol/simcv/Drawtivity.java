@@ -3,7 +3,9 @@ package com.simjessimsol.simcv;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.ContentValues;
+import android.hardware.Camera;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -32,10 +34,14 @@ import java.io.File;
 
 
 public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
-    private final static String TAG = "com.simjessimsol.simcv";
+
+    private static final String TAG = "com.simjessimsol.simcv";
     private static final String PHOTO_MIME_TYPE = "image/png";
+    private static final String STATE_CAMERA_INDEX = "cameraIndex";
 
     private CameraBridgeViewBase cameraView;
+    private int cameraIndex;
+    private boolean isCameraFrontFacing;
     private Mat hsvFrame;
     private Mat inOutFrame;
     private Mat storeRedPoints;
@@ -47,6 +53,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private boolean paused = true;
     private boolean erasing = false;
     private ImageButton pauseButton;
+    private ImageButton eraserButton;
     private boolean takePhotoClicked = false;
 
     private Scalar lowRed = new Scalar(163, 191, 211);
@@ -102,7 +109,29 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         setContentView(R.layout.activity_drawtivity);
 
         pauseButton = (ImageButton) findViewById(R.id.startDrawingButton);
+        eraserButton = (ImageButton) findViewById(R.id.eraseDrawingButton);
 
+        if (savedInstanceState != null) {
+            cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
+        } else {
+            cameraIndex = 0;
+        }
+
+        int numberOfCameras;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+            Camera.getCameraInfo(cameraIndex, cameraInfo);
+            isCameraFrontFacing = (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT);
+            numberOfCameras = Camera.getNumberOfCameras();
+        } else {
+            isCameraFrontFacing = false;
+            numberOfCameras = 1;
+        }
+
+        if (numberOfCameras < 2) {
+            ImageButton changeCameraButton = (ImageButton) findViewById(R.id.changeCameraButton);
+            changeCameraButton.setVisibility(View.GONE);
+        }
         /*hueLowSeekBar = (SeekBar) findViewById(R.id.hueLowSeekBar);
         saturationLowSeekBar = (SeekBar) findViewById(R.id.saturationLowSeekBar);
         valueLowSeekBar = (SeekBar) findViewById(R.id.valueLowSeekBar);
@@ -214,7 +243,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
 
         cameraView = (CameraBridgeViewBase) findViewById(R.id.drawcam);
         cameraView.setVisibility(SurfaceView.VISIBLE);
-        cameraView.setCameraIndex(0);
+        cameraView.setCameraIndex(cameraIndex);
         cameraView.setCvCameraViewListener(this);
     }
 
@@ -273,6 +302,9 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         inOutFrame = inputFrame.rgba();
+        if (isCameraFrontFacing) {
+            Core.flip(inOutFrame, inOutFrame, 1);
+        }
 
         if (!paused) {
             Imgproc.cvtColor(inOutFrame, hsvFrame, Imgproc.COLOR_RGB2HSV);
@@ -401,6 +433,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
 
     public void onPauseClick(View view) {
         erasing = false;
+        eraserButton.setImageResource(R.drawable.eraser_icon);
         if (paused) {
             paused = false;
             pauseButton.setImageResource(R.drawable.ic_action_pause);
@@ -410,11 +443,32 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         }
     }
 
+    public void onEraserClick(View view) {
+        paused = true;
+        pauseButton.setImageResource(R.drawable.ic_action_play);
+        if (erasing) {
+            erasing = false;
+            eraserButton.setImageResource(R.drawable.eraser_icon);
+        } else {
+            erasing = true;
+            eraserButton.setImageResource(R.drawable.eraser_icon_active);
+            Toast.makeText(this, "Erasing by tracking red", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void changeCameraClick(View view) {
+        cameraView.disableView();
+        cameraIndex ^= 1;
+        cameraView.setCameraIndex(cameraIndex);
+        cameraView.enableView();
+    }
+
     public void onClearDrawingClick(View view) {
         drawingMat = new Mat(inOutFrame.size(), CvType.CV_8UC4);
         paused = true;
         erasing = false;
         pauseButton.setImageResource(R.drawable.ic_action_play);
+        eraserButton.setImageResource(R.drawable.eraser_icon);
     }
 
     public void onTakePictureClick(View view) {
@@ -424,8 +478,10 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
 
     public void onColorChooserClick(View view) {
         paused = true;
-        pauseButton.setImageResource(R.drawable.ic_action_play);
         erasing = false;
+        pauseButton.setImageResource(R.drawable.ic_action_play);
+        eraserButton.setImageResource(R.drawable.eraser_icon);
+
         FragmentManager fragmentManager = getFragmentManager();
         ColorPickerFragment colorPickerFragment = new ColorPickerFragment();
         colorPickerFragment.show(fragmentManager, "Color wheel");
@@ -433,28 +489,15 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         switch (view.getId()) {
             case R.id.changeRedTrackColor:
                 args.putString("color", "red");
-                colorPickerFragment.setArguments(args);
                 break;
             case R.id.changeGreenTrackColor:
                 args.putString("color", "green");
-                colorPickerFragment.setArguments(args);
                 break;
             case R.id.changeBlueTrackColor:
                 args.putString("color", "blue");
-                colorPickerFragment.setArguments(args);
                 break;
         }
-    }
-
-    public void onEraserClick(View view) {
-        paused = true;
-        pauseButton.setImageResource(R.drawable.ic_action_play);
-        if (erasing) {
-            erasing = false;
-        } else {
-            erasing = true;
-            Toast.makeText(this, "Erasing by tracking red", Toast.LENGTH_SHORT).show();
-        }
+        colorPickerFragment.setArguments(args);
     }
 
     public void setColorToDrawFromRed(Scalar colorToDrawFromRed) {

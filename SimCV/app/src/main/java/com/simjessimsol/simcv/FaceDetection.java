@@ -2,7 +2,6 @@ package com.simjessimsol.simcv;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.os.Build;
@@ -40,20 +39,17 @@ import java.io.InputStream;
 public class FaceDetection extends Activity implements CvCameraViewListener2 {
 
     private final static String TAG = "com.simjessimsol.simcv";
-
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
     private final static String STATE_NATIVE_OR_JAVA = "nativeOrJava";
 
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
     private boolean isCameraFrontFacing;
-    private int numberOfCameras;
     private String nativeOrJava;
 
     private Mat inputFrame;
     private Mat detectedImage;
     private Mat grayscaleImage;
-    private File cascadeFile;
     private CascadeClassifier detector;
     private int scale = 2;
 
@@ -68,7 +64,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
                     try {
                         InputStream inputStream = getResources().openRawResource(R.raw.lbpcascade_frontalface);
                         File cascadeDir = getDir("lbpcascade", Context.MODE_PRIVATE);
-                        cascadeFile = new File(cascadeDir, "lbpcascade_face.xml");
+                        File cascadeFile = new File(cascadeDir, "lbpcascade_face.xml");
                         FileOutputStream outputStream = new FileOutputStream(cascadeFile);
 
                         byte[] buffer = new byte[4096];
@@ -99,9 +95,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_facedetection);
 
         if (savedInstanceState != null) {
@@ -112,6 +106,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
             nativeOrJava = "java";
         }
 
+        int numberOfCameras;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             CameraInfo cameraInfo = new CameraInfo();
             Camera.getCameraInfo(cameraIndex, cameraInfo);
@@ -208,13 +203,8 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
 
     public void changeCameraClick(View view) {
         cameraView.disableView();
-        if (cameraIndex == 0) {
-            cameraIndex = 1;
-            cameraView.setCameraIndex(cameraIndex);
-        } else {
-            cameraIndex = 0;
-            cameraView.setCameraIndex(cameraIndex);
-        }
+        cameraIndex ^= 1;
+        cameraView.setCameraIndex(cameraIndex);
         cameraView.enableView();
     }
 

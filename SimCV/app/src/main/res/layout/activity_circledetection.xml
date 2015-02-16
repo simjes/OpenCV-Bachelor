@@ -13,11 +13,13 @@
         opencv:camera_id="any" />
 
     <ImageButton
+        android:contentDescription="@string/changeCameraButtonDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/changeCameraButton"
         android:src="@drawable/ic_action_switch_camera"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:onClick="changeCameraClick"
         style="?android:attr/borderlessButtonStyle" />
