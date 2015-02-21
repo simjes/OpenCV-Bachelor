@@ -30,7 +30,6 @@ public class ColorPickerFragment extends DialogFragment {
 
         colorPicker = (ColorPicker) view.findViewById(R.id.colorPickerWheel);
         SaturationBar saturationBar = (SaturationBar) view.findViewById(R.id.saturationBar);
-
         colorPicker.addSaturationBar(saturationBar);
 
         colorToChange = getArguments().getString("color");

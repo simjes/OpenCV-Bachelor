@@ -264,7 +264,9 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             cameraView.disableView();
         }
         paused = true;
+        erasing = false;
         pauseButton.setImageResource(R.drawable.ic_action_play);
+        eraserButton.setImageResource(R.drawable.eraser_icon);
         super.onPause();
     }
 
@@ -488,7 +490,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         eraserButton.setImageResource(R.drawable.eraser_icon);
     }
 
-    public void onTakePictureClick(View view) {
+    public void pictureToSave(View view) {
         takePhotoClicked = true;
         Toast.makeText(this, "Photo Saved", Toast.LENGTH_SHORT).show();
     }

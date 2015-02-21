@@ -51,11 +51,6 @@
             android:screenOrientation="landscape">
 
         </activity>
-        <activity
-            android:name=".Pongtivity"
-            android:label="@string/title_activity_pongtivity">
-
-        </activity>
     </application>
 
 </manifest>

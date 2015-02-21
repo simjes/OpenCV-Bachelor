@@ -24,15 +24,14 @@ import org.opencv.imgproc.Imgproc;
 
 public class CircleDetection extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private final static String TAG = "com.simjessimsol.simcv";
-
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
 
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
     private boolean isCameraFrontFacing;
-    private static Mat grayscaleImage;
-    private static Mat circles;
 
+    private Mat grayscaleImage;
+    private Mat circles;
     private Mat inputFrame;
     private Mat detectedImage;
     private int scale = 2;
@@ -156,7 +155,6 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
 
         Imgproc.HoughCircles(grayscaleImage, circles, Imgproc.CV_HOUGH_GRADIENT, 1, grayscaleImage.rows() / 8, 200, 100, 0, 0);
 
-        //Log.w("circles", circles.cols()+"");
         if (circles.cols() > 0) {
             for (int x = 0; x < circles.cols(); x++) {
                 double vectorCircle[] = circles.get(0, x);
@@ -171,20 +169,13 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
                 Core.circle(originalImage, pt, radius, new Scalar(0, 0, 255), 3, 8, 0);
             }
         }
-
         return originalImage;
     }
 
     public void changeCameraClick(View view) {
         cameraView.disableView();
-        if (cameraIndex == 0) {
-            cameraIndex = 1;
-            cameraView.setCameraIndex(cameraIndex);
-        } else {
-            cameraIndex = 0;
-            cameraView.setCameraIndex(cameraIndex);
-        }
+        cameraIndex ^= 1;
+        cameraView.setCameraIndex(cameraIndex);
         cameraView.enableView();
     }
-
 }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -52,6 +51,9 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
     private Mat grayscaleImage;
     private CascadeClassifier detector;
     private int scale = 2;
+
+    private boolean drop = false;
+    private Rect[] lastRect;
 
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
@@ -192,14 +194,25 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         if (isCameraFrontFacing) {
             Core.flip(inputFrame, inputFrame, 1);
         }
+        //TODO: skip detect on frames for better fps?
         if (nativeOrJava.equals("java")) {
-            detectedImage = findFaces();
-            return detectedImage;
+            if (!drop) {
+                drop = true;
+                detectedImage = findFaces();
+                return detectedImage;
+            } else {
+                for (Rect r : lastRect) {
+                    Core.rectangle(inputFrame, new Point(r.x * scale, r.y * scale), new Point((r.x + r.width) * scale, (r.y + r.height) * scale), new Scalar(0, 0, 255), 3);
+                }
+                drop = false;
+                return inputFrame;
+            }
         } else {
             NativeDetection.nativeDetectFace(inputFrame.getNativeObjAddr());
             return inputFrame;
         }
     }
+
 
     public void changeCameraClick(View view) {
         cameraView.disableView();
@@ -227,10 +240,10 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         MatOfRect detectedFaces = new MatOfRect();
         detector.detectMultiScale(grayscaleImage, detectedFaces, 1.1, 3, Objdetect.CASCADE_SCALE_IMAGE, new Size(50, 50), new Size());
 
+        lastRect = detectedFaces.toArray();
         for (Rect r : detectedFaces.toArray()) {
             Core.rectangle(inputFrame, new Point(r.x * scale, r.y * scale), new Point((r.x + r.width) * scale, (r.y + r.height) * scale), new Scalar(0, 0, 255), 3);
         }
-
         return inputFrame;
     }
 }
