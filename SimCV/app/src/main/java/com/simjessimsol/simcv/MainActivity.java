@@ -54,8 +54,8 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
-    public void startPongClick(View view) {
-        Intent intent = new Intent(this, Pongtivity.class);
+    public void startForegroundDetection(View view) {
+        Intent intent = new Intent(this, foregroundDetection.class);
         startActivity(intent);
     }
 

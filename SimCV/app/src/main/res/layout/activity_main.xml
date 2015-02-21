@@ -39,10 +39,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/startPongGameButton"
-        android:text="@string/pongtivity_start_button"
+        android:id="@+id/startForegroundDetection"
+        android:text="foreground"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="startPongClick" />
+        android:onClick="startForegroundDetection" />
 
 </RelativeLayout>

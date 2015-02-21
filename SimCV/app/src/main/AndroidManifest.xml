@@ -51,6 +51,12 @@
             android:screenOrientation="landscape">
 
         </activity>
+        <activity
+            android:name=".foregroundDetection"
+            android:label="foreground detection"
+            android:screenOrientation="landscape">
+
+        </activity>
     </application>
 
 </manifest>
