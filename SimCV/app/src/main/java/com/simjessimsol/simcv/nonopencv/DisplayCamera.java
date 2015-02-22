@@ -2,14 +2,10 @@ package com.simjessimsol.simcv.nonopencv;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ImageFormat;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
+import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
 import android.util.Log;
@@ -18,6 +14,8 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class DisplayCamera extends SurfaceView implements Callback, PreviewCallback {
     private static final String TAG = "com.simjessimsol.simcv";
@@ -30,8 +28,13 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
     private int cameraWidth;
     private int cameraHeight;
 
+    private Paint rectanglePaint = new Paint();
+
     public DisplayCamera(Context context) {
         super(context);
+        rectanglePaint.setColor(Color.RED);
+        rectanglePaint.setStrokeWidth(10);
+
         holder = getHolder();
         holder.addCallback(this);
     }
@@ -40,6 +43,7 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
     public void surfaceCreated(SurfaceHolder holder) {
         synchronized (this) {
             this.setWillNotDraw(false);
+
             camera = Camera.open();
             Camera.Parameters parameters = camera.getParameters();
             cameraWidth = parameters.getPreviewSize().width;
@@ -47,14 +51,16 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
             rgbColors = new int[cameraWidth * cameraHeight];
 
+
             try {
-                camera.setPreviewDisplay(holder);
+                camera.setPreviewDisplay(null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             camera.startPreview();
             camera.setPreviewCallback(this);
+
         }
     }
 
@@ -78,37 +84,65 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
     }
 
-    protected final Paint rectanglePaint = new Paint();
 
-    @Override
+    /*@Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawLine(1000, 300, 2000, 600, rectanglePaint);
-        
-        Log.i(TAG, "testdasds");
-    }
+        canvas.drawLine(100, 100, 200, 200, rectanglePaint);
+
+        Log.i(TAG, "called onDraw");
+    }*/
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        Canvas canvas = null;
-        try {
-            synchronized (this) {
-                canvas = holder.lockCanvas(null);
-                int canvasWidth = canvas.getWidth();
-                int canvasHeight = canvas.getHeight();
+        Log.d(TAG, "getting frame");
 
-                YUV_NV21_TO_RGB(rgbColors, data, cameraWidth, cameraHeight);
-                canvas.drawBitmap(rgbColors, 0, cameraWidth, canvasWidth - ((cameraWidth + canvasWidth) >> 1), canvasHeight - ((cameraHeight + canvasHeight) >> 1), cameraWidth, cameraHeight, false, null);
+        YUV_NV21_TO_RGB(rgbColors, data, cameraWidth, cameraHeight);
 
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (canvas != null) {
-                holder.unlockCanvasAndPost(canvas);
-            }
+        bitmap = Bitmap.createBitmap(rgbColors, cameraWidth, cameraHeight, Bitmap.Config.RGB_565);
+        if (centerOfmas != null) {
+            lastPoint = centerOfmas;
         }
+        centerOfmas = findRedCenterOfMas(bitmap);
+        Canvas canvas = holder.lockCanvas();
+        if (canvas != null) {
+            canvas.drawBitmap(bitmap, (canvas.getWidth() - cameraWidth) / 2, (canvas.getHeight() - cameraHeight) / 2, null);
+            if (lastPoint != null && centerOfmas != null) {
+                canvas.drawLine(lastPoint.x, lastPoint.y, centerOfmas.x, centerOfmas.y, rectanglePaint);
+            }
+            holder.unlockCanvasAndPost(canvas);
+        }
+        bitmap.recycle();
     }
 
+    private Point centerOfmas;
+    private Point lastPoint;
+
+    private Point findRedCenterOfMas(Bitmap bm) {
+        Date first = new Date();
+        Log.d(TAG, "starta find mass center: " + first);
+        Point avrage = new Point(0, 0);
+        int nrOfPoints = 0;
+
+        for (int rows = 0; rows < bm.getWidth(); rows++) {
+            for (int cols = 0; cols < bm.getHeight(); cols++) {
+                int redVal = Color.red(bm.getPixel(rows, cols));
+                int greenVal = Color.green(bm.getPixel(rows, cols));
+                int blueVal = Color.blue(bm.getPixel(rows, cols));
+                if (redVal >= 200 && greenVal <= 45 && blueVal <= 45) {
+                    avrage.x += rows;
+                    avrage.y += cols;
+                    nrOfPoints++;
+                }
+            }
+        }
+
+        avrage.x /= nrOfPoints;
+        avrage.y /= nrOfPoints;
+
+
+        Log.d(TAG, "slutt: " + (new Date().getTime() - first.getTime()));
+        return avrage;
+    }
 
     //TODO: copied from http://stackoverflow.com/questions/12469730/confusion-on-yuv-nv21-conversion-to-rgb
     public static void YUV_NV21_TO_RGB(int[] argb, byte[] yuv, int width, int height) {
