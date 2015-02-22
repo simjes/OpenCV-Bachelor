@@ -21,5 +21,6 @@
     <string name="change_camera_button">changeCameraButtonDesc</string>
     <string name="title_activity_color_tracker_non_open_cv">ColorTrackerNonOpenCV</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_open_gltracker">openGLTracker</string>
 
 </resources>

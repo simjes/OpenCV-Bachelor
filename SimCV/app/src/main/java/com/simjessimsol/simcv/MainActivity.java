@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.simjessimsol.simcv.nonopencv.ColorTrackerNonOpenCV;
+import com.simjessimsol.simcv.nonopencv.opengltracker.OpenGLTracker;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -63,6 +64,11 @@ public class MainActivity extends ActionBarActivity {
 
     public void startNonCVColorTracking(View view) {
         Intent intent = new Intent(this, ColorTrackerNonOpenCV.class);
+        startActivity(intent);
+    }
+
+    public void startOpenGlTracker(View view) {
+        Intent intent = new Intent(this, OpenGLTracker.class);
         startActivity(intent);
     }
 
