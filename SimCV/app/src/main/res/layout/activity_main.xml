@@ -45,4 +45,15 @@
         android:layout_centerHorizontal="true"
         android:onClick="startForegroundDetection" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/startNonCVColorTracker"
+        android:text="noncv color"
+        android:onClick="startNonCVColorTracking"
+        android:layout_below="@+id/startFaceDetectionButton"
+        android:layout_alignLeft="@+id/startForegroundDetection"
+        android:layout_alignStart="@+id/startForegroundDetection"
+        android:layout_marginTop="60dp" />
+
 </RelativeLayout>

@@ -490,7 +490,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         eraserButton.setImageResource(R.drawable.eraser_icon);
     }
 
-    public void pictureToSave(View view) {
+    public void onTakePictureClick(View view) {
         takePhotoClicked = true;
         Toast.makeText(this, "Photo Saved", Toast.LENGTH_SHORT).show();
     }

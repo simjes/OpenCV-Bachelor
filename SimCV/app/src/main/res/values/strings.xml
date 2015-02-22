@@ -19,5 +19,7 @@
     <string name="title_activity_pongtivity">Pongtivity</string>
     <string name="pongtivity_start_button">Game</string>
     <string name="change_camera_button">changeCameraButtonDesc</string>
+    <string name="title_activity_color_tracker_non_open_cv">ColorTrackerNonOpenCV</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
