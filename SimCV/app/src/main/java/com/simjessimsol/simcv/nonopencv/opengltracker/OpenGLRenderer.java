@@ -39,7 +39,6 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         directVideo = new DirectVideo(texture);
         GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         mainActivity.startCamera(texture);
-
     }
 
     @Override
@@ -62,7 +61,6 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         surfaceTexture.updateTexImage();
         surfaceTexture.getTransformMatrix(mtx);
-
 
         directVideo.draw();
 

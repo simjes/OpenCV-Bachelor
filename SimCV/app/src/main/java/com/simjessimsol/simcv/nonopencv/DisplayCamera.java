@@ -120,7 +120,6 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
             centerOfmass.y += centerCavnasHeightHelper;
             pointsOfMass.add(centerOfmass);
 
-
             canvas.drawBitmap(bitmap, centerCanvasWidthHelper, centerCavnasHeightHelper, null);
             Log.d(TAG, "canvas width: " + canvas.getWidth() + ", canvasHeight: " + canvas.getHeight());
             if (pointsOfMass.size() > 2) {
@@ -128,9 +127,7 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
                     Point lastPoint = pointsOfMass.get(i - 1);
                     Point thisPoint = pointsOfMass.get(i);
                     if (lastPoint.x > 0 && lastPoint.y > 0 && thisPoint.x > 0 && thisPoint.y > 0) {
-
                         canvas.drawLine(lastPoint.x, lastPoint.y, thisPoint.x, thisPoint.y, rectanglePaint);
-
                     }
                 }
             }

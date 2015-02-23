@@ -22,6 +22,7 @@ public class OpenGLTracker extends Activity implements SurfaceTexture.OnFrameAva
     private Camera camera;
     private OpenGLRenderer openGLRenderer;
 
+    //TODO: fix freeze onPause/onResume
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +56,11 @@ public class OpenGLTracker extends Activity implements SurfaceTexture.OnFrameAva
     protected void onPause() {
         camera.stopPreview();
         camera.release();
-        super.onPause();
+        //super.onPause();
+        //TODO: temp fix
+        System.exit(0);
     }
+
 
     public void saveBitmap(Bitmap bm) {
         String path = Environment.getExternalStorageDirectory().toString();
