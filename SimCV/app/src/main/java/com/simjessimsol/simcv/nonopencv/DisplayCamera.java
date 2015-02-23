@@ -1,19 +1,24 @@
 package com.simjessimsol.simcv.nonopencv;
 
-import android.app.ActionBar;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
-import android.view.WindowManager;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +30,6 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
 
     //TODO: Fungerer kun på android build < 4.4(?)
-    //TODO: sett lik resolution som OpenCV
     //TODO: sjekk fps
     private Camera camera;
     private SurfaceHolder holder;
@@ -36,7 +40,7 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
     private int initCameraHeight;
     private int cameraWidth;
     private int cameraHeight;
-    private int scale = 0;
+    private float scale = 0;
 
     private Paint rectanglePaint = new Paint();
 
@@ -52,7 +56,7 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
         holder = getHolder();
         holder.addCallback(this);
-        this.setLayoutParams(WindowManager.LayoutParams.MATCH_PARENT);
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     @Override
@@ -71,6 +75,9 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
             cameraWidth = optimalSize[0];
             cameraHeight = optimalSize[1];
+
+            //TODO: feil med initCameara sizes?
+            scale = Math.min(((float) initCameraHeight) / cameraHeight, ((float) initCameraWidth) / cameraWidth);
 
             rgbColors = new int[cameraWidth * cameraHeight];
 
@@ -125,14 +132,20 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
         Canvas canvas = holder.lockCanvas();
 
         if (canvas != null) {
-            int centerCanvasWidthHelper = (canvas.getWidth() - cameraWidth) / 2;
-            int centerCanvasHeightHelper = (canvas.getHeight() - cameraHeight) / 2;
+            int centerCanvasWidthHelper = (int) (canvas.getWidth() - scale * bitmap.getWidth()) / 2;
+            Log.d(TAG, "helper width: " + centerCanvasWidthHelper);
+            int centerCanvasHeightHelper = (int) (canvas.getHeight() - scale * bitmap.getHeight()) / 2;
             centerOfmass = findRedCenterOfMas(bitmap);
-            centerOfmass.x += centerCanvasWidthHelper;
-            centerOfmass.y += centerCanvasHeightHelper;
+            centerOfmass.x = (int) (centerOfmass.x * scale) + (centerCanvasWidthHelper);
+            centerOfmass.y = (int) (centerOfmass.y * scale) + (centerCanvasHeightHelper);
             pointsOfMass.add(centerOfmass);
 
-            canvas.drawBitmap(bitmap, centerCanvasWidthHelper, centerCanvasHeightHelper, null);
+
+            canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+                    new Rect(centerCanvasWidthHelper, centerCanvasHeightHelper,
+                            (int) (centerCanvasWidthHelper + scale * bitmap.getWidth()),
+                            (int) (centerCanvasHeightHelper + scale * bitmap.getHeight())), null);
+
             Log.d(TAG, "canvas width: " + canvas.getWidth() + ", canvasHeight: " + canvas.getHeight());
             if (pointsOfMass.size() > 2) {
                 for (int i = 1; i < pointsOfMass.size(); i++) {
