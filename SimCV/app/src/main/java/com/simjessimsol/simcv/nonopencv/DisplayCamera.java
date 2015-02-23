@@ -1,5 +1,6 @@
 package com.simjessimsol.simcv.nonopencv;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,10 +13,12 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DisplayCamera extends SurfaceView implements Callback, PreviewCallback {
     private static final String TAG = "com.simjessimsol.simcv";
@@ -29,8 +32,11 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
     private int[] rgbColors;
     private Bitmap bitmap;
+    private int initCameraWidth;
+    private int initCameraHeight;
     private int cameraWidth;
     private int cameraHeight;
+    private int scale = 0;
 
     private Paint rectanglePaint = new Paint();
 
@@ -46,6 +52,7 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
         holder = getHolder();
         holder.addCallback(this);
+        this.setLayoutParams(WindowManager.LayoutParams.MATCH_PARENT);
     }
 
     @Override
@@ -55,11 +62,17 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
             camera = Camera.open();
             Camera.Parameters parameters = camera.getParameters();
-            cameraWidth = parameters.getPreviewSize().width;
-            cameraHeight = parameters.getPreviewSize().height;
+            initCameraWidth = parameters.getPreviewSize().width;
+            initCameraHeight = parameters.getPreviewSize().height;
+
+            int[] optimalSize = findOptimalResolution();
+            parameters.setPreviewSize(optimalSize[0], optimalSize[1]);
+            camera.setParameters(parameters);
+
+            cameraWidth = optimalSize[0];
+            cameraHeight = optimalSize[1];
 
             rgbColors = new int[cameraWidth * cameraHeight];
-
 
             try {
                 camera.setPreviewDisplay(null);
@@ -69,7 +82,6 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
             camera.startPreview();
             camera.setPreviewCallback(this);
-
         }
     }
 
@@ -114,13 +126,13 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
         if (canvas != null) {
             int centerCanvasWidthHelper = (canvas.getWidth() - cameraWidth) / 2;
-            int centerCavnasHeightHelper = (canvas.getHeight() - cameraHeight) / 2;
+            int centerCanvasHeightHelper = (canvas.getHeight() - cameraHeight) / 2;
             centerOfmass = findRedCenterOfMas(bitmap);
             centerOfmass.x += centerCanvasWidthHelper;
-            centerOfmass.y += centerCavnasHeightHelper;
+            centerOfmass.y += centerCanvasHeightHelper;
             pointsOfMass.add(centerOfmass);
 
-            canvas.drawBitmap(bitmap, centerCanvasWidthHelper, centerCavnasHeightHelper, null);
+            canvas.drawBitmap(bitmap, centerCanvasWidthHelper, centerCanvasHeightHelper, null);
             Log.d(TAG, "canvas width: " + canvas.getWidth() + ", canvasHeight: " + canvas.getHeight());
             if (pointsOfMass.size() > 2) {
                 for (int i = 1; i < pointsOfMass.size(); i++) {
@@ -169,6 +181,29 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
         }
         Log.d(TAG, "slutt: " + (new Date().getTime() - first.getTime()));
         return avrage;
+    }
+
+    private int[] findOptimalResolution() {
+        List<Camera.Size> supportedCameraSizes = camera.getParameters().getSupportedPreviewSizes();
+        int optimalWidth = 0;
+        int optimalHeight = 0;
+
+        for (Camera.Size s : supportedCameraSizes) {
+            Log.d(TAG, "optimal, size width: " + s.width + ", size height: " + s.height);
+
+            if (s.width <= getWidth() && s.height <= getHeight()) {
+                if (s.width >= optimalWidth && s.height >= optimalHeight) {
+                    optimalWidth = s.width;
+                    optimalHeight = s.height;
+                }
+            }
+        }
+
+        Log.d(TAG, "optimal width: " + optimalWidth + ", optimal height: " + optimalHeight);
+        int[] optimalSize = new int[2];
+        optimalSize[0] = optimalWidth;
+        optimalSize[1] = optimalHeight;
+        return optimalSize;
     }
 
     //TODO: copied from http://stackoverflow.com/questions/12469730/confusion-on-yuv-nv21-conversion-to-rgb

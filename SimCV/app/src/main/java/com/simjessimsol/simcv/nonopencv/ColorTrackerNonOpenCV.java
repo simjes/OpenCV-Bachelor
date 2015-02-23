@@ -12,6 +12,7 @@ public class ColorTrackerNonOpenCV extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         setContentView(new DisplayCamera(this));
     }
 
