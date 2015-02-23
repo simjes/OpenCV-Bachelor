@@ -1,6 +1,8 @@
 package com.simjessimsol.simcv.nonopencv.opengltracker;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
@@ -16,6 +18,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
+import java.util.Date;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -91,6 +94,53 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
             sb.rewind();
             bitmap.copyPixelsFromBuffer(sb);
             lastScreenshot = bitmap;
+            //TODO:stuff
+            Date first = new Date();
+            int[] pixels = new int[width * height];
+            lastScreenshot.getPixels(pixels, 0, width, 0, 0, width, height);
+
+            for (int i = 0; i < pixels.length; i++) {
+                int pixelVal = pixels[i];
+                if (Color.red(pixelVal) >= 200 && Color.green(pixelVal) <= 45 && Color.blue(pixelVal) <= 45) {
+                    pixels[i] = 0xffffff;
+                } else {
+                    pixels[i] = 0;
+                }
+            }
+
+            //lastScreenshot.setPixels(pixels, 0, width, 0, 0, width, height);
+            Point avg = new Point(0, 0);
+            int nrOfPoints = 0;
+
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if (pixels[y * width + x] > 0) {
+                        avg.x += x;
+                        avg.y += y;
+                        nrOfPoints++;
+                    }
+                }
+            }
+
+            if (nrOfPoints > 0) {
+                Log.d(TAG, "x mass center: " + (avg.x / nrOfPoints) + ", y mass center: " + (avg.y / nrOfPoints));
+                Log.d(TAG, "widht: " + lastScreenshot.getWidth() + ", height: " + lastScreenshot.getHeight());
+                Log.d(TAG, "slutt: " + (new Date().getTime() - first.getTime()));
+                int x = avg.x / nrOfPoints;
+                int y = avg.y / nrOfPoints;
+                lastScreenshot.setPixel(x, y, Color.BLACK);
+                lastScreenshot.setPixel(x - 1, y, Color.BLUE);
+                lastScreenshot.setPixel(x - 2, y, Color.BLUE);
+                lastScreenshot.setPixel(x - 3, y, Color.BLUE);
+                lastScreenshot.setPixel(x + 1, y, Color.BLUE);
+                lastScreenshot.setPixel(x + 2, y, Color.BLUE);
+                lastScreenshot.setPixel(x + 3, y, Color.BLUE);
+                lastScreenshot.setPixel(x, y + 1, Color.BLUE);
+                lastScreenshot.setPixel(x, y - 1, Color.BLUE);
+            }
+
+
+            //TODO: end stuff
             mainActivity.saveBitmap(lastScreenshot);
         }
     }

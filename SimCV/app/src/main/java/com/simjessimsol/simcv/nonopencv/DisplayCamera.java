@@ -20,6 +20,10 @@ import java.util.Date;
 public class DisplayCamera extends SurfaceView implements Callback, PreviewCallback {
     private static final String TAG = "com.simjessimsol.simcv";
 
+
+    //TODO: Fungerer kun på android build < 4.4(?)
+    //TODO: sett lik resolution som OpenCV
+    //TODO: sjekk fps
     private Camera camera;
     private SurfaceHolder holder;
 
@@ -30,8 +34,13 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
     private Paint rectanglePaint = new Paint();
 
+
+    private Point centerOfmass;
+    private ArrayList<Point> pointsOfMass;
+
     public DisplayCamera(Context context) {
         super(context);
+        pointsOfMass = new ArrayList<>();
         rectanglePaint.setColor(Color.RED);
         rectanglePaint.setStrokeWidth(10);
 
@@ -99,47 +108,68 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
         YUV_NV21_TO_RGB(rgbColors, data, cameraWidth, cameraHeight);
 
         bitmap = Bitmap.createBitmap(rgbColors, cameraWidth, cameraHeight, Bitmap.Config.RGB_565);
-        if (centerOfmas != null) {
-            lastPoint = centerOfmas;
-        }
-        centerOfmas = findRedCenterOfMas(bitmap);
+        Log.d(TAG, "width: " + bitmap.getWidth() + ", height: " + bitmap.getHeight() + ", camWidth: " + cameraWidth + ", camHeight: " + cameraHeight);
+
         Canvas canvas = holder.lockCanvas();
+
         if (canvas != null) {
-            canvas.drawBitmap(bitmap, (canvas.getWidth() - cameraWidth) / 2, (canvas.getHeight() - cameraHeight) / 2, null);
-            if (lastPoint != null && centerOfmas != null) {
-                canvas.drawLine(lastPoint.x, lastPoint.y, centerOfmas.x, centerOfmas.y, rectanglePaint);
+            int centerCanvasWidthHelper = (canvas.getWidth() - cameraWidth) / 2;
+            int centerCavnasHeightHelper = (canvas.getHeight() - cameraHeight) / 2;
+            centerOfmass = findRedCenterOfMas(bitmap);
+            centerOfmass.x += centerCanvasWidthHelper;
+            centerOfmass.y += centerCavnasHeightHelper;
+            pointsOfMass.add(centerOfmass);
+
+
+            canvas.drawBitmap(bitmap, centerCanvasWidthHelper, centerCavnasHeightHelper, null);
+            Log.d(TAG, "canvas width: " + canvas.getWidth() + ", canvasHeight: " + canvas.getHeight());
+            if (pointsOfMass.size() > 2) {
+                for (int i = 1; i < pointsOfMass.size(); i++) {
+                    Point lastPoint = pointsOfMass.get(i - 1);
+                    Point thisPoint = pointsOfMass.get(i);
+                    if (lastPoint.x > 0 && lastPoint.y > 0 && thisPoint.x > 0 && thisPoint.y > 0) {
+
+                        canvas.drawLine(lastPoint.x, lastPoint.y, thisPoint.x, thisPoint.y, rectanglePaint);
+
+                    }
+                }
             }
             holder.unlockCanvasAndPost(canvas);
         }
         bitmap.recycle();
     }
 
-    private Point centerOfmas;
-    private Point lastPoint;
-
     private Point findRedCenterOfMas(Bitmap bm) {
         Date first = new Date();
-        Log.d(TAG, "starta find mass center: " + first);
         Point avrage = new Point(0, 0);
         int nrOfPoints = 0;
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        int[] pixels = new int[width * height];
+        bm.getPixels(pixels, 0, width, 0, 0, width, height);
 
-        for (int rows = 0; rows < bm.getWidth(); rows++) {
-            for (int cols = 0; cols < bm.getHeight(); cols++) {
-                int redVal = Color.red(bm.getPixel(rows, cols));
-                int greenVal = Color.green(bm.getPixel(rows, cols));
-                int blueVal = Color.blue(bm.getPixel(rows, cols));
-                if (redVal >= 200 && greenVal <= 45 && blueVal <= 45) {
-                    avrage.x += rows;
-                    avrage.y += cols;
+        for (int i = 0; i < pixels.length; i++) {
+            int pixelVal = pixels[i];
+            if (Color.red(pixelVal) >= 200 && Color.green(pixelVal) <= 45 && Color.blue(pixelVal) <= 45) {
+                pixels[i] = 0xffffff;
+            } else {
+                pixels[i] = 0;
+            }
+        }
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (pixels[y * width + x] > 0) {
+                    avrage.x += x;
+                    avrage.y += y;
                     nrOfPoints++;
                 }
             }
         }
-
-        avrage.x /= nrOfPoints;
-        avrage.y /= nrOfPoints;
-
-
+        if (nrOfPoints > 0) {
+            avrage.x /= nrOfPoints;
+            avrage.y /= nrOfPoints;
+        }
         Log.d(TAG, "slutt: " + (new Date().getTime() - first.getTime()));
         return avrage;
     }
