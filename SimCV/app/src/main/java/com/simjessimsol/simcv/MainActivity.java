@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.simjessimsol.simcv.colortracker.Drawtivity;
 import com.simjessimsol.simcv.detection.CircleDetection;
+import com.simjessimsol.simcv.detection.FaceDetection;
 import com.simjessimsol.simcv.detection.foregroundDetection;
 import com.simjessimsol.simcv.nonopencv.noncvgl.ColorTrackerNonOpenCV;
 import com.simjessimsol.simcv.nonopencv.opengltracker.OpenGLTracker;

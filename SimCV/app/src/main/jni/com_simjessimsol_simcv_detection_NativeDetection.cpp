@@ -1,4 +1,4 @@
-#include "com_simjessimsol_simcv_NativeDetection.h"
+#include "com_simjessimsol_simcv_detection_NativeDetection.h"
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
@@ -15,7 +15,7 @@ Mat grayFrame;
 Size sizeOfMat;
 
 
-JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_NativeDetection_sendCascadeFile
+JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_sendCascadeFile
   (JNIEnv *jenv, jclass jnativeDetection, jstring jcascadeFilePath)
 {
     const char *fixJavaFilePath = jenv->GetStringUTFChars(jcascadeFilePath, NULL);
@@ -28,7 +28,7 @@ JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_NativeDetection_sendCascadeFi
     }
 }
 
-JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_NativeDetection_nativeDetectFace
+JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_nativeDetectFace
   (JNIEnv *jenv, jclass jnativeDetection, jlong jframeAddress)
 {
     vector<Rect> faces;

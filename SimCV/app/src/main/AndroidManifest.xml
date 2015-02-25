@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FaceDetection"
+            android:name=".detection.FaceDetection"
             android:label="@string/title_activity_facedetection"
             android:screenOrientation="landscape" >
         </activity>

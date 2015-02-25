@@ -1,4 +1,4 @@
-package com.simjessimsol.simcv;
+package com.simjessimsol.simcv.detection;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.simjessimsol.simcv.R;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;

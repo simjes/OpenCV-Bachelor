@@ -1,4 +1,4 @@
-package com.simjessimsol.simcv;
+package com.simjessimsol.simcv.detection;
 
 public class NativeDetection {
 
