@@ -17,7 +17,7 @@ public class FunctionRowHolder extends RecyclerView.ViewHolder {
 
     public FunctionRowHolder(View itemView) {
         super(itemView);
-        this.thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
+        this.thumbnail = (ImageView) itemView.findViewById(R.id.banner);
         this.title = (TextView) itemView.findViewById(R.id.title);
     }
 }

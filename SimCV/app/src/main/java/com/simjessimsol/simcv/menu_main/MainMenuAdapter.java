@@ -23,7 +23,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<FunctionRowHolder> {
 
     @Override
     public FunctionRowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.menu_list_row, null);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.menu_fragment_card_view, null);
         FunctionRowHolder rh = new FunctionRowHolder(v);
         return rh;
     }
