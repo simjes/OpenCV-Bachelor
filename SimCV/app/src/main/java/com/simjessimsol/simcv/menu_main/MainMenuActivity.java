@@ -7,8 +7,12 @@ import android.support.v7.widget.RecyclerView;
 
 import com.simjessimsol.simcv.R;
 
+import java.util.HashMap;
+
 /**
  * Created by Simen on 25.02.2015.
+ *
+ * http://javatechig.com/android/android-recyclerview-example
  */
 public class MainMenuActivity extends Activity {
     private RecyclerView mRecyclerView;
@@ -30,8 +34,9 @@ public class MainMenuActivity extends Activity {
 
         String[] dataSet = {"Simen", "Rikard", "Christer"};
 
+
         //specify the adapter we want to use
-        mAdapter = new MainMenuAdapter(dataSet);
+        mAdapter = new MainMenuAdapter(MainMenuActivity.this, dataSet);
         mRecyclerView.setAdapter(mAdapter);
     }
 
