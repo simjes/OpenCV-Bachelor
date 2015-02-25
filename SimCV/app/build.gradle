@@ -32,5 +32,6 @@ dependencies {
     compile project(':app:libs:opencv')
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile 'com.android.support:recyclerview-v7:21.0.+'
+    compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.squareup.picasso:picasso:2.5.0'
 }
