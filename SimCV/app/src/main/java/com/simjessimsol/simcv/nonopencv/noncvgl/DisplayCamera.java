@@ -1,4 +1,4 @@
-package com.simjessimsol.simcv.nonopencv;
+package com.simjessimsol.simcv.nonopencv.noncvgl;
 
 
 import android.content.Context;
@@ -8,16 +8,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
-import android.util.DisplayMetrics;
+import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 
 import java.io.IOException;
@@ -28,22 +27,18 @@ import java.util.List;
 public class DisplayCamera extends SurfaceView implements Callback, PreviewCallback {
     private static final String TAG = "com.simjessimsol.simcv";
 
-
-    //TODO: Fungerer kun på android build < 4.4(?)
     //TODO: sjekk fps
+
     private Camera camera;
     private SurfaceHolder holder;
 
     private int[] rgbColors;
     private Bitmap bitmap;
-    private int initCameraWidth;
-    private int initCameraHeight;
     private int cameraWidth;
     private int cameraHeight;
     private float scale = 0;
 
     private Paint rectanglePaint = new Paint();
-
 
     private Point centerOfmass;
     private ArrayList<Point> pointsOfMass;
@@ -66,8 +61,8 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
             camera = Camera.open();
             Camera.Parameters parameters = camera.getParameters();
-            initCameraWidth = parameters.getPreviewSize().width;
-            initCameraHeight = parameters.getPreviewSize().height;
+            int initCameraWidth = parameters.getPreviewSize().width;
+            int initCameraHeight = parameters.getPreviewSize().height;
 
             int[] optimalSize = findOptimalResolution();
             parameters.setPreviewSize(optimalSize[0], optimalSize[1]);
@@ -76,13 +71,18 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
             cameraWidth = optimalSize[0];
             cameraHeight = optimalSize[1];
 
-            //TODO: feil med initCameara sizes?
             scale = Math.min(((float) initCameraHeight) / cameraHeight, ((float) initCameraWidth) / cameraWidth);
 
             rgbColors = new int[cameraWidth * cameraHeight];
 
             try {
+                //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                 camera.setPreviewDisplay(null);
+                /*} else {
+                    //TODO: slow, fix?
+                    SurfaceTexture surfaceTexture = new SurfaceTexture(10);
+                    camera.setPreviewTexture(surfaceTexture);
+                }*/
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -248,5 +248,4 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
             }
         }
     }
-
 }

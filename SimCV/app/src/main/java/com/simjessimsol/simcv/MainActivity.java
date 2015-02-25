@@ -7,7 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.simjessimsol.simcv.nonopencv.ColorTrackerNonOpenCV;
+import com.simjessimsol.simcv.colortracker.Drawtivity;
+import com.simjessimsol.simcv.detection.CircleDetection;
+import com.simjessimsol.simcv.detection.foregroundDetection;
+import com.simjessimsol.simcv.nonopencv.noncvgl.ColorTrackerNonOpenCV;
 import com.simjessimsol.simcv.nonopencv.opengltracker.OpenGLTracker;
 
 

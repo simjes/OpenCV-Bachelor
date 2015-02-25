@@ -42,22 +42,22 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".Drawtivity"
+            android:name=".colortracker.Drawtivity"
             android:label="@string/title_activity_drawtivity"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".CircleDetection"
+            android:name=".detection.CircleDetection"
             android:label="@string/title_activity_circledetection"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".foregroundDetection"
+            android:name=".detection.foregroundDetection"
             android:label="foreground detection"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".nonopencv.ColorTrackerNonOpenCV"
+            android:name=".nonopencv.noncvgl.ColorTrackerNonOpenCV"
             android:label="@string/title_activity_color_tracker_non_open_cv"
             android:screenOrientation="landscape" >
         </activity>

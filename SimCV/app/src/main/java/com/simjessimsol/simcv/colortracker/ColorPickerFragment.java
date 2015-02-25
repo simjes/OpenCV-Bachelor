@@ -1,4 +1,4 @@
-package com.simjessimsol.simcv;
+package com.simjessimsol.simcv.colortracker;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SaturationBar;
+import com.simjessimsol.simcv.R;
 
 import org.opencv.core.Scalar;
 

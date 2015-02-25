@@ -1,4 +1,4 @@
-package com.simjessimsol.simcv.nonopencv;
+package com.simjessimsol.simcv.nonopencv.noncvgl;
 
 import android.app.Activity;
 import android.os.Bundle;
