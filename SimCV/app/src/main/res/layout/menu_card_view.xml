@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,15 +16,15 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:elevation="100dp"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardBackgroundColor="#9e9e9e" >
+            card_view:cardBackgroundColor="#9e9e9e"
+            card_view:cardCornerRadius="4dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/banner"
+                    android:id="@+id/thumbnail"
                     android:layout_width="75dp"
                     android:layout_height="fill_parent"
                     android:paddingRight="16dp" />
@@ -33,9 +33,9 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/thumbnail"
                     android:gravity="center_vertical"
-                    android:textSize="24sp"
-                    android:layout_toRightOf="@+id/banner"/>
+                    android:textSize="24sp" />
 
                 <!--
                 <TextView
@@ -43,29 +43,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
-                    android:layout_toRightOf="@+id/banner"
+                    android:layout_toRightOf="@+id/thumbnail"
                     android:layout_below="@+id/title" />
                 -->
 
                 <ToggleButton
-                    style="?android:attr/borderlessButtonStyle"
                     android:id="@+id/toggleNative"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textOn="Native"
+                    android:layout_below="@+id/title"
+                    android:layout_toRightOf="@+id/thumbnail"
                     android:textOff="Java"
-                    android:layout_toRightOf="@+id/banner"
-                    android:layout_below="@+id/title"/>
+                    android:textOn="Native" />
 
                 <Button
-                    style="?android:attr/borderlessButtonStyle"
                     android:id="@+id/btnStart"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="START"
-                    android:onClick="startFunctionClick"
+                    android:layout_below="@+id/title"
                     android:layout_toRightOf="@+id/toggleNative"
-                    android:layout_below="@+id/title"/>
+                    android:text="START"/>
+                <!--android:onClick="startFunctionClick"-->
 
             </RelativeLayout>
 
