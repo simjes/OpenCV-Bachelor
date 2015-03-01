@@ -37,7 +37,7 @@ import java.io.File;
 
 public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
 
-    private static final String TAG = "com.simjessimsol.simcv";
+    private static final String TAG = "com.simjessimsol.simcv.colortracker";
     private static final String PHOTO_MIME_TYPE = "image/png";
     private static final String STATE_CAMERA_INDEX = "cameraIndex";
     private static final String STATE_BYTE_MAT = "matAsByte";

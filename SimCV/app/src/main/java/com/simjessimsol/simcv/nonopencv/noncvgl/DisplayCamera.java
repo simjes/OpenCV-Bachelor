@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 public class DisplayCamera extends SurfaceView implements Callback, PreviewCallback {
-    private static final String TAG = "com.simjessimsol.simcv";
+    private static final String TAG = "noncvgl";
 
     //TODO: sjekk fps
 

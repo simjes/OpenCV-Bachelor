@@ -34,7 +34,7 @@ import java.io.File;
 
 public class foregroundDetection extends Activity implements CvCameraViewListener2 {
 
-    private final static String TAG = "com.simjessimsol.simcv";
+    private final static String TAG = "com.simjessimsol.simcv.detection";
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
 
     private CameraBridgeViewBase cameraView;

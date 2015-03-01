@@ -64,7 +64,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
         directVideo.draw();
 
-        //TODO: fjern
+        /*//TODO: fjern
         counter++;
         Log.d(TAG, "counter: " + counter);
 
@@ -139,8 +139,8 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
 
             //TODO: end stuff
-            mainActivity.saveBitmap(lastScreenshot);
-        }
+            openGLTrackerActivity.saveBitmap(lastScreenshot);*/
+        //}
     }
 
     static public int loadShader(int type, String shaderCode) {

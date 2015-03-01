@@ -13,6 +13,7 @@ import com.simjessimsol.simcv.detection.FaceDetection;
 import com.simjessimsol.simcv.detection.foregroundDetection;
 import com.simjessimsol.simcv.nonopencv.noncvgl.ColorTrackerNonOpenCV;
 import com.simjessimsol.simcv.nonopencv.opengltracker.OpenGLTracker;
+import com.simjessimsol.simcv.nonopencv.opengltracker2.OpenGLTrackerActivity;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -72,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void startOpenGlTracker(View view) {
-        Intent intent = new Intent(this, OpenGLTracker.class);
+        Intent intent = new Intent(this, OpenGLTrackerActivity.class);
         startActivity(intent);
     }
 

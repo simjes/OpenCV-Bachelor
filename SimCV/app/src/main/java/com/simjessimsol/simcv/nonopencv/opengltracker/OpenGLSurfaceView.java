@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 
 public class OpenGLSurfaceView extends GLSurfaceView {
+
     private OpenGLRenderer renderer;
 
     public OpenGLSurfaceView(Context context) {
@@ -18,4 +19,5 @@ public class OpenGLSurfaceView extends GLSurfaceView {
     public OpenGLRenderer getRenderer() {
         return renderer;
     }
+
 }
