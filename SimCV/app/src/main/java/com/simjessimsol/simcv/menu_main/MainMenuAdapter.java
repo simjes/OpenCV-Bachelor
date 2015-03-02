@@ -33,7 +33,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<CardViewHolder> {
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.menu_card_view, null);
+                .inflate(R.layout.menu_recycler_view, null);
         CardViewHolder vh = new CardViewHolder(v);
 
         return vh;
@@ -44,7 +44,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<CardViewHolder> {
         Picasso.with(context).load(R.drawable.ic_launcher)
                 .into(cardViewHolder.thumbnail);
         cardViewHolder.title.setText(dataSet[position]);
-        cardViewHolder.toggleNative.setVisibility(View.INVISIBLE);
+        //cardViewHolder.toggleNative.setVisibility(View.INVISIBLE);
         cardViewHolder.btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -28,6 +28,7 @@ import java.util.HashMap;
 /**
  * Created by Simen Sollie on 25.02.2015.
  * <p/>
+ * http://javatechig.com/android/android-recyclerview-example
  * https://developer.android.com/training/material/lists-cards.html
  * http://www.survivingwithandroid.com/2014/11/a-guide-to-android-recyclerview-cardview.html
  */
@@ -37,7 +38,7 @@ public class MainMenuActivity extends Activity {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private Boolean isNative = false;
-    private String[] dataSet = {"Face Detection", "Circle Detection", "Foreground Detection", "Color Detection"};
+    private String[] dataSet = {"Face Detection", "Circle Detection", "Foreground Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +53,6 @@ public class MainMenuActivity extends Activity {
         mAdapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, isNative, new MainMenuAdapter.OnItemClickListener(){
             @Override
             public void onItemClick(View v, int pos) {
-                //String s = Integer.toString(pos);
-                //Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 if (pos == 0){
                     intent = new Intent(MainMenuActivity.this, FaceDetection.class);
@@ -69,8 +68,6 @@ public class MainMenuActivity extends Activity {
                 startActivity(intent);
             }
         });
-
-        //we use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
