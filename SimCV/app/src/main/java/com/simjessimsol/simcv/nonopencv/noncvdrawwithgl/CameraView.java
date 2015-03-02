@@ -12,6 +12,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
+import com.simjessimsol.simcv.R;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -21,31 +23,32 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
 
     private Camera camera;
     private Parameters cameraParameters;
-
+    private int[] optimalResolution;
     private OpenGLSurfaceView openGLSurfaceView;
-
 
     public CameraView(Context context, OpenGLSurfaceView openGLSurfaceView) {
         super(context);
+
+        this.openGLSurfaceView = openGLSurfaceView;
         getHolder().addCallback(this);
         getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        this.openGLSurfaceView = openGLSurfaceView;
+
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         camera = Camera.open();
         cameraParameters = camera.getParameters();
+        optimalResolution = findOptimalResolution();
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        int[] optimalResolution = findOptimalResolution();
+    public void surfaceChanged(SurfaceHolder holder, int format, int unusedWidth, int unusedHeight) {
         cameraParameters.setPreviewSize(optimalResolution[0], optimalResolution[1]);
 
         rgbFrame = new int[optimalResolution[0] * optimalResolution[1]];
-        this.width = optimalResolution[0];
-        this.height = optimalResolution[1];
+        width = optimalResolution[0];
+        height = optimalResolution[1];
 
         camera.setParameters(cameraParameters);
         try {
@@ -55,6 +58,7 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
         }
         camera.startPreview();
         camera.setPreviewCallback(this);
+        openGLSurfaceView.setViewPort(width, height);
     }
 
     @Override
@@ -70,10 +74,6 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        //TODO: hente ut data som ints, finne massecenter, legg til pointsToDraw i openglsurfaceview
-        //TODO: delete threads + class if not needed
-        //Thread findMassCenterThread = new Thread(new FindMassCenter(data, camera, openGLSurfaceView));
-        //findMassCenterThread.start();
         YUV_NV21_TO_RGB(rgbFrame, data, width, height);
         Point redCenterOfMass = findRedCenterOfMass();
         if (redCenterOfMass.x > 0 && redCenterOfMass.y > 0) {
@@ -135,6 +135,7 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
         return optimalSize;
     }
 
+    //TODO: copied from http://stackoverflow.com/questions/12469730/confusion-on-yuv-nv21-conversion-to-rgb
     public static void YUV_NV21_TO_RGB(int[] argb, byte[] yuv, int width, int height) {
         final int frameSize = width * height;
 

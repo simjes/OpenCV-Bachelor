@@ -9,6 +9,8 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.util.Log;
 
 
+import com.simjessimsol.simcv.R;
+
 import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -21,6 +23,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Renderer {
 
     public OpenGLSurfaceView(Context context) {
         super(context);
+
         pointsToDraw = new ArrayList<>();
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
@@ -34,9 +37,6 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        //TODO: skifte viewport
-        GLES20.glViewport(0, 0, width, height);
-        Log.i(TAG, "GLVIEW: width:" + width + ", height: " + height);
 
     }
 
@@ -52,5 +52,10 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Renderer {
     public void addPointsToDraw(Point point) {
         pointsToDraw.add(point);
         Log.i(TAG, "nyeste point, x: " + pointsToDraw.get(pointsToDraw.size() - 1).x + ", y: " + pointsToDraw.get(pointsToDraw.size() - 1).y);
+    }
+
+    public void setViewPort(int width, int height) {
+        GLES20.glViewport(0, 0, width, height);
+        Log.i(TAG, "GLVIEW: width:" + width + ", height: " + height);
     }
 }

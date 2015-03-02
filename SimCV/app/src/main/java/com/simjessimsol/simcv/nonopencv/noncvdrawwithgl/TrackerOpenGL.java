@@ -7,8 +7,9 @@ import android.view.WindowManager;
 
 public class TrackerOpenGL extends Activity {
 
-    OpenGLSurfaceView glSurfaceView;
-    CameraView cameraView;
+    private OpenGLSurfaceView glSurfaceView;
+    private CameraView cameraView;
+
 
     //TODO: endre camera, lagre tegning, beholde tegning onStateChanged?
 
@@ -18,10 +19,16 @@ public class TrackerOpenGL extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         glSurfaceView = new OpenGLSurfaceView(this);
-        setContentView(glSurfaceView);
-
         cameraView = new CameraView(this, glSurfaceView);
+
+        setContentView(glSurfaceView);
         addContentView(cameraView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //TODO: temp solution
+        System.exit(0);
+    }
 }
