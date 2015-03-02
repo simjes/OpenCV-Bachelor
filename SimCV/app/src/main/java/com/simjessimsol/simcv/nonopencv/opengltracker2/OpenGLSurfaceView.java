@@ -62,12 +62,13 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Renderer {
 
         directVideo.draw();
 
-        //TODO: egen traad?
+
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(width * height * 4);
         byteBuffer.order(ByteOrder.nativeOrder());
-        GLES20.glReadPixels(0, 0, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, byteBuffer);
-        int[] pixelsAsInts = new int[width * height];
-        byteBuffer.asIntBuffer().get(pixelsAsInts);
+        //TODO: egen traad? readpixels seeeeeein
+        //GLES20.glReadPixels(0, 0, width, height, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, byteBuffer);
+        //int[] pixelsAsInts = new int[width * height];
+        //byteBuffer.asIntBuffer().get(pixelsAsInts);
         /*Point redMassCenter = findMassCenterOfRed(pixelsAsInts);
         if (redMassCenter.x > 0 && redMassCenter.y > 0) {
             cords.add(redMassCenter);

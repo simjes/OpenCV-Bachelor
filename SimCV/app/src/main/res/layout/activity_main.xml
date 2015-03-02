@@ -52,10 +52,10 @@
         android:id="@+id/startNonCVColorTracker"
         android:text="noncv color"
         android:onClick="startNonCVColorTracking"
+        android:layout_marginTop="61dp"
         android:layout_below="@+id/startFaceDetectionButton"
-        android:layout_alignLeft="@+id/startForegroundDetection"
-        android:layout_alignStart="@+id/startForegroundDetection"
-        android:layout_marginTop="60dp" />
+        android:layout_toRightOf="@+id/startForegroundDetection"
+        android:layout_toEndOf="@+id/startForegroundDetection" />
 
     <Button
         android:layout_width="wrap_content"
@@ -67,5 +67,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/starttrackerutenopencv"
+        android:text="utencv og litt gl"
+        android:onClick="startLittGL"
+        android:layout_alignTop="@+id/startNonCVColorTracker"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

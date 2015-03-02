@@ -66,12 +66,13 @@
             android:label="@string/title_activity_open_gltracker" >
         </activity>
         <activity
-            android:name=".MainActivity2Activity"
-            android:label="@string/title_activity_main_activity2" >
-        </activity>
-        <activity
             android:name=".nonopencv.opengltracker2.OpenGLTrackerActivity"
             android:label="@string/title_activity_open_gltracker" >
+        </activity>
+        <activity
+            android:name=".nonopencv.noncvdrawwithgl.TrackerOpenGL"
+            android:label="@string/title_activity_tracker_open_gl"
+            android:screenOrientation="landscape">
         </activity>
     </application>
 

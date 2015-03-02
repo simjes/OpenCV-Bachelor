@@ -135,6 +135,7 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
             int centerCanvasWidthHelper = (int) (canvas.getWidth() - scale * bitmap.getWidth()) / 2;
             Log.d(TAG, "helper width: " + centerCanvasWidthHelper);
             int centerCanvasHeightHelper = (int) (canvas.getHeight() - scale * bitmap.getHeight()) / 2;
+            //TODO: har allerede pixels i rgb array, trenger ikke å sende bitmap til metoden findRedCenterOfMass
             centerOfmass = findRedCenterOfMas(bitmap);
             centerOfmass.x = (int) (centerOfmass.x * scale) + (centerCanvasWidthHelper);
             centerOfmass.y = (int) (centerOfmass.y * scale) + (centerCanvasHeightHelper);
@@ -163,7 +164,7 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
     private Point findRedCenterOfMas(Bitmap bm) {
         Date first = new Date();
-        Point avrage = new Point(0, 0);
+        Point average = new Point(0, 0);
         int nrOfPoints = 0;
         int width = bm.getWidth();
         int height = bm.getHeight();
@@ -182,18 +183,18 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (pixels[y * width + x] > 0) {
-                    avrage.x += x;
-                    avrage.y += y;
+                    average.x += x;
+                    average.y += y;
                     nrOfPoints++;
                 }
             }
         }
         if (nrOfPoints > 0) {
-            avrage.x /= nrOfPoints;
-            avrage.y /= nrOfPoints;
+            average.x /= nrOfPoints;
+            average.y /= nrOfPoints;
         }
         Log.d(TAG, "slutt: " + (new Date().getTime() - first.getTime()));
-        return avrage;
+        return average;
     }
 
     private int[] findOptimalResolution() {
