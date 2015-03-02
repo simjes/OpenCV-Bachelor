@@ -1,31 +1,19 @@
 package com.simjessimsol.simcv.menu_main;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
-import android.nfc.Tag;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
-import android.widget.Toolbar;
 
 import com.simjessimsol.simcv.CircleDetection;
 import com.simjessimsol.simcv.Drawtivity;
 import com.simjessimsol.simcv.FaceDetection;
 import com.simjessimsol.simcv.R;
 import com.simjessimsol.simcv.foregroundDetection;
-import com.simjessimsol.simcv.nonopencv.ColorTrackerNonOpenCV;
-import com.simjessimsol.simcv.nonopencv.opengltracker.OpenGLTracker;
-
-import java.util.HashMap;
 
 /**
  * Created by Simen Sollie on 25.02.2015.
@@ -38,8 +26,7 @@ public class MainMenuActivity extends ActionBarActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private android.support.v7.widget.Toolbar mToolbar;
-    private Toolbar toolbar;
+    private Toolbar mToolbar;
 
     private Boolean isNative = false;
     private String[] dataSet = {"Face Detection", "Circle Detection", "Foreground Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection"};
@@ -47,15 +34,14 @@ public class MainMenuActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu_main);
+        setContentView(R.layout.activity_menu_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.container);
-
-        //adds our custom toolbar
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
 
         //improves performance if we know that changes in content doesn't change layout
         mRecyclerView.setHasFixedSize(true);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         //specify the adapter we want to use
         mAdapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, isNative, new MainMenuAdapter.OnItemClickListener(){
