@@ -2,4 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="collapse_expand_height">72dip</dimen>
+    <dimen name="row_vertical_margin">12dip</dimen>
+    <dimen name="hairline_height">1dip</dimen>
 </resources>

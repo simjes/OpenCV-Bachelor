@@ -2,11 +2,15 @@
 <resources>
     <!-- http://antonioleiva.com/material-design-everywhere/ -->
     <style name="AppTheme" parent="AppTheme.Base" />
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="colorPrimary">@color/colorToolbar</item>
-        <!--<item name="colorPrimaryDark">@color/colorStatusBar</item>-->
-        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="ImageButtonTheme">
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 </resources>
