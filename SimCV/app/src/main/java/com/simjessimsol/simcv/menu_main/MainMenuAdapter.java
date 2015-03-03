@@ -1,10 +1,19 @@
 package com.simjessimsol.simcv.menu_main;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.Resources;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.simjessimsol.simcv.R;
 import com.squareup.picasso.Picasso;
@@ -13,20 +22,35 @@ import com.squareup.picasso.Picasso;
  * Created by Simen Sollie on 25.02.2015.
  */
 public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
+    private static final float EXPAND_DECELERATION = 1f;
+    private static final float COLLAPSE_DECELERATION = 0.7f;
+    private static final int ANIMATION_DURATION = 300;
+    private static final int EXPAND_DURATION = 300;
+    private static final int COLLAPSE_DURATION = 250;
+    private static final int ROTATE_180_DEGREE = 180;
+    private static final float LIST_ELEVATION = 8f;
+
     private String[] dataSet;
     private Context context;
-    private Boolean isNative;
+    private Boolean isActivityNative;
     private OnItemClickListener mOnItemClickListener;
+
+    private ItemViewHolder expandedView;
+    private final int collapseExpandHeight;
+    private boolean isExpanded = false;
 
     public interface OnItemClickListener {
         public void onItemClick(View v, int pos);
     }
 
-    public MainMenuAdapter(Context context, String[] dataSet, Boolean isNative, OnItemClickListener mOnItemClickListener){
+    public MainMenuAdapter(Context context, String[] dataSet, Boolean isActivityNative, OnItemClickListener mOnItemClickListener) {
         this.context = context;
         this.dataSet = dataSet;
-        this.isNative = isNative;
+        this.isActivityNative = isActivityNative;
         this.mOnItemClickListener = mOnItemClickListener;
+
+        Resources res = this.context.getResources();
+        collapseExpandHeight = (int) res.getDimension(R.dimen.collapse_expand_height);
     }
 
     @Override
@@ -39,24 +63,203 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder itemViewHolder, final int position) {
+    public void onBindViewHolder(final ItemViewHolder itemViewHolder, final int position) {
+        // Thumbnail
         Picasso.with(context).load(R.drawable.ic_launcher)
                 .into(itemViewHolder.thumbnail);
+
+        // Text
+        itemViewHolder.title.setText(dataSet[position]);
+
+        // Arrow
+        itemViewHolder.arrow.setClickable(true);
+        itemViewHolder.arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isExpanded) {
+                    collapseItem(itemViewHolder);
+                } else {
+                    expandItem(itemViewHolder);
+                }
+            }
+        });
+
+        // Button
         Picasso.with(context).load(R.drawable.ic_action_play)
                 .into(itemViewHolder.btnStart);
-        itemViewHolder.title.setText(dataSet[position]);
         itemViewHolder.btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnItemClickListener.onItemClick(v, position);
             }
         });
-
-
     }
 
     @Override
     public int getItemCount() {
         return dataSet.length;
+    }
+
+    private void expandItem(final ItemViewHolder itemViewHolder){
+
+        if (expandedView != null && expandedView != itemViewHolder){
+            collapseItem(expandedView);
+        }
+
+        expandedView = itemViewHolder;
+
+        final int startingHeight = itemViewHolder.listItem.getHeight();
+
+        setListItemBackgroundAndElevation(itemViewHolder.listItem, true);
+        itemViewHolder.expandArea.setVisibility(View.VISIBLE);
+
+        final ViewTreeObserver observer = itemViewHolder.listItem.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (observer.isAlive()) {
+                    observer.removeOnPreDrawListener(this);
+                }
+
+                final int endingHeight = itemViewHolder.listItem.getHeight();
+                final int distance = endingHeight - startingHeight;
+                final int collapseHeight = itemViewHolder.collapseExpandArea.getHeight();
+
+                itemViewHolder.listItem.getLayoutParams().height = startingHeight;
+
+                FrameLayout.LayoutParams expandParams = (FrameLayout.LayoutParams)
+                        itemViewHolder.expandArea.getLayoutParams();
+                expandParams.setMargins(0, -distance, 0, collapseHeight);
+                itemViewHolder.listItem.requestLayout();
+
+                ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f).setDuration(EXPAND_DURATION);
+                animator.setInterpolator(new DecelerateInterpolator(EXPAND_DECELERATION));
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        Float value = (Float) animation.getAnimatedValue();
+
+                        itemViewHolder.listItem.getLayoutParams().height =
+                                (int) (value * distance + startingHeight);
+                        FrameLayout.LayoutParams expandParams = (FrameLayout.LayoutParams)
+                                itemViewHolder.expandArea.getLayoutParams();
+                        expandParams.setMargins(
+                                0, (int) -((1 - value) * distance), 0, collapseHeight);
+                        itemViewHolder.arrow.setRotation(ROTATE_180_DEGREE * value);
+                        itemViewHolder.hairLine.setAlpha(1 - value);
+
+                        itemViewHolder.listItem.requestLayout();
+                    }
+                });
+                animator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) { }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        itemViewHolder.listItem.getLayoutParams().height =
+                                ViewGroup.LayoutParams.WRAP_CONTENT;
+                        itemViewHolder.arrow.setRotation(ROTATE_180_DEGREE);
+                        itemViewHolder.hairLine.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) { }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) { }
+                });
+                animator.start();
+
+                isExpanded = true;
+
+                return false;
+            }
+        });
+    }
+
+    private void collapseItem(final ItemViewHolder itemViewHolder) {
+        expandedView = null;
+
+        final int startingHeight = itemViewHolder.listItem.getHeight();
+
+        setListItemBackgroundAndElevation(itemViewHolder.listItem, false);
+        itemViewHolder.expandArea.setVisibility(View.GONE);
+
+        final ViewTreeObserver observer = itemViewHolder.listItem.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (observer.isAlive()) {
+                    observer.removeOnPreDrawListener(this);
+                }
+
+                final int endingHeight = itemViewHolder.listItem.getHeight();
+                final int distance = endingHeight - startingHeight;
+
+                itemViewHolder.expandArea.setVisibility(View.VISIBLE);
+                itemViewHolder.hairLine.setVisibility(View.VISIBLE);
+
+                ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f).setDuration(COLLAPSE_DURATION);
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        Float value = (Float) animation.getAnimatedValue();
+
+                        itemViewHolder.listItem.getLayoutParams().height =
+                                (int) (value * distance + startingHeight);
+                        FrameLayout.LayoutParams expandParams = (FrameLayout.LayoutParams)
+                                itemViewHolder.expandArea.getLayoutParams();
+                        expandParams.setMargins(
+                                0, (int) (value * distance), 0, collapseExpandHeight);
+                        itemViewHolder.arrow.setRotation(ROTATE_180_DEGREE * (1 - value));
+                        itemViewHolder.hairLine.setAlpha(value);
+
+                        itemViewHolder.listItem.requestLayout();
+                    }
+                });
+                animator.setInterpolator(new DecelerateInterpolator(COLLAPSE_DECELERATION));
+                animator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) { }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        itemViewHolder.listItem.getLayoutParams().height =
+                                ViewGroup.LayoutParams.WRAP_CONTENT;
+                        FrameLayout.LayoutParams expandParams = (FrameLayout.LayoutParams)
+                                itemViewHolder.expandArea.getLayoutParams();
+                        expandParams.setMargins(0, 0, 0, collapseExpandHeight);
+                        itemViewHolder.expandArea.setVisibility(View.GONE);
+                        itemViewHolder.arrow.setRotation(0);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) { }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) { }
+                });
+                animator.start();
+
+                isExpanded = false;
+
+                return false;
+            }
+        });
+    }
+
+    private void setListItemBackgroundAndElevation(LinearLayout layout, boolean expanded) {
+        if (expanded) {
+            layout.setBackgroundResource(R.color.colorPrimaryLight);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                layout.setElevation(LIST_ELEVATION);
+            }
+        } else {
+            layout.setBackgroundResource(R.color.colorPrimary);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                layout.setElevation(0);
+            }
+        }
     }
 }

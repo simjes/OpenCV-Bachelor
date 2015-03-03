@@ -32,7 +32,7 @@ public class MainMenuActivity extends ActionBarActivity {
     private Toolbar mToolbar;
 
     private Boolean isNative = false;
-    private String[] dataSet = {"Face Detection", "Circle Detection", "Foreground Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection", "Color Detection"};
+    private String[] dataSet = {"Face Detection", "Circle Detection", "Foreground Detection", "Color Detection"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

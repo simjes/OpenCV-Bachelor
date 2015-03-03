@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
@@ -59,7 +60,7 @@
                 android:id="@+id/textNative"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Native"/>
+                android:text="Native" />
 
             <Switch
                 android:id="@+id/switchNative"
@@ -95,8 +96,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dip"
                 android:layout_gravity="center_vertical|end"
-                android:layout_marginTop="@dimen/row_vertical_margin"
                 android:layout_marginBottom="@dimen/row_vertical_margin"
+                android:layout_marginTop="@dimen/row_vertical_margin"
                 android:src="@drawable/ic_action_arrow_down" />
 
         </FrameLayout>
