@@ -1,12 +1,15 @@
 package com.simjessimsol.simcv.menu_main;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.simjessimsol.simcv.CircleDetection;
@@ -34,11 +37,17 @@ public class MainMenuActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            //getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
         setContentView(R.layout.activity_menu_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.container);
 
         //improves performance if we know that changes in content doesn't change layout
         mRecyclerView.setHasFixedSize(true);
+
+
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
