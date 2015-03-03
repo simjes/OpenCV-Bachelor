@@ -24,15 +24,17 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
     private Camera camera;
     private Parameters cameraParameters;
     private int[] optimalResolution;
+    private int[] rgbFrame;
+    private int width;
+    private int height;
+
     private OpenGLSurfaceView openGLSurfaceView;
 
     public CameraView(Context context, OpenGLSurfaceView openGLSurfaceView) {
         super(context);
-
         this.openGLSurfaceView = openGLSurfaceView;
         getHolder().addCallback(this);
         getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
     }
 
     @Override
@@ -67,10 +69,6 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
         camera.release();
         camera = null;
     }
-
-    private int[] rgbFrame;
-    private int width;
-    private int height;
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
@@ -135,6 +133,7 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
         return optimalSize;
     }
 
+    //TODO: flytt til annen klasse? statisk?
     //TODO: copied from http://stackoverflow.com/questions/12469730/confusion-on-yuv-nv21-conversion-to-rgb
     public static void YUV_NV21_TO_RGB(int[] argb, byte[] yuv, int width, int height) {
         final int frameSize = width * height;
