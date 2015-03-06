@@ -39,7 +39,7 @@ import java.io.InputStream;
 
 public class FaceDetection extends Activity implements CvCameraViewListener2 {
 
-    private final static String TAG = "com.simjessimsol.simcv.detection";
+    private final static String TAG = "detection";
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
     private final static String STATE_NATIVE_OR_JAVA = "nativeOrJava";
 

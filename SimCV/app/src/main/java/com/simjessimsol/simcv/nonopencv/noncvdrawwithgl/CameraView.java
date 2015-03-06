@@ -12,8 +12,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
-import com.simjessimsol.simcv.R;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -75,8 +73,27 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
         YUV_NV21_TO_RGB(rgbFrame, data, width, height);
         Point redCenterOfMass = findRedCenterOfMass();
         if (redCenterOfMass.x > 0 && redCenterOfMass.y > 0) {
-            openGLSurfaceView.addPointsToDraw(redCenterOfMass);
+            VertexPoint vertexPoint = pointToVertexPoint(redCenterOfMass);
+            openGLSurfaceView.addPointsToDraw(vertexPoint);
+            openGLSurfaceView.requestRender();
         }
+    }
+
+    private VertexPoint pointToVertexPoint(Point point) {
+        float x = (float) point.x / width;
+        float y = (float) point.y / height;
+        if (x < 0.5f) {
+            x = (x * 2) - 1f;
+        } else {
+            x = Math.abs(1f - (x * 2));
+        }
+        if (y < 0.5f) {
+            y = 1f - (y * 2);
+        } else {
+            y = -((y * 2) - 1f);
+        }
+        Log.i(TAG, "vertex point, x: " + x + ", y: " + y);
+        return new VertexPoint(x, y);
     }
 
     private Point findRedCenterOfMass() {

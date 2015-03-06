@@ -25,7 +25,7 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class CircleDetection extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
-    private final static String TAG = "com.simjessimsol.simcv.detection";
+    private final static String TAG = "detection";
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
 
     private CameraBridgeViewBase cameraView;
