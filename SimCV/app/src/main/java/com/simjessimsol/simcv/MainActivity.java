@@ -11,6 +11,7 @@ import com.simjessimsol.simcv.colortracker.Drawtivity;
 import com.simjessimsol.simcv.detection.CircleDetection;
 import com.simjessimsol.simcv.detection.FaceDetection;
 import com.simjessimsol.simcv.detection.foregroundDetection;
+import com.simjessimsol.simcv.nonopencv.glagain.OpenGLTrackerActivity;
 import com.simjessimsol.simcv.nonopencv.noncvdrawwithgl.TrackerOpenGL;
 import com.simjessimsol.simcv.nonopencv.noncvgl.ColorTrackerNonOpenCV;
 

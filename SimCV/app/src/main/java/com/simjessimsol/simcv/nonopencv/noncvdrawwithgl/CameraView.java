@@ -42,10 +42,10 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
         optimalResolution = findOptimalResolution();
     }
 
+
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int unusedWidth, int unusedHeight) {
         cameraParameters.setPreviewSize(optimalResolution[0], optimalResolution[1]);
-
         rgbFrame = new int[optimalResolution[0] * optimalResolution[1]];
         width = optimalResolution[0];
         height = optimalResolution[1];

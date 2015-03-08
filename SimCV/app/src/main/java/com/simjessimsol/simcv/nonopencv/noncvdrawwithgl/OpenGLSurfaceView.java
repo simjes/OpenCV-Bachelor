@@ -30,9 +30,6 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Renderer {
         setEGLContextClientVersion(2);
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
-        //TODO: kan brukes til aa slippe aa tegne linjene for hvert bilde
-        //setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-        //This setting prevents the GLSurfaceView frame from being redrawn until you call requestRender().
         setRenderer(this);
 
 
@@ -67,7 +64,6 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Renderer {
 
     public void addPointsToDraw(VertexPoint vertexPoint) {
         pointsToDraw.add(vertexPoint);
-        //requestRender();
     }
 
     public void setViewPort(int width, int height) {

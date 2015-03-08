@@ -1,7 +1,6 @@
 package com.simjessimsol.simcv.nonopencv.noncvdrawwithgl;
 
 import android.app.Activity;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -17,7 +16,6 @@ public class TrackerOpenGL extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         glSurfaceView = new OpenGLSurfaceView(this);
-        glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         cameraView = new CameraView(this, glSurfaceView);
 
         setContentView(glSurfaceView);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.simjessimsol.simcv" >
+    package="com.simjessimsol.simcv"
+    android:installLocation="auto">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -26,10 +27,10 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,32 +40,43 @@
         <activity
             android:name=".detection.FaceDetection"
             android:label="@string/title_activity_facedetection"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape">
+
         </activity>
         <activity
             android:name=".colortracker.Drawtivity"
             android:label="@string/title_activity_drawtivity"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape">
+
         </activity>
         <activity
             android:name=".detection.CircleDetection"
             android:label="@string/title_activity_circledetection"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape">
+
         </activity>
         <activity
             android:name=".detection.foregroundDetection"
             android:label="foreground detection"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape">
+
         </activity>
         <activity
             android:name=".nonopencv.noncvgl.ColorTrackerNonOpenCV"
             android:label="@string/title_activity_color_tracker_non_open_cv"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape">
+
         </activity>
         <activity
             android:name=".nonopencv.noncvdrawwithgl.TrackerOpenGL"
             android:label="@string/title_activity_tracker_open_gl"
             android:screenOrientation="landscape">
+
+        </activity>'
+        <activity
+            android:name=".nonopencv.glagain.OpenGLTrackerActivity"
+            android:label="stuff">
+
         </activity>
     </application>
 
