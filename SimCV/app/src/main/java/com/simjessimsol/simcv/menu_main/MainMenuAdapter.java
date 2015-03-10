@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.simjessimsol.simcv.R;
@@ -112,6 +113,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         final int startingHeight = itemViewHolder.listItem.getHeight();
 
         setListItemBackgroundAndElevation(itemViewHolder.listItem, true);
+        setImageButtonBackgroundColor(itemViewHolder.btnStart, true);
         itemViewHolder.expandArea.setVisibility(View.VISIBLE);
 
         final ViewTreeObserver observer = itemViewHolder.listItem.getViewTreeObserver();
@@ -186,6 +188,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         final int startingHeight = itemViewHolder.listItem.getHeight();
 
         setListItemBackgroundAndElevation(itemViewHolder.listItem, false);
+        setImageButtonBackgroundColor(itemViewHolder.btnStart, false);
         itemViewHolder.expandArea.setVisibility(View.GONE);
 
         final ViewTreeObserver observer = itemViewHolder.listItem.getViewTreeObserver();
@@ -262,6 +265,14 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 layout.setElevation(0);
             }
+        }
+    }
+
+    private void setImageButtonBackgroundColor (ImageButton imgButton, boolean expanded){
+        if (expanded) {
+            imgButton.setBackgroundResource(R.color.colorPrimaryLight);
+        } else {
+            imgButton.setBackgroundResource(R.color.colorPrimary);
         }
     }
 }
