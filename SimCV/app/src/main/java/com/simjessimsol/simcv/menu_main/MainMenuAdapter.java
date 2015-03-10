@@ -24,7 +24,6 @@ import com.squareup.picasso.Picasso;
 public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private static final float EXPAND_DECELERATION = 1f;
     private static final float COLLAPSE_DECELERATION = 0.7f;
-    private static final int ANIMATION_DURATION = 300;
     private static final int EXPAND_DURATION = 300;
     private static final int COLLAPSE_DURATION = 250;
     private static final int ROTATE_180_DEGREE = 180;
@@ -38,6 +37,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private ItemViewHolder expandedView;
     private final int collapseExpandHeight;
     private boolean isExpanded = false;
+    private int expandedPos;
 
     public interface OnItemClickListener {
         public void onItemClick(View v, int pos);
@@ -76,16 +76,16 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         itemViewHolder.arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isExpanded) {
+                if (expandedPos == position) {
                     collapseItem(itemViewHolder);
                 } else {
-                    expandItem(itemViewHolder);
+                    expandItem(itemViewHolder, position);
                 }
             }
         });
 
         // Button
-        Picasso.with(context).load(R.drawable.ic_action_play)
+        Picasso.with(context).load(R.drawable.ic_fab_play)
                 .into(itemViewHolder.btnStart);
         itemViewHolder.btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,13 +100,14 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         return dataSet.length;
     }
 
-    private void expandItem(final ItemViewHolder itemViewHolder){
+    private void expandItem(final ItemViewHolder itemViewHolder, int pos){
 
         if (expandedView != null && expandedView != itemViewHolder){
             collapseItem(expandedView);
         }
 
         expandedView = itemViewHolder;
+        expandedPos = pos;
 
         final int startingHeight = itemViewHolder.listItem.getHeight();
 
@@ -180,6 +181,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     private void collapseItem(final ItemViewHolder itemViewHolder) {
         expandedView = null;
+        expandedPos = 999;
 
         final int startingHeight = itemViewHolder.listItem.getHeight();
 

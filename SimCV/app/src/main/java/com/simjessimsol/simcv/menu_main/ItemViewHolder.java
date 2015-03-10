@@ -23,7 +23,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     protected View expandArea;
     protected View collapseExpandArea;
     protected LinearLayout listItem;
-    protected RecyclerView container;
 
     public ItemViewHolder(View v) {
         super(v);
@@ -36,6 +35,5 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         this.expandArea = v.findViewById(R.id.expand_area);
         this.collapseExpandArea = v.findViewById(R.id.collapse_expand);
         this.listItem = (LinearLayout) v.findViewById(R.id.list_item);
-        this.container = (RecyclerView) v.findViewById(R.id.container);
     }
 }
