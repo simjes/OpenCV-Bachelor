@@ -11,6 +11,6 @@
     </style>
 
     <style name="ImageButtonTheme">
-        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 </resources>
