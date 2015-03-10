@@ -162,6 +162,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                     public void onAnimationEnd(Animator animation) {
                         itemViewHolder.listItem.getLayoutParams().height =
                                 ViewGroup.LayoutParams.WRAP_CONTENT;
+                        itemViewHolder.listItem.getLayoutParams().width =
+                                ViewGroup.LayoutParams.MATCH_PARENT;
                         itemViewHolder.arrow.setRotation(ROTATE_180_DEGREE);
                         itemViewHolder.hairLine.setVisibility(View.GONE);
                     }
