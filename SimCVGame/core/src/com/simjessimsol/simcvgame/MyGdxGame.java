@@ -29,7 +29,11 @@ public class MyGdxGame extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         timePassed += Gdx.graphics.getDeltaTime();
-        batch.draw(player.getCharacterAnimation().getKeyFrame(timePassed, true), 100, 100);
+        batch.draw(player.getCharacterAnimation().getKeyFrame(timePassed, true), player.getX(), player.getY());
         batch.end();
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

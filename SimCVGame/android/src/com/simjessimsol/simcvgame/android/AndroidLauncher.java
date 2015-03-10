@@ -2,12 +2,12 @@ package com.simjessimsol.simcvgame.android;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.WindowManager.*;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.simjessimsol.simcvgame.MyGdxGame;
+import com.simjessimsol.simcvgame.Player;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -16,13 +16,24 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 
 public class AndroidLauncher extends AndroidApplication implements CvCameraViewListener2 {
     private final static String TAG = "android";
 
     private CameraBridgeViewBase cameraView;
-    private Mat testFrame;
+    private Player player;
+    private MyGdxGame myGdxGame;
+
+    private Mat originalFrame;
+    private Mat binaryFrame;
+    private Scalar lowRed = new Scalar(163, 191, 211);
+    private Scalar highRed = new Scalar(180, 255, 255);
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -47,11 +58,12 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
 
 
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-        initialize(new MyGdxGame(), config);
+        myGdxGame = new MyGdxGame();
+        initialize(myGdxGame, config);
         cameraView = new JavaCameraView(this, 0);
         cameraView.setCvCameraViewListener(this);
         addContentView(cameraView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-
+        player = myGdxGame.getPlayer();
     }
 
     @Override
@@ -82,20 +94,49 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         }
     }
 
+
     @Override
     public void onCameraViewStarted(int width, int height) {
-        testFrame = new Mat();
+        originalFrame = new Mat();
+        binaryFrame = new Mat();
+        player = myGdxGame.getPlayer();
     }
 
     @Override
     public void onCameraViewStopped() {
-        testFrame.release();
+        originalFrame.release();
+        binaryFrame.release();
     }
 
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        testFrame = inputFrame.rgba();
-        Log.d(TAG, "faar frames");
+        originalFrame = inputFrame.rgba();
+
+        Imgproc.cvtColor(originalFrame, originalFrame, Imgproc.COLOR_RGB2HSV);
+        Core.inRange(originalFrame, lowRed, highRed, binaryFrame);
+        Point point = findCenterOfMass(binaryFrame);
+        player.setX((int) point.x);
+        player.setY((int) point.y);
+
+        //Log.d(TAG, "faar frames: " + player);
+        //Log.d(TAG, "org x: " + player.getX() + ", y: " + player.getY());
+        /*if (player.getX() < 1000 && player.getY() < 200) {
+            player.setX(player.getX() + 20);
+            player.setY(player.getY() + 20);
+            Log.d(TAG, "new x: " + player.getX() + ", y: " + player.getY());
+        }*/
         return null;
+    }
+
+    private Point findCenterOfMass(Mat mat) {
+        Moments matMoments = Imgproc.moments(mat, true);
+        double matMoment10 = matMoments.get_m10();
+        double matMoment01 = matMoments.get_m01();
+        double matArea = matMoments.get_m00();
+
+        int redPosX = (int) (matMoment10 / matArea);
+        int redPosY = (int) (matMoment01 / matArea);
+
+        return new Point(redPosX, redPosY);
     }
 }
