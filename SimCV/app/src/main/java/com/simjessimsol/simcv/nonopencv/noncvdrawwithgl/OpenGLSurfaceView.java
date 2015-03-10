@@ -60,6 +60,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Renderer {
                 line.draw();
             }
         }
+        Log.d(TAG, "glsurfaceview hw acc: " + isHardwareAccelerated());
     }
 
     public void addPointsToDraw(VertexPoint vertexPoint) {

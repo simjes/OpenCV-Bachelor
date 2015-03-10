@@ -75,8 +75,9 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
         if (redCenterOfMass.x > 0 && redCenterOfMass.y > 0) {
             VertexPoint vertexPoint = pointToVertexPoint(redCenterOfMass);
             openGLSurfaceView.addPointsToDraw(vertexPoint);
-            openGLSurfaceView.requestRender();
+            //openGLSurfaceView.requestRender();
         }
+        Log.d(TAG, "camview hw acc: " + isHardwareAccelerated());
     }
 
     private VertexPoint pointToVertexPoint(Point point) {

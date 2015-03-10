@@ -78,11 +78,12 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
             try {
                 //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                 camera.setPreviewDisplay(null);
-                /*} else {
-                    //TODO: slow, fix?
-                    SurfaceTexture surfaceTexture = new SurfaceTexture(10);
-                    camera.setPreviewTexture(surfaceTexture);
-                }*/
+                //} else {
+                //  //TODO: slow, fix?
+                // SurfaceTexture surfaceTexture = new SurfaceTexture(10);
+                //camera.setPreviewTexture(surfaceTexture);
+
+                //}
             } catch (IOException e) {
                 e.printStackTrace();
             }
