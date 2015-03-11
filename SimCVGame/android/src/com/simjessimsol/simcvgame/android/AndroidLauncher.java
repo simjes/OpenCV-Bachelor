@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager.*;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.simjessimsol.simcvgame.MyGdxGame;
@@ -34,6 +35,11 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
     private Mat binaryFrame;
     private Scalar lowRed = new Scalar(163, 191, 211);
     private Scalar highRed = new Scalar(180, 255, 255);
+
+    private int gdxWidth;
+    private int gdxHeight;
+    private float scaleX;
+    private float scaleY;
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -100,6 +106,16 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         originalFrame = new Mat();
         binaryFrame = new Mat();
         player = myGdxGame.getPlayer();
+
+        gdxWidth = Gdx.app.getGraphics().getWidth();
+        gdxHeight = Gdx.app.getGraphics().getHeight();
+        scaleX = ((float) gdxWidth) / width;
+        scaleY = ((float) gdxHeight) / height;
+
+        Log.i(TAG, "lol opencv width: " + width + ", height: " + height);
+        Log.i(TAG, "lol width: " + Gdx.app.getGraphics().getWidth() + ", height: " + Gdx.app.getGraphics().getHeight());
+        Log.i(TAG, "lol scaleX: " + scaleX + ", scaleY: " + scaleY);
+        Log.i(TAG, "lol opencv with scale width: " + width * scaleX + ", height: " + height * scaleY);
     }
 
     @Override
@@ -115,9 +131,12 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         Imgproc.cvtColor(originalFrame, originalFrame, Imgproc.COLOR_RGB2HSV);
         Core.inRange(originalFrame, lowRed, highRed, binaryFrame);
         Point point = findCenterOfMass(binaryFrame);
-        player.setX((int) point.x);
-        player.setY((int) point.y);
 
+        //TODO: check x + spritewidth and y + spriteheight
+        if (point.x > 0 && point.x < gdxWidth && point.y > 0 && point.y < gdxHeight) {
+            player.setX((int) (point.x * scaleX));
+            player.setY(Math.abs((int) (gdxHeight - (point.y * scaleY))));
+        }
         //Log.d(TAG, "faar frames: " + player);
         //Log.d(TAG, "org x: " + player.getX() + ", y: " + player.getY());
         /*if (player.getX() < 1000 && player.getY() < 200) {
