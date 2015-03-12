@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.simjessimsol.simcv.CircleDetection;
@@ -17,6 +18,8 @@ import com.simjessimsol.simcv.Drawtivity;
 import com.simjessimsol.simcv.FaceDetection;
 import com.simjessimsol.simcv.R;
 import com.simjessimsol.simcv.foregroundDetection;
+
+import java.util.HashMap;
 
 /**
  * Created by Simen Sollie on 25.02.2015.
@@ -33,6 +36,7 @@ public class MainMenuActivity extends ActionBarActivity {
 
     private Boolean isNative = false;
     private String[] dataSet = {"Face Detection", "Circle Detection", "Foreground Detection", "Color Detection"};
+    private HashMap<String, Integer> dataMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +51,13 @@ public class MainMenuActivity extends ActionBarActivity {
         //improves performance if we know that changes in content doesn't change layout
         mRecyclerView.setHasFixedSize(true);
 
-
-
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        dataMap.put("Face Detection", R.drawable.round_button_blue);
+        dataMap.put("Circle Detection", R.drawable.round_button_red);
+        dataMap.put("Foreground Detection", R.drawable.round_button_green);
+        dataMap.put("Color Detection", R.drawable.ic_launcher_cv);
 
         //specify the adapter we want to use
         mAdapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, isNative, new MainMenuAdapter.OnItemClickListener(){

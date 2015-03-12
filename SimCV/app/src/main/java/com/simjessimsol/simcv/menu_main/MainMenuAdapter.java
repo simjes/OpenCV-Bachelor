@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import com.simjessimsol.simcv.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+
 /**
  * Created by Simen Sollie on 25.02.2015.
  */
@@ -31,6 +33,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private static final float LIST_ELEVATION = 8f;
 
     private String[] dataSet;
+    private HashMap<String, Integer> dataMap;
     private Context context;
     private Boolean isActivityNative;
     private OnItemClickListener mOnItemClickListener;
@@ -66,8 +69,28 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     @Override
     public void onBindViewHolder(final ItemViewHolder itemViewHolder, final int position) {
         // Thumbnail
-        Picasso.with(context).load(R.drawable.ic_launcher)
-                .into(itemViewHolder.thumbnail);
+        switch (position) {
+            case 0:
+                Picasso.with(context).load(R.drawable.ic_launcher)
+                        .into(itemViewHolder.thumbnail);
+                break;
+            case 1:
+                Picasso.with(context).load(R.drawable.ic_launcher)
+                        .into(itemViewHolder.thumbnail);
+                break;
+            case 2:
+                Picasso.with(context).load(R.drawable.ic_launcher)
+                        .into(itemViewHolder.thumbnail);
+                break;
+            case 3:
+                Picasso.with(context).load(R.drawable.ic_launcher)
+                        .into(itemViewHolder.thumbnail);
+                break;
+            default:
+                Picasso.with(context).load(R.drawable.ic_launcher)
+                        .into(itemViewHolder.thumbnail);
+                break;
+        }
 
         // Text
         itemViewHolder.title.setText(dataSet[position]);
