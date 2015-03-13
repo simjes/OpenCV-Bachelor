@@ -21,21 +21,21 @@ public class Player {
         characterAnimation = new Animation(1 / 15f, characterAtlas.getRegions(), Animation.PlayMode.LOOP);
     }
 
-    //TODO: x,y nede i venstre hjørne av charen, endre?
     public int getX() {
-        return x;// - ((int) width / 2);
+        return x;
     }
 
     public int getY() {
-        return y;// - ((int) height / 2);
+        return y;
     }
 
+    //TODO: x bli forskjøvet slik at point.x som opencv fant er x + width / 2 som er midten av fig.
     public void setX(int x) {
-        this.x = x;// - ((int) width / 2);
+        this.x = x - ((int) width / 2);
     }
 
     public void setY(int y) {
-        this.y = y;// - ((int) height / 2);
+        this.y = y - ((int) height / 2);
     }
 
     public float getWidth() {
