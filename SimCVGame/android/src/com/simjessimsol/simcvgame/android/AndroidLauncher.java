@@ -127,12 +127,13 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         originalFrame = inputFrame.rgba();
+        //Core.flip(originalFrame, originalFrame, 0);
 
         Imgproc.cvtColor(originalFrame, originalFrame, Imgproc.COLOR_RGB2HSV);
         Core.inRange(originalFrame, lowRed, highRed, binaryFrame);
         Point point = findCenterOfMass(binaryFrame);
 
-        //TODO: check x + spritewidth and y + spriteheight
+        //TODO: check x + spritewidth and y + spriteheight, sett x - width /2 og y - height /2 for å midtstille
         if (point.x > 0 && point.x < gdxWidth && point.y > 0 && point.y < gdxHeight) {
             player.setX((int) (point.x * scaleX));
             player.setY(Math.abs((int) (gdxHeight - (point.y * scaleY))));
