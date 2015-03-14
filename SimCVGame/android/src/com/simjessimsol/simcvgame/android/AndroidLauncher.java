@@ -133,7 +133,7 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         Core.inRange(originalFrame, lowRed, highRed, binaryFrame);
         Point point = findCenterOfMass(binaryFrame);
 
-        //TODO: check x + spritewidth and y + spriteheight, sett x - width /2 og y - height /2 for å midtstille
+        //TODO: check x + spritewidth and y + spriteheight
         if (point.x > 0 && point.x < gdxWidth && point.y > 0 && point.y < gdxHeight) {
             player.setX((int) (point.x * scaleX));
             player.setY(Math.abs((int) (gdxHeight - (point.y * scaleY))));

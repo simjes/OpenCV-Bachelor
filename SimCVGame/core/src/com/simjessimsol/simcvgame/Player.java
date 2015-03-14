@@ -3,39 +3,45 @@ package com.simjessimsol.simcvgame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class Player {
-    private int x;
-    private int y;
+    private Vector2 position;
     private float width;
     private float height;
     private TextureAtlas characterAtlas;
     private Animation characterAnimation;
+    private Rectangle hitbox;
 
-    public Player(int startX, int startY, float width, float height) {
+    public Player(float x, float y, float width, float height) {
         this.width = width;
         this.height = height;
-        x = startX;
-        y = startY;
+        position = new Vector2(x, y);
         characterAtlas = new TextureAtlas(Gdx.files.internal("gc.pack"));
         characterAnimation = new Animation(1 / 15f, characterAtlas.getRegions(), Animation.PlayMode.LOOP);
+        hitbox = new Rectangle();
     }
 
-    public int getX() {
-        return x;
+    public void update() {
+        hitbox.set(position.x, position.y, width, height);
     }
 
-    public int getY() {
-        return y;
+    public float getX() {
+        return position.x;
+    }
+
+    public float getY() {
+        return position.y;
     }
 
     //TODO: x bli forskjøvet slik at point.x som opencv fant er x + width / 2 som er midten av fig.
     public void setX(int x) {
-        this.x = x - ((int) width / 2);
+        position.x = x - width / 2;
     }
 
     public void setY(int y) {
-        this.y = y - ((int) height / 2);
+        position.y = y - height / 2;
     }
 
     public float getWidth() {
@@ -52,5 +58,9 @@ public class Player {
 
     public Animation getCharacterAnimation() {
         return characterAnimation;
+    }
+
+    public Rectangle getHitbox() {
+        return hitbox;
     }
 }
