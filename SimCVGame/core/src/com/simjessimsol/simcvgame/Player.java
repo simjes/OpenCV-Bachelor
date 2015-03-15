@@ -11,6 +11,7 @@ public class Player {
     private float height;
     private Texture texture;
     private Rectangle hitbox;
+    private int score;
 
     public Player(float x, float y, float width, float height) {
         this.width = width;
@@ -18,10 +19,23 @@ public class Player {
         position = new Vector2(x, y);
         hitbox = new Rectangle();
         texture = new Texture(Gdx.files.internal("player.png"));
+        score = 0;
     }
 
     public void update() {
         hitbox.set(position.x, position.y, width, height);
+    }
+
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void addToScore(int points) {
+        score += points;
     }
 
     public float getX() {
