@@ -9,7 +9,6 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.simjessimsol.simcvgame.MyGdxGame;
 import com.simjessimsol.simcvgame.Player;
-import com.simjessimsol.simcvgame.Wall;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -25,14 +24,12 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
-import java.util.ArrayList;
 
 public class AndroidLauncher extends AndroidApplication implements CvCameraViewListener2 {
     private final static String TAG = "android";
 
     private CameraBridgeViewBase cameraView;
     private Player player;
-    private ArrayList<Wall> walls;
     private MyGdxGame myGdxGame;
 
     private Mat originalFrame;
@@ -65,7 +62,6 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON);
-
 
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         myGdxGame = new MyGdxGame();
@@ -116,7 +112,6 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         scaleY = ((float) gdxHeight) / height;
 
         player = myGdxGame.getPlayer();
-        walls = myGdxGame.getWalls();
 
         Log.i(TAG, "lol opencv width: " + width + ", height: " + height);
         Log.i(TAG, "lol width: " + Gdx.app.getGraphics().getWidth() + ", height: " + Gdx.app.getGraphics().getHeight());
@@ -139,34 +134,10 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         Core.inRange(originalFrame, lowRed, highRed, binaryFrame);
         Point point = findCenterOfMass(binaryFrame);
 
-        //if (point.x > 0 && point.x < gdxWidth && point.y > 0 && point.y < gdxHeight) {
-        /*for (Wall w : walls) {
-            boolean coll = collides(point, w);
-            Log.i(TAG, "collides: " + coll);
-            if (coll) {
-                myGdxGame.addPenaltyTime();
-            } else {
-                player.setX((int) (point.x * scaleX));
-                player.setY(Math.abs((int) (gdxHeight - (point.y * scaleY))));
-            }
-        }*/
-        //}
-
-
-        /*
-        //TODO: check x + spritewidth and y + spriteheight
-        if (point.x > 0 && point.x < gdxWidth && point.y > 0 && point.y < gdxHeight) {
+        if (point.x - player.getWidth() / 2 > 0 && point.x + player.getWidth() / 2 < gdxWidth) {
             player.setX((int) (point.x * scaleX));
-            player.setY(Math.abs((int) (gdxHeight - (point.y * scaleY))));
-        }*/
-        //Log.d(TAG, "faar frames: " + player);
-        //Log.d(TAG, "org x: " + player.getX() + ", y: " + player.getY());
-        /*if (player.getX() < 1000 && player.getY() < 200) {
-            player.setX(player.getX() + 20);
-            player.setY(player.getY() + 20);
-            Log.d(TAG, "new x: " + player.getX() + ", y: " + player.getY());
-        }*/
-        return null;
+        }
+        return originalFrame;
     }
 
     private Point findCenterOfMass(Mat mat) {
@@ -181,10 +152,4 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         return new Point(redPosX, redPosY);
     }
 
-    private boolean collides(Point point, Wall wall) {
-        if ((point.x >= wall.getX() && point.x <= wall.getX() + wall.getWidth())) {
-            return true;
-        }
-        return false;
-    }
 }
