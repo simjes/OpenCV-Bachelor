@@ -11,10 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.simjessimsol.simcv.R;
 import com.squareup.picasso.Picasso;
@@ -35,7 +36,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private String[] dataSet;
     private HashMap<String, Integer> dataMap;
     private Context context;
-    private Boolean isActivityNative;
+    private Boolean toggleAlternative = false;
     private OnItemClickListener mOnItemClickListener;
 
     private ItemViewHolder expandedView;
@@ -47,10 +48,10 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         public void onItemClick(View v, int pos);
     }
 
-    public MainMenuAdapter(Context context, String[] dataSet, Boolean isActivityNative, OnItemClickListener mOnItemClickListener) {
+    public MainMenuAdapter(Context context, String[] dataSet, Boolean toggleAlternative, OnItemClickListener mOnItemClickListener) {
         this.context = context;
         this.dataSet = dataSet;
-        this.isActivityNative = isActivityNative;
+        this.toggleAlternative = toggleAlternative;
         this.mOnItemClickListener = mOnItemClickListener;
 
         Resources res = this.context.getResources();
@@ -68,23 +69,31 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     @Override
     public void onBindViewHolder(final ItemViewHolder itemViewHolder, final int position) {
-        // Thumbnail
+        // Thumbnail and title
         switch (position) {
-            case 0:
+            case 0: // Face Detection
                 Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
+                itemViewHolder.title.setText("Face\nDetection");
+                itemViewHolder.switchAlternative.setText("Native Camera");
                 break;
-            case 1:
+            case 1: // Circle Detection
                 Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
+                itemViewHolder.title.setText("Circle\nDetection");
+                itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
-            case 2:
+            case 2: // Foreground Detection
                 Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
+                itemViewHolder.title.setText("Foreground\nDetection");
+                itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
-            case 3:
+            case 3: // Color Detection
                 Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
+                itemViewHolder.title.setText("Color\nDetection");
+                itemViewHolder.switchAlternative.setText("Non-OpenCV");
                 break;
             default:
                 Picasso.with(context).load(R.drawable.ic_launcher)
@@ -92,12 +101,12 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 break;
         }
 
-        // Text
-        itemViewHolder.title.setText(dataSet[position]);
+        // Expanded View
+        setTextScaleValue(itemViewHolder.seekScale, itemViewHolder.textScaleValue);
 
         // Arrow
-        itemViewHolder.arrow.setClickable(true);
-        itemViewHolder.arrow.setOnClickListener(new View.OnClickListener() {
+        itemViewHolder.collapse_expand.setClickable(true);
+        itemViewHolder.collapse_expand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (expandedPos == position) {
@@ -115,6 +124,25 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             @Override
             public void onClick(View v) {
                 mOnItemClickListener.onItemClick(v, position);
+            }
+        });
+    }
+
+    public void setTextScaleValue(SeekBar seekBar, final TextView textScaleValue) {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textScaleValue.setText("1/" + String.valueOf(progress + 1));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
     }

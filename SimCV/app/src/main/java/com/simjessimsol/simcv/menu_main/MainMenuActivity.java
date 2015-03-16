@@ -64,16 +64,30 @@ public class MainMenuActivity extends ActionBarActivity {
             @Override
             public void onItemClick(View v, int pos) {
                 Intent intent = new Intent();
-                if (pos == 0){
-                    intent = new Intent(MainMenuActivity.this, FaceDetection.class);
-                } else if (pos == 1){
-                    intent = new Intent(MainMenuActivity.this, CircleDetection.class);
-                } else if (pos == 2){
-                    intent = new Intent(MainMenuActivity.this, foregroundDetection.class);
-                } else if (pos == 3){
-                    intent = new Intent(MainMenuActivity.this, Drawtivity.class);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Invalid function", Toast.LENGTH_SHORT).show();
+                switch (pos) {
+                    case 0: // Face Detection
+                        if (isNative) {
+                            intent = new Intent(MainMenuActivity.this, FaceDetection.class);
+                        } else {
+                            intent = new Intent(MainMenuActivity.this, FaceDetection.class);
+                        }
+                        break;
+                    case 1: // Circle Detection
+                        intent = new Intent(MainMenuActivity.this, CircleDetection.class);
+                        break;
+                    case 2: // Foreground Detection
+                        intent = new Intent(MainMenuActivity.this, foregroundDetection.class);
+                        break;
+                    case 3: // Color Detection
+                        if (isNative) {
+                            intent = new Intent(MainMenuActivity.this, Drawtivity.class);
+                        } else {
+                            intent = new Intent(MainMenuActivity.this, Drawtivity.class);
+                        }
+                        break;
+                    default:
+                        Toast.makeText(getApplicationContext(), "Invalid function", Toast.LENGTH_SHORT).show();
+                        break;
                 }
                 startActivity(intent);
             }
