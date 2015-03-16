@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.simjessimsol.simcv.CircleDetection;
@@ -33,10 +35,9 @@ public class MainMenuActivity extends ActionBarActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Toolbar mToolbar;
+    private Switch switchAlternative;
 
-    private Boolean isNative = false;
     private String[] dataSet = {"Face Detection", "Circle Detection", "Foreground Detection", "Color Detection"};
-    private HashMap<String, Integer> dataMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,23 +55,17 @@ public class MainMenuActivity extends ActionBarActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        dataMap.put("Face Detection", R.drawable.round_button_blue);
-        dataMap.put("Circle Detection", R.drawable.round_button_red);
-        dataMap.put("Foreground Detection", R.drawable.round_button_green);
-        dataMap.put("Color Detection", R.drawable.ic_launcher_cv);
+        switchAlternative = (Switch) findViewById(R.id.switchAlternative);
 
         //specify the adapter we want to use
-        mAdapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, isNative, new MainMenuAdapter.OnItemClickListener(){
+        mAdapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, new MainMenuAdapter.OnItemClickListener(){
             @Override
             public void onItemClick(View v, int pos) {
                 Intent intent = new Intent();
                 switch (pos) {
                     case 0: // Face Detection
-                        if (isNative) {
-                            intent = new Intent(MainMenuActivity.this, FaceDetection.class);
-                        } else {
-                            intent = new Intent(MainMenuActivity.this, FaceDetection.class);
-                        }
+                        intent = new Intent(MainMenuActivity.this, FaceDetection.class);
+                        intent.putExtra("isAlternativeCamera", false); //switchAlternative.isChecked()
                         break;
                     case 1: // Circle Detection
                         intent = new Intent(MainMenuActivity.this, CircleDetection.class);
@@ -79,7 +74,7 @@ public class MainMenuActivity extends ActionBarActivity {
                         intent = new Intent(MainMenuActivity.this, foregroundDetection.class);
                         break;
                     case 3: // Color Detection
-                        if (isNative) {
+                        if (switchAlternative.isChecked()) {
                             intent = new Intent(MainMenuActivity.this, Drawtivity.class);
                         } else {
                             intent = new Intent(MainMenuActivity.this, Drawtivity.class);

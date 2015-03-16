@@ -34,24 +34,20 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private static final float LIST_ELEVATION = 8f;
 
     private String[] dataSet;
-    private HashMap<String, Integer> dataMap;
     private Context context;
-    private Boolean toggleAlternative = false;
     private OnItemClickListener mOnItemClickListener;
 
     private ItemViewHolder expandedView;
     private final int collapseExpandHeight;
-    private boolean isExpanded = false;
     private int expandedPos;
 
     public interface OnItemClickListener {
         public void onItemClick(View v, int pos);
     }
 
-    public MainMenuAdapter(Context context, String[] dataSet, Boolean toggleAlternative, OnItemClickListener mOnItemClickListener) {
+    public MainMenuAdapter(Context context, String[] dataSet, OnItemClickListener mOnItemClickListener) {
         this.context = context;
         this.dataSet = dataSet;
-        this.toggleAlternative = toggleAlternative;
         this.mOnItemClickListener = mOnItemClickListener;
 
         Resources res = this.context.getResources();
@@ -227,8 +223,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 });
                 animator.start();
 
-                isExpanded = true;
-
                 return false;
             }
         });
@@ -299,8 +293,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                     public void onAnimationRepeat(Animator animation) { }
                 });
                 animator.start();
-
-                isExpanded = false;
 
                 return false;
             }
