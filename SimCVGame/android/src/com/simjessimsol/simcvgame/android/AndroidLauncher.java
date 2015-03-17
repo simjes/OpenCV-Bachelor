@@ -137,7 +137,7 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         if (point.x - player.getWidth() / 2 > 0 && point.x + player.getWidth() / 2 < gdxWidth) {
             player.setX((int) (point.x * scaleX));
         }
-        return originalFrame;
+        return null;
     }
 
     private Point findCenterOfMass(Mat mat) {

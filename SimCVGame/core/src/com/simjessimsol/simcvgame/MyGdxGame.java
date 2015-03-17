@@ -63,11 +63,8 @@ public class MyGdxGame extends ApplicationAdapter {
                 player.addToScore(pointIncreaser.getScoreModifier());
                 pointIncreaser = null;
             }
-
         }
-
         batch.end();
-
 
         /*//TODO: debug stuff
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -77,7 +74,6 @@ public class MyGdxGame extends ApplicationAdapter {
         //shapeRenderer.rect(player.getX(), player.getY(), player.getWidth(), player.getHeight());
         shapeRenderer.end();
 */
-
     }
 
     public Player getPlayer() {
