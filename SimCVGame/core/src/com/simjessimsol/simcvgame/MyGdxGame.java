@@ -7,22 +7,28 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.simjessimsol.scoreobjects.PointIncreaser;
+import com.simjessimsol.scoreobjects.ScoreIncreaser;
+
+import java.util.ArrayList;
 
 public class MyGdxGame extends ApplicationAdapter {
     private SpriteBatch batch;
     private Player player;
     private BitmapFont scoreFont;
 
-    private float timePassed = 0;
+    private float timePassedTen = 0;
+    private float timePassedTwenty = 0;
 
     private int gdxWidth;
     private int gdxHeight;
     private int playerScaleWidth;
 
-    private PointIncreaser pointIncreaser;
-
     private ShapeRenderer shapeRenderer;
+
+    private ArrayList<ScoreIncreaser> scoreIncreasers;
+    private ArrayList<Integer> increasersToDelete;
+    private Spawner spawner;
+    private int speedIncreaser = 200;
 
     @Override
     public void create() {
@@ -35,15 +41,18 @@ public class MyGdxGame extends ApplicationAdapter {
         scoreFont = new BitmapFont();
         scoreFont.setColor(Color.BLACK);
         scoreFont.setScale(3);
+
+        scoreIncreasers = new ArrayList<ScoreIncreaser>();
+        increasersToDelete = new ArrayList<Integer>();
+        spawner = new Spawner(scoreIncreasers);
+
         shapeRenderer = new ShapeRenderer();
-        pointIncreaser = new PointIncreaser(gdxWidth / 2, 500, 50, 50, 10, 10);
     }
 
     @Override
     public void dispose() {
         batch.dispose();
         player.dispose();
-        pointIncreaser.dispose();
     }
 
     @Override
@@ -52,20 +61,35 @@ public class MyGdxGame extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        timePassed += Gdx.graphics.getDeltaTime();
         scoreFont.draw(batch, "Score: " + player.getScore(), gdxWidth / 2, gdxHeight - 20);
         batch.draw(player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
         player.update();
-        if (pointIncreaser != null) {
-            batch.draw(pointIncreaser.getTexture(), pointIncreaser.getX(), pointIncreaser.getY(), pointIncreaser.getWidth(), pointIncreaser.getHeight());
-            pointIncreaser.update();
-            if (pointIncreaser.collides(player)) {
-                player.addToScore(pointIncreaser.getScoreModifier());
-                pointIncreaser = null;
+
+        if (scoreIncreasers.size() > 0) {
+            for (ScoreIncreaser s : scoreIncreasers) {
+                batch.draw(s.getTexture(), s.getX(), s.getY(), s.getWidth(), s.getHeight());
+                s.update();
+                if (s.collides(player)) {
+                    player.addToScore(s.getScoreModifier());
+                    increasersToDelete.add(scoreIncreasers.indexOf(s));
+                } else if (s.getY() < -20) { //TODO: endre?
+                    increasersToDelete.add(scoreIncreasers.indexOf(s));
+                }
+            }
+            if (increasersToDelete.size() > 0) {
+                for (Integer i : increasersToDelete) {
+                    scoreIncreasers.remove((int) i);
+                }
+                increasersToDelete.clear();
             }
         }
         batch.end();
 
+        spawnPointIncreasers();
+        if (player.getScore() > speedIncreaser) {
+            spawner.speedUp();
+            speedIncreaser += 200;
+        }
         /*//TODO: debug stuff
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
@@ -74,6 +98,19 @@ public class MyGdxGame extends ApplicationAdapter {
         //shapeRenderer.rect(player.getX(), player.getY(), player.getWidth(), player.getHeight());
         shapeRenderer.end();
 */
+    }
+
+    private void spawnPointIncreasers() {
+        timePassedTen += Gdx.graphics.getDeltaTime();
+        if (timePassedTen > 0.75) {
+            timePassedTen = 0;
+            spawner.spawnTenPointers();
+        }
+        timePassedTwenty += Gdx.graphics.getDeltaTime();
+        if (timePassedTwenty > 1) {
+            timePassedTwenty = 0;
+            spawner.spawnTwentyPointers();
+        }
     }
 
     public Player getPlayer() {

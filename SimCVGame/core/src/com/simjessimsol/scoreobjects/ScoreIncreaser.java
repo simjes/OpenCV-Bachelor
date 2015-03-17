@@ -18,9 +18,11 @@ public abstract class ScoreIncreaser {
     protected int width;
     protected int height;
 
-    public ScoreIncreaser(int width, int height) {
+    public ScoreIncreaser(int width, int height, int fallspeed) {
         this.width = width;
         this.height = height;
+        this.fallspeed = fallspeed;
+        position = new Vector2();
 
         int screenWidth = Gdx.graphics.getWidth();
         int screenHeight = Gdx.graphics.getHeight();
@@ -30,7 +32,10 @@ public abstract class ScoreIncreaser {
         hitbox = new Rectangle(position.x, position.y, width, height);
     }
 
-    public abstract void update();
+    public void update() {
+        position.y -= fallspeed;
+        hitbox.set(position.x, position.y, hitbox.width, hitbox.height);
+    }
 
     public boolean collides(Player player) {
         return Intersector.overlaps(hitbox, player.getHitbox());
