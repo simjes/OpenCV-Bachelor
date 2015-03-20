@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.simjessimsol.scoreobjects.Bomb;
 import com.simjessimsol.scoreobjects.ScoreIncreaser;
 
@@ -38,6 +40,9 @@ public class MyGdxGame extends ApplicationAdapter {
         STOPPED
     }
 
+    //debug
+    //private ShapeRenderer shapeRenderer;
+
     @Override
     public void create() {
         currentState = GameState.RUN;
@@ -46,7 +51,7 @@ public class MyGdxGame extends ApplicationAdapter {
         batch = new SpriteBatch();
 
         playerScaleWidth = gdxWidth / 12;
-        player = new Player(gdxWidth / 2, 30, playerScaleWidth, playerScaleWidth * 0.3f);
+        player = new Player(gdxWidth / 2, 30, playerScaleWidth, playerScaleWidth * 0.5f);
 
         scoreFont = new BitmapFont();
         scoreFont.setColor(Color.BLACK);
@@ -58,6 +63,9 @@ public class MyGdxGame extends ApplicationAdapter {
         scoreIncreasers = new ArrayList<ScoreIncreaser>();
         increasersToDelete = new ArrayList<Integer>();
         spawner = new Spawner(scoreIncreasers);
+
+        //debug
+        //shapeRenderer = new ShapeRenderer();
 
     }
 
@@ -117,6 +125,14 @@ public class MyGdxGame extends ApplicationAdapter {
                 break;
         }
         batch.end();
+
+        //player hotbox debug
+        /*shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+        Rectangle hitbox = player.getHitbox();
+        shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        //shapeRenderer.rect(player.getX(), player.getY(), player.getWidth(), player.getHeight());
+        shapeRenderer.end();*/
     }
 
     private void spawnPointIncreasers() {

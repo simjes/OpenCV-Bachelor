@@ -18,12 +18,13 @@ public class Player {
         this.height = height;
         position = new Vector2(x, y);
         hitbox = new Rectangle();
+        hitbox.set(position.x, height, width, 1);
         texture = new Texture(Gdx.files.internal("player.png"));
         score = 0;
     }
 
     public void update() {
-        hitbox.set(position.x, position.y, width, height);
+        hitbox.set(position.x, height, width, 1);
     }
 
     public Rectangle getHitbox() {
