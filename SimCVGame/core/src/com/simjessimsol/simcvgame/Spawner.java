@@ -1,8 +1,9 @@
 package com.simjessimsol.simcvgame;
 
+import com.simjessimsol.scoreobjects.Bomb;
 import com.simjessimsol.scoreobjects.ScoreIncreaser;
 import com.simjessimsol.scoreobjects.TenPointer;
-import com.simjessimsol.scoreobjects.TwentyPointer;
+import com.simjessimsol.scoreobjects.FiftyPointer;
 
 import java.util.ArrayList;
 
@@ -21,9 +22,14 @@ public class Spawner {
         scoreIncreasers.add(tenPointer);
     }
 
-    public void spawnTwentyPointers() {
-        TwentyPointer twentyPointer = new TwentyPointer(20, 20, fallspeed * 3);
-        scoreIncreasers.add(twentyPointer);
+    public void spawnFiftyPointers() {
+        FiftyPointer fiftyPointer = new FiftyPointer(20, 20, fallspeed * 3);
+        scoreIncreasers.add(fiftyPointer);
+    }
+
+    public void spawnBombs() {
+        Bomb bomb = new Bomb(60, 60, fallspeed * 4);
+        scoreIncreasers.add(bomb);
     }
 
     public void speedUp() {

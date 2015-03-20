@@ -71,7 +71,6 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         cameraView = new JavaCameraView(this, 0);
         cameraView.setCvCameraViewListener(this);
         addContentView(cameraView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-
     }
 
     @Override
@@ -129,15 +128,17 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
 
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        originalFrame = inputFrame.rgba();
-        //Core.flip(originalFrame, originalFrame, 0);
+        if (myGdxGame.getCurrentState() == MyGdxGame.GameState.RUN) {
+            originalFrame = inputFrame.rgba();
+            //Core.flip(originalFrame, originalFrame, 0);
 
-        Imgproc.cvtColor(originalFrame, originalFrame, Imgproc.COLOR_RGB2HSV);
-        Core.inRange(originalFrame, lowRed, highRed, binaryFrame);
-        Point point = findCenterOfMass(binaryFrame);
+            Imgproc.cvtColor(originalFrame, originalFrame, Imgproc.COLOR_RGB2HSV);
+            Core.inRange(originalFrame, lowRed, highRed, binaryFrame);
+            Point point = findCenterOfMass(binaryFrame);
 
-        if (point.x - player.getWidth() / 2 > 0 && point.x + player.getWidth() / 2 < gdxWidth) {
-            player.setX((int) (point.x * scaleX));
+            if (point.x - player.getWidth() / 2 > 0 && point.x + player.getWidth() / 2 < gdxWidth) {
+                player.setX((int) (point.x * scaleX));
+            }
         }
         return null;
     }
