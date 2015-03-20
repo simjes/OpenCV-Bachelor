@@ -2,6 +2,7 @@ package com.simjessimsol.simcvgame.android;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager.*;
 
 import com.badlogic.gdx.Gdx;
@@ -62,6 +63,7 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         myGdxGame = new MyGdxGame();

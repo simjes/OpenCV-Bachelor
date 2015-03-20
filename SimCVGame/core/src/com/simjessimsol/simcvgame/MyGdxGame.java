@@ -78,6 +78,7 @@ public class MyGdxGame extends ApplicationAdapter {
             }
             if (increasersToDelete.size() > 0) {
                 for (Integer i : increasersToDelete) {
+                    scoreIncreasers.get(i).dispose();
                     scoreIncreasers.remove((int) i);
                 }
                 increasersToDelete.clear();
