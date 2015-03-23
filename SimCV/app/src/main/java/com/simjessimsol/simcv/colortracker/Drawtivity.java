@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.simjessimsol.simcv.Performance;
 import com.simjessimsol.simcv.R;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -41,6 +42,8 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private static final String PHOTO_MIME_TYPE = "image/png";
     private static final String STATE_CAMERA_INDEX = "cameraIndex";
     private static final String STATE_BYTE_MAT = "matAsByte";
+
+    private Performance performanceCounter;
 
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
@@ -128,6 +131,8 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         cameraView.setVisibility(SurfaceView.VISIBLE);
         cameraView.setCameraIndex(cameraIndex);
         cameraView.setCvCameraViewListener(this);
+
+        performanceCounter = new Performance();
     }
 
     @Override
@@ -181,7 +186,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         if (byteMat != null) {
             drawingMat.put(0, 0, byteMat);
         }
-
+        performanceCounter.startFPSCounter();
     }
 
     @Override
@@ -200,6 +205,8 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        performanceCounter.start();
+        performanceCounter.addFrame();
         inOutFrame = inputFrame.rgba();
         if (isCameraFrontFacing) {
             Core.flip(inOutFrame, inOutFrame, 1);
@@ -240,6 +247,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             takePhoto(inOutFrame);
             takePhotoClicked = false;
         }
+        performanceCounter.stop();
         return inOutFrame;
     }
 
