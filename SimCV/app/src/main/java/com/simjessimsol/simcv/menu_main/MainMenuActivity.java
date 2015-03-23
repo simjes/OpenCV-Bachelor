@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import com.simjessimsol.simcv.Drawtivity;
 import com.simjessimsol.simcv.FaceDetection;
 import com.simjessimsol.simcv.R;
 import com.simjessimsol.simcv.foregroundDetection;
+import com.simjessimsol.simcv.nonopencv.ColorTrackerNonOpenCV;
 
 /**
  * Created by Simen Sollie on 25.02.2015.
@@ -30,7 +32,7 @@ import com.simjessimsol.simcv.foregroundDetection;
  * https://developer.android.com/training/material/lists-cards.html
  * http://www.survivingwithandroid.com/2014/11/a-guide-to-android-recyclerview-cardview.html
  */
-public class MainMenuActivity extends ActionBarActivity {
+public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -55,17 +57,15 @@ public class MainMenuActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        switchAlternative = (Switch) findViewById(R.id.switchAlternative);
-
         //specify the adapter we want to use
-        adapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, new MainMenuAdapter.OnItemClickListener(){
+        adapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, new MainMenuAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
                 Intent intent = new Intent();
                 switch (pos) {
                     case 0: // Face Detection
                         intent = new Intent(MainMenuActivity.this, FaceDetection.class);
-                        intent.putExtra("isAlternativeCamera", switchAlternative.isChecked()); //switchAlternative.isChecked()
+                        intent.putExtra("isAlternativeCamera", isAlternative()); //switchAlternative.isChecked()
                         break;
                     case 1: // Circle Detection
                         intent = new Intent(MainMenuActivity.this, CircleDetection.class);
@@ -74,8 +74,8 @@ public class MainMenuActivity extends ActionBarActivity {
                         intent = new Intent(MainMenuActivity.this, foregroundDetection.class);
                         break;
                     case 3: // Color Detection
-                        if (switchAlternative.isChecked()) {
-                            intent = new Intent(MainMenuActivity.this, Drawtivity.class);
+                        if (isAlternative()) {
+                            intent = new Intent(MainMenuActivity.this, ColorTrackerNonOpenCV.class);
                         } else {
                             intent = new Intent(MainMenuActivity.this, Drawtivity.class);
                         }
@@ -91,11 +91,9 @@ public class MainMenuActivity extends ActionBarActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
-    public static class PlaceholderFragment extends Fragment {
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return super.onCreateView(inflater, container, savedInstanceState);
-        }
+
+    public boolean isAlternative() {
+        switchAlternative = (Switch) findViewById(R.id.switchAlternative);
+        return switchAlternative.isChecked();
     }
 }
