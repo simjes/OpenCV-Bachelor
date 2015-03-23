@@ -59,6 +59,10 @@ public class Player {
         return height;
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public void dispose() {
         texture.dispose();
     }

@@ -14,7 +14,7 @@ import com.simjessimsol.scoreobjects.ScoreIncreaser;
 
 import java.util.ArrayList;
 
-public class MyGdxGame extends ApplicationAdapter {
+public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     private SpriteBatch batch;
     private Player player;
     private BitmapFont scoreFont;
@@ -64,6 +64,8 @@ public class MyGdxGame extends ApplicationAdapter {
         increasersToDelete = new ArrayList<Integer>();
         spawner = new Spawner(scoreIncreasers);
 
+        Gdx.input.setInputProcessor(this);
+
         //debug
         //shapeRenderer = new ShapeRenderer();
 
@@ -85,7 +87,8 @@ public class MyGdxGame extends ApplicationAdapter {
         batch.begin();
         switch (currentState) {
             case RUN:
-                scoreFont.draw(batch, "Score: " + player.getScore(), gdxWidth / 2, gdxHeight - 20);
+                String score = "Score: " + player.getScore();
+                scoreFont.draw(batch, score, gdxWidth / 2 - scoreFont.getBounds(score).width / 2, gdxHeight - 20);
                 batch.draw(player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
                 player.update();
 
@@ -121,7 +124,8 @@ public class MyGdxGame extends ApplicationAdapter {
                 }
                 break;
             case STOPPED:
-                gameOverFont.draw(batch, "Game Over\nScore: " + player.getScore(), gdxWidth / 2, gdxHeight / 2);
+                String gameOver = "Game Over, Score: " + player.getScore();
+                gameOverFont.draw(batch, gameOver, gdxWidth / 2 - gameOverFont.getBounds(gameOver).width / 2, gdxHeight / 2);
                 break;
         }
         batch.end();
@@ -154,7 +158,7 @@ public class MyGdxGame extends ApplicationAdapter {
     }
 
     public void restart() {
-        player = new Player(gdxWidth / 2, 30, playerScaleWidth, playerScaleWidth * 0.3f);
+        player.setScore(0);
         timePassedBomb = 0;
         timePassedTen = 0;
         timePassedFifty = 0;
@@ -171,4 +175,47 @@ public class MyGdxGame extends ApplicationAdapter {
         return player;
     }
 
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (currentState == GameState.STOPPED) {
+            restart();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
+    }
 }
