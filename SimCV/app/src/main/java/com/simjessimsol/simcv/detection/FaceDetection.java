@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.simjessimsol.simcv.Performance;
 import com.simjessimsol.simcv.R;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -42,6 +43,8 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
     private final static String TAG = "detection";
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
     private final static String STATE_NATIVE_OR_JAVA = "nativeOrJava";
+
+    private Performance performanceCounter;
 
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
@@ -139,6 +142,8 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         cameraView.setVisibility(SurfaceView.VISIBLE);
         cameraView.setCameraIndex(cameraIndex);
         cameraView.setCvCameraViewListener(this);
+
+        performanceCounter = new Performance();
     }
 
     @Override
@@ -181,6 +186,8 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         inputFrame = new Mat();
         detectedImage = new Mat();
         grayscaleImage = new Mat();
+
+        performanceCounter.startFPSCounter();
     }
 
     @Override
@@ -192,6 +199,8 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
 
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inFrame) {
+        performanceCounter.start();
+        performanceCounter.addFrame();
         inputFrame = inFrame.rgba();
         if (isCameraFrontFacing) {
             Core.flip(inputFrame, inputFrame, 1);
@@ -201,16 +210,19 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
             if (!drop) {
                 drop = true;
                 detectedImage = findFaces();
+                performanceCounter.stop();
                 return detectedImage;
             } else {
                 for (Rect r : lastRect) {
                     Core.rectangle(inputFrame, new Point(r.x * scale, r.y * scale), new Point((r.x + r.width) * scale, (r.y + r.height) * scale), new Scalar(0, 0, 255), 3);
                 }
                 drop = false;
+                performanceCounter.stop();
                 return inputFrame;
             }
         } else {
             NativeDetection.nativeDetectFace(inputFrame.getNativeObjAddr());
+            performanceCounter.stop();
             return inputFrame;
         }
     }

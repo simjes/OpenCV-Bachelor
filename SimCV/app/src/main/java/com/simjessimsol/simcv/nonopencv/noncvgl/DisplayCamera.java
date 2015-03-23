@@ -19,6 +19,8 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 
+import com.simjessimsol.simcv.Performance;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +28,8 @@ import java.util.List;
 
 public class DisplayCamera extends SurfaceView implements Callback, PreviewCallback {
     private static final String TAG = "noncvgl";
+
+    private Performance performanceCounter;
 
     //TODO: sjekk fps
 
@@ -52,6 +56,8 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
         holder = getHolder();
         holder.addCallback(this);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        performanceCounter = new Performance();
+
     }
 
     @Override
@@ -90,6 +96,8 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
             camera.startPreview();
             camera.setPreviewCallback(this);
+
+            performanceCounter.startFPSCounter();
         }
     }
 
@@ -123,6 +131,8 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
+        performanceCounter.start();
+        performanceCounter.addFrame();
         Log.d(TAG, "getting frame");
 
         YUV_NV21_TO_RGB(rgbColors, data, cameraWidth, cameraHeight);
@@ -158,6 +168,7 @@ public class DisplayCamera extends SurfaceView implements Callback, PreviewCallb
                     }
                 }
             }
+            performanceCounter.stop();
             holder.unlockCanvasAndPost(canvas);
         }
         bitmap.recycle();
