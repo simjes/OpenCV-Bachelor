@@ -68,7 +68,7 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         myGdxGame = new MyGdxGame();
         initialize(myGdxGame, config);
-        cameraView = new JavaCameraView(this, 0);
+        cameraView = new JavaCameraView(this, 1);
         cameraView.setCvCameraViewListener(this);
         addContentView(cameraView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
@@ -130,7 +130,7 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         if (myGdxGame.getCurrentState() == MyGdxGame.GameState.RUN) {
             originalFrame = inputFrame.rgba();
-            //Core.flip(originalFrame, originalFrame, 0);
+            Core.flip(originalFrame, originalFrame, 1);
 
             Imgproc.cvtColor(originalFrame, originalFrame, Imgproc.COLOR_RGB2HSV);
             Core.inRange(originalFrame, lowRed, highRed, binaryFrame);

@@ -79,20 +79,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     private Scalar colorToDrawFromGreen = new Scalar(0, 255, 0, 255);
     private Scalar colorToDrawFromBlue = new Scalar(0, 0, 255, 255);
 
-
-    /*public int lowhue = 0;
-    public int lowsat = 0;
-    public int lowval = 0;
-    public int highhue = 0;
-    public int highsat = 0;
-    public int highval = 0;
-    private SeekBar hueLowSeekBar;
-    private SeekBar saturationLowSeekBar;
-    private SeekBar valueLowSeekBar;
-    private SeekBar hueHighSeekBar;
-    private SeekBar saturationHighSeekBar;
-    private SeekBar valueHighSeekBar;*/
-
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -137,114 +123,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             ImageButton changeCameraButton = (ImageButton) findViewById(R.id.changeCameraButton);
             changeCameraButton.setVisibility(View.GONE);
         }
-        /*hueLowSeekBar = (SeekBar) findViewById(R.id.hueLowSeekBar);
-        saturationLowSeekBar = (SeekBar) findViewById(R.id.saturationLowSeekBar);
-        valueLowSeekBar = (SeekBar) findViewById(R.id.valueLowSeekBar);
-        hueHighSeekBar = (SeekBar) findViewById(R.id.hueHighSeekBar);
-        saturationHighSeekBar = (SeekBar) findViewById(R.id.saturationHighSeekBar);
-        valueHighSeekBar = (SeekBar) findViewById(R.id.valueHighSeekBar);
-        hueLowSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressVal = 0;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressVal = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                lowhue = progressVal;
-            }
-        });
-        saturationLowSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressVal = 0;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressVal = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                lowsat = progressVal;
-            }
-        });
-        valueLowSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressVal = 0;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressVal = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                lowval = progressVal;
-            }
-        });
-        hueHighSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressVal = 0;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressVal = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                highhue = progressVal;
-            }
-        });
-        saturationHighSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressVal = 0;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressVal = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                highsat = progressVal;
-            }
-        });
-        valueHighSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressVal = 0;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressVal = progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                highval = progressVal;
-            }
-        });*/
 
         cameraView = (CameraBridgeViewBase) findViewById(R.id.drawcam);
         cameraView.setVisibility(SurfaceView.VISIBLE);
@@ -364,10 +242,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         }
         //return storeBluePoints;
         return inOutFrame;
-
-        /*Core.inRange(hsvFrame, new Scalar(lowhue, lowsat, lowval), new Scalar(highhue, highsat, highval), hsvFrame);
-        Log.i(TAG, "lowHue: " + lowhue + ", lowSat: " + lowsat + ", lowVal: " + lowval + "....highHue: " + highhue + ", highSat: " + highsat + ", highVal: " + highval);
-        return hsvFrame;*/
     }
 
     private void findPositionAndDraw(Mat mat) {
