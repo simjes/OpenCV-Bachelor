@@ -240,7 +240,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             takePhoto(inOutFrame);
             takePhotoClicked = false;
         }
-        //return storeBluePoints;
         return inOutFrame;
     }
 
