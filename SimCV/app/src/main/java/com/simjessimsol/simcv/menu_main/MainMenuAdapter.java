@@ -65,6 +65,10 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     @Override
     public void onBindViewHolder(final ItemViewHolder itemViewHolder, final int position) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            itemViewHolder.switchAlternative.setClickable(false);
+        }
+
         // Thumbnail and title
         switch (position) {
             case 0: // Face Detection

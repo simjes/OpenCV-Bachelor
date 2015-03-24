@@ -34,7 +34,7 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
     private Mat circles;
     private Mat inputFrame;
     private Mat detectedImage;
-    private int scale = 2;
+    private int scale;
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -56,8 +56,9 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
         super.onCreate(savedInstanceState);
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         setContentView(R.layout.activity_circledetection);
+        scale = getIntent().getIntExtra("setScale", 1);
+        Log.d(TAG, "CircleScale: " + scale);
 
         if (savedInstanceState != null) {
             cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);

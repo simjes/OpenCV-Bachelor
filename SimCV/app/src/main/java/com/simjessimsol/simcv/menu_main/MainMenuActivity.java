@@ -68,22 +68,22 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
                     case 0: // Face Detection
                         intent = new Intent(MainMenuActivity.this, FaceDetection.class);
                         intent.putExtra("isAlternativeCamera", isAlternative()); //switchAlternative.isChecked()
-                        intent.putExtra("isAlternativeCamera", getSeekBarValue());
+                        intent.putExtra("setScale", getSeekBarValue());
                         break;
                     case 1: // Circle Detection
                         intent = new Intent(MainMenuActivity.this, CircleDetection.class);
-                        intent.putExtra("isAlternativeCamera", getSeekBarValue());
+                        intent.putExtra("setScale", getSeekBarValue());
                         break;
                     case 2: // Foreground Detection
                         intent = new Intent(MainMenuActivity.this, foregroundDetection.class);
-                        intent.putExtra("isAlternativeCamera", getSeekBarValue());
+                        intent.putExtra("setScale", getSeekBarValue());
                         break;
                     case 3: // Color Detection
                         if (isAlternative()) {
                             intent = new Intent(MainMenuActivity.this, ColorTrackerNonOpenCV.class);
                         } else {
                             intent = new Intent(MainMenuActivity.this, Drawtivity.class);
-                            intent.putExtra("isAlternativeCamera", getSeekBarValue());
+                            intent.putExtra("setScale", getSeekBarValue());
                         }
                         break;
                     default:
@@ -105,6 +105,6 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
 
     public int getSeekBarValue() {
         seekbarValue = (SeekBar) findViewById(R.id.seekScale);
-        return seekbarValue.getProgress();
+        return seekbarValue.getProgress() + 1;
     }
 }

@@ -51,7 +51,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
     private Mat detectedImage;
     private Mat grayscaleImage;
     private CascadeClassifier detector;
-    private int scale = 2;
+    private int scale;
 
     private boolean drop = false;
     private Rect[] lastRect;
@@ -102,6 +102,8 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_facedetection);
         isAlternativeCamera = getIntent().getBooleanExtra("isAlternativeCamera", false);
+        scale = getIntent().getIntExtra("setScale", 1);
+        Log.d(TAG, "FaceScale: " + scale);
 
         if (savedInstanceState != null) {
             cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
