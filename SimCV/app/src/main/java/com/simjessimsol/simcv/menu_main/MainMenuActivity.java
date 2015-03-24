@@ -3,17 +3,12 @@ package com.simjessimsol.simcv.menu_main;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -23,7 +18,7 @@ import com.simjessimsol.simcv.colortracker.Drawtivity;
 import com.simjessimsol.simcv.detection.FaceDetection;
 import com.simjessimsol.simcv.R;
 import com.simjessimsol.simcv.detection.ForegroundDetection;
-import com.simjessimsol.simcv.nonopencv.noncvgl.ColorTrackerNonOpenCV;
+import com.simjessimsol.simcv.nonopencv.noncvdrawwithgl.TrackerOpenGL;
 
 /**
  * Created by Simen Sollie on 25.02.2015.
@@ -40,7 +35,8 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
     private Switch switchAlternative;
     private SeekBar seekbarValue;
 
-    private String[] dataSet = {"Face Detection", "Circle Detection", "Foreground Detection", "Color Detection"};
+    private String[] dataSet = {"Face\nDetection", "Circle\nDetection", "Foreground\nDetection",
+            "Color\nTracker", "OpenGL\nTracker"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +45,7 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             //getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
-        setContentView(R.layout.activity_menu_main);
+        setContentView(R.layout.menu_main);
         recyclerView = (RecyclerView) findViewById(R.id.container);
 
         //improves performance if we know that changes in content doesn't change layout
@@ -78,13 +74,11 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
                         intent.putExtra("setScale", getSeekBarValue());
                         break;
                     case 3: // Color Detection
-                        if (isAlternative()) {
-                            intent = new Intent(MainMenuActivity.this, ColorTrackerNonOpenCV.class);
-                        } else {
-                            intent = new Intent(MainMenuActivity.this, Drawtivity.class);
-                            intent.putExtra("setScale", getSeekBarValue());
-                        }
+                        intent = new Intent(MainMenuActivity.this, Drawtivity.class);
+                        intent.putExtra("setScale", getSeekBarValue());
                         break;
+                    case 4:
+                        intent = new Intent(MainMenuActivity.this, TrackerOpenGL.class);
                     default:
                         Toast.makeText(getApplicationContext(), "Invalid function", Toast.LENGTH_SHORT).show();
                         break;

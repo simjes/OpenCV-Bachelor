@@ -20,8 +20,6 @@ import android.widget.TextView;
 import com.simjessimsol.simcv.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
-
 /**
  * Created by Simen Sollie on 25.02.2015.
  */
@@ -57,7 +55,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_menu_recycler_view, null);
+                .inflate(R.layout.menu_recycler_view, null);
         ItemViewHolder vh = new ItemViewHolder(v);
 
         return vh;
@@ -74,37 +72,42 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             case 0: // Face Detection
                 Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
-                itemViewHolder.title.setText("Face\nDetection");
+                itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setText("Native Camera");
                 break;
             case 1: // Circle Detection
                 Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
-                itemViewHolder.title.setText("Circle\nDetection");
+                itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
             case 2: // Foreground Detection
                 Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
-                itemViewHolder.title.setText("Foreground\nDetection");
+                itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
-            case 3: // Color Detection
+            case 3: // Color Tracker
                 Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
-                itemViewHolder.title.setText("Color\nDetection");
-                itemViewHolder.switchAlternative.setText("Non-OpenCV");
+                itemViewHolder.title.setText(dataSet[position]);
+                itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
+            case 4: // Color Tracker with OpenGL
+                Picasso.with(context).load(R.drawable.ic_launcher)
+                        .into(itemViewHolder.thumbnail);
+                itemViewHolder.title.setText(dataSet[position]);
+                itemViewHolder.switchAlternative.setVisibility(View.GONE);
             default:
                 Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
                 break;
         }
 
-        // Expanded View
+        // ChangeListener for scale value
         setTextScaleValue(itemViewHolder.seekScale, itemViewHolder.textScaleValue);
 
-        // Arrow
+        // ClickListener for expanded view
         itemViewHolder.collapse_expand.setClickable(true);
         itemViewHolder.collapse_expand.setOnClickListener(new View.OnClickListener() {
             @Override
