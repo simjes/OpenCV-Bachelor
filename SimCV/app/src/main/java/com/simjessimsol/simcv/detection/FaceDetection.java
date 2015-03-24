@@ -2,6 +2,7 @@ package com.simjessimsol.simcv.detection;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.os.Build;
@@ -55,11 +56,12 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
     private Mat detectedImage;
     private Mat grayscaleImage;
     private CascadeClassifier detector;
-    private int scale = 2;
+    private int scale;
 
     private boolean drop = false;
     private Rect[] lastRect;
 
+    private boolean isAlternativeCamera;
 
     private BaseLoaderCallback loaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -105,6 +107,9 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_facedetection);
+        isAlternativeCamera = getIntent().getBooleanExtra("isAlternativeCamera", false);
+        scale = getIntent().getIntExtra("setScale", 1);
+        Log.d(TAG, "FaceScale: " + scale);
 
         if (savedInstanceState != null) {
             cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
@@ -135,10 +140,15 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
             changeCameraButton.setVisibility(View.GONE);
         }
 
-        if (nativeOrJava.equals("java")) {
+        /*if (nativeOrJava.equals("java")) {
             cameraView = (CameraBridgeViewBase) findViewById(R.id.OpenCVCamView);
         } else {
             cameraView = (CameraBridgeViewBase) findViewById(R.id.NativeOpenCVCamView);
+        }*/
+        if (isAlternativeCamera) {
+            cameraView = (CameraBridgeViewBase) findViewById(R.id.NativeOpenCVCamView);
+        } else {
+            cameraView = (CameraBridgeViewBase) findViewById(R.id.OpenCVCamView);
         }
         cameraView.setVisibility(SurfaceView.VISIBLE);
         cameraView.setCameraIndex(cameraIndex);

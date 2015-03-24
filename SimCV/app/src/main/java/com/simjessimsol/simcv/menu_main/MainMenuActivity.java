@@ -3,12 +3,19 @@ package com.simjessimsol.simcv.menu_main;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.simjessimsol.simcv.detection.CircleDetection;
@@ -16,8 +23,7 @@ import com.simjessimsol.simcv.colortracker.Drawtivity;
 import com.simjessimsol.simcv.detection.FaceDetection;
 import com.simjessimsol.simcv.R;
 import com.simjessimsol.simcv.detection.ForegroundDetection;
-
-import java.util.HashMap;
+import com.simjessimsol.simcv.nonopencv.noncvgl.ColorTrackerNonOpenCV;
 
 /**
  * Created by Simen Sollie on 25.02.2015.
@@ -26,15 +32,15 @@ import java.util.HashMap;
  * https://developer.android.com/training/material/lists-cards.html
  * http://www.survivingwithandroid.com/2014/11/a-guide-to-android-recyclerview-cardview.html
  */
-public class MainMenuActivity extends ActionBarActivity {
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private Toolbar mToolbar;
+public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private Toolbar toolbar;
+    private Switch switchAlternative;
+    private SeekBar seekbarValue;
 
-    private Boolean isNative = false;
     private String[] dataSet = {"Face Detection", "Circle Detection", "Foreground Detection", "Color Detection"};
-    private HashMap<String, Integer> dataMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,40 +50,60 @@ public class MainMenuActivity extends ActionBarActivity {
             //getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
         setContentView(R.layout.activity_menu_main);
-        mRecyclerView = (RecyclerView) findViewById(R.id.container);
+        recyclerView = (RecyclerView) findViewById(R.id.container);
 
         //improves performance if we know that changes in content doesn't change layout
-        mRecyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-
-        dataMap.put("Face Detection", R.drawable.round_button_blue);
-        dataMap.put("Circle Detection", R.drawable.round_button_red);
-        dataMap.put("Foreground Detection", R.drawable.round_button_green);
-        dataMap.put("Color Detection", R.drawable.ic_launcher_cv);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         //specify the adapter we want to use
-        mAdapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, isNative, new MainMenuAdapter.OnItemClickListener() {
+        adapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, new MainMenuAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
                 Intent intent = new Intent();
-                if (pos == 0) {
-                    intent = new Intent(MainMenuActivity.this, FaceDetection.class);
-                } else if (pos == 1) {
-                    intent = new Intent(MainMenuActivity.this, CircleDetection.class);
-                } else if (pos == 2) {
-                    intent = new Intent(MainMenuActivity.this, ForegroundDetection.class);
-                } else if (pos == 3) {
-                    intent = new Intent(MainMenuActivity.this, Drawtivity.class);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Invalid function", Toast.LENGTH_SHORT).show();
+                switch (pos) {
+                    case 0: // Face Detection
+                        intent = new Intent(MainMenuActivity.this, FaceDetection.class);
+                        intent.putExtra("isAlternativeCamera", isAlternative()); //switchAlternative.isChecked()
+                        intent.putExtra("setScale", getSeekBarValue());
+                        break;
+                    case 1: // Circle Detection
+                        intent = new Intent(MainMenuActivity.this, CircleDetection.class);
+                        intent.putExtra("setScale", getSeekBarValue());
+                        break;
+                    case 2: // Foreground Detection
+                        intent = new Intent(MainMenuActivity.this, ForegroundDetection.class);
+                        intent.putExtra("setScale", getSeekBarValue());
+                        break;
+                    case 3: // Color Detection
+                        if (isAlternative()) {
+                            intent = new Intent(MainMenuActivity.this, ColorTrackerNonOpenCV.class);
+                        } else {
+                            intent = new Intent(MainMenuActivity.this, Drawtivity.class);
+                            intent.putExtra("setScale", getSeekBarValue());
+                        }
+                        break;
+                    default:
+                        Toast.makeText(getApplicationContext(), "Invalid function", Toast.LENGTH_SHORT).show();
+                        break;
                 }
                 startActivity(intent);
             }
         });
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
+    public boolean isAlternative() {
+        switchAlternative = (Switch) findViewById(R.id.switchAlternative);
+        return switchAlternative.isChecked();
+    }
+
+    public int getSeekBarValue() {
+        seekbarValue = (SeekBar) findViewById(R.id.seekScale);
+        return seekbarValue.getProgress() + 1;
     }
 }
