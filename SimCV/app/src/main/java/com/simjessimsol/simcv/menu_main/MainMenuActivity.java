@@ -13,11 +13,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.simjessimsol.simcv.CircleDetection;
-import com.simjessimsol.simcv.Drawtivity;
-import com.simjessimsol.simcv.FaceDetection;
+import com.simjessimsol.simcv.detection.CircleDetection;
+import com.simjessimsol.simcv.colortracker.Drawtivity;
+import com.simjessimsol.simcv.detection.FaceDetection;
 import com.simjessimsol.simcv.R;
-import com.simjessimsol.simcv.foregroundDetection;
+import com.simjessimsol.simcv.detection.foregroundDetection;
 
 import java.util.HashMap;
 
@@ -60,17 +60,17 @@ public class MainMenuActivity extends ActionBarActivity {
         dataMap.put("Color Detection", R.drawable.ic_launcher_cv);
 
         //specify the adapter we want to use
-        mAdapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, isNative, new MainMenuAdapter.OnItemClickListener(){
+        mAdapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, isNative, new MainMenuAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
                 Intent intent = new Intent();
-                if (pos == 0){
+                if (pos == 0) {
                     intent = new Intent(MainMenuActivity.this, FaceDetection.class);
-                } else if (pos == 1){
+                } else if (pos == 1) {
                     intent = new Intent(MainMenuActivity.this, CircleDetection.class);
-                } else if (pos == 2){
+                } else if (pos == 2) {
                     intent = new Intent(MainMenuActivity.this, foregroundDetection.class);
-                } else if (pos == 3){
+                } else if (pos == 3) {
                     intent = new Intent(MainMenuActivity.this, Drawtivity.class);
                 } else {
                     Toast.makeText(getApplicationContext(), "Invalid function", Toast.LENGTH_SHORT).show();
