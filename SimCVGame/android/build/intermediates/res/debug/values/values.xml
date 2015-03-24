@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CameraBridgeViewBase"><attr format="boolean" name="show_fps"/><attr format="integer" name="camera_id"><enum name="any" value="-1"/><enum name="back" value="99"/><enum name="front" value="98"/></attr></declare-styleable>
+    <!-- From: file:/C:/Users/Simon/OpenCV-Bachelor/SimCVGame/android/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">SimCVGame</string>
+    <!-- From: file:/C:/Users/Simon/OpenCV-Bachelor/SimCVGame/android/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="GdxTheme" parent="android:Theme">
+		<item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+</resources>

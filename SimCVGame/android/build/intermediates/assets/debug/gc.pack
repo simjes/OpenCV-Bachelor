@@ -1,0 +1,52 @@
+
+gc.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+astronaut1
+  rotate: false
+  xy: 1, 1
+  size: 272, 553
+  orig: 272, 553
+  offset: 0, 0
+  index: -1
+astronaut2
+  rotate: false
+  xy: 275, 1
+  size: 272, 553
+  orig: 272, 553
+  offset: 0, 0
+  index: -1
+astronaut6
+  rotate: false
+  xy: 275, 1
+  size: 272, 553
+  orig: 272, 553
+  offset: 0, 0
+  index: -1
+astronaut3
+  rotate: false
+  xy: 549, 1
+  size: 272, 553
+  orig: 272, 553
+  offset: 0, 0
+  index: -1
+astronaut5
+  rotate: false
+  xy: 549, 1
+  size: 272, 553
+  orig: 272, 553
+  offset: 0, 0
+  index: -1
+
+gc2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+astronaut4
+  rotate: false
+  xy: 1, 1
+  size: 272, 553
+  orig: 272, 553
+  offset: 0, 0
+  index: -1
