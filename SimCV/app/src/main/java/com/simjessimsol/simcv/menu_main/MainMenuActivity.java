@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.SeekBar;
@@ -45,12 +47,13 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             //getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
-        setContentView(R.layout.menu_main);
+        setContentView(R.layout.view_container);
         recyclerView = (RecyclerView) findViewById(R.id.container);
 
         //improves performance if we know that changes in content doesn't change layout
         recyclerView.setHasFixedSize(true);
 
+        //toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -89,6 +92,29 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_help:
+                Toast.makeText(getApplicationContext(), "Help", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_about:
+                Toast.makeText(getApplicationContext(), "About", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public boolean isAlternative() {

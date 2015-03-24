@@ -24,5 +24,7 @@
     <string name="title_activity_open_gltracker">openGLTracker</string>
     <string name="title_activity_main_activity2">MainActivity2Activity</string>
     <string name="title_activity_tracker_open_gl">trackerOpenGL</string>
+    <string name="action_help">Help</string>
+    <string name="action_about">About</string>
 
 </resources>
