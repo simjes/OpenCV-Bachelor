@@ -32,7 +32,7 @@ import org.opencv.video.BackgroundSubtractorMOG;
 import java.io.File;
 
 
-public class foregroundDetection extends Activity implements CvCameraViewListener2 {
+public class ForegroundDetection extends Activity implements CvCameraViewListener2 {
 
     private final static String TAG = "detection";
     private final static String STATE_CAMERA_INDEX = "cameraIndex";

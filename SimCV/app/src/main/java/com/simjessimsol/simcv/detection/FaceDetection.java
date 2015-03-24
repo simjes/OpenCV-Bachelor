@@ -84,6 +84,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
 
                         detector = new CascadeClassifier(cascadeFile.getAbsolutePath());
                         NativeDetection.sendCascadeFile(cascadeFile.getAbsolutePath());
+                        NativeDetection.sendScale(scale);
 
                         cascadeDir.delete();
                     } catch (IOException e) {

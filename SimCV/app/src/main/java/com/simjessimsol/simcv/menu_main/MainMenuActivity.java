@@ -1,6 +1,5 @@
 package com.simjessimsol.simcv.menu_main;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,14 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.simjessimsol.simcv.detection.CircleDetection;
 import com.simjessimsol.simcv.colortracker.Drawtivity;
 import com.simjessimsol.simcv.detection.FaceDetection;
 import com.simjessimsol.simcv.R;
-import com.simjessimsol.simcv.detection.foregroundDetection;
+import com.simjessimsol.simcv.detection.ForegroundDetection;
 
 import java.util.HashMap;
 
@@ -69,7 +67,7 @@ public class MainMenuActivity extends ActionBarActivity {
                 } else if (pos == 1) {
                     intent = new Intent(MainMenuActivity.this, CircleDetection.class);
                 } else if (pos == 2) {
-                    intent = new Intent(MainMenuActivity.this, foregroundDetection.class);
+                    intent = new Intent(MainMenuActivity.this, ForegroundDetection.class);
                 } else if (pos == 3) {
                     intent = new Intent(MainMenuActivity.this, Drawtivity.class);
                 } else {

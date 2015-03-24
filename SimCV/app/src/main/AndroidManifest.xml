@@ -55,7 +55,7 @@
 
         </activity>
         <activity
-            android:name=".detection.foregroundDetection"
+            android:name=".detection.ForegroundDetection"
             android:label="foreground detection"
             android:screenOrientation="landscape">
 

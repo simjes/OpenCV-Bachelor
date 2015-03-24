@@ -10,7 +10,7 @@ using namespace cv;
 using namespace std;
 
 CascadeClassifier cascadeFile;
-int SCALE = 2;
+int scale = 2;
 Mat grayFrame;
 Size sizeOfMat;
 
@@ -28,6 +28,12 @@ JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_sen
     }
 }
 
+JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_sendScale
+  (JNIEnv *jenv, jclass jnativeDetection, jint jscale)
+{
+    scale = jscale;
+}
+
 JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_nativeDetectFace
   (JNIEnv *jenv, jclass jnativeDetection, jlong jframeAddress)
 {
@@ -38,14 +44,14 @@ JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_nat
     equalizeHist(grayFrame, grayFrame);
 
     sizeOfMat = grayFrame.size();
-    resize(grayFrame, grayFrame, Size(sizeOfMat.width / SCALE, sizeOfMat.height / SCALE));
+    resize(grayFrame, grayFrame, Size(sizeOfMat.width / scale, sizeOfMat.height / scale));
 
     cascadeFile.detectMultiScale(grayFrame, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50));
 
     for (size_t i = 0; i < faces.size(); i++)
     {
-        Point center(faces[i].x * SCALE, faces[i].y * SCALE);
-        Point stuff((faces[i].x + faces[i].width) * SCALE, (faces[i].y + faces[i].height) * SCALE);
+        Point center(faces[i].x * scale, faces[i].y * scale);
+        Point stuff((faces[i].x + faces[i].width) * scale, (faces[i].y + faces[i].height) * scale);
         rectangle(colorFrame, center, stuff, Scalar(0, 0, 255), 3);
     }
 }

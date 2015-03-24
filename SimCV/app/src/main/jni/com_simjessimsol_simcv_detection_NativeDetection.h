@@ -17,6 +17,14 @@ JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_sen
 
 /*
  * Class:     com_simjessimsol_simcv_detection_NativeDetection
+ * Method:    sendScale
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_sendScale
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_simjessimsol_simcv_detection_NativeDetection
  * Method:    nativeDetectFace
  * Signature: (J)V
  */
