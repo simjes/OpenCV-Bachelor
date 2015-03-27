@@ -70,31 +70,31 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         // Thumbnail and title
         switch (position) {
             case 0: // Face Detection
-                Picasso.with(context).load(R.drawable.ic_launcher)
+                Picasso.with(context).load(R.drawable.thumb_facedetect)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setText("Native Camera");
                 break;
             case 1: // Circle Detection
-                Picasso.with(context).load(R.drawable.ic_launcher)
+                Picasso.with(context).load(R.drawable.thumb_circledetect)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
             case 2: // Foreground Detection
-                Picasso.with(context).load(R.drawable.ic_launcher)
+                Picasso.with(context).load(R.drawable.thumb_foregrounddetect)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
             case 3: // Color Tracker
-                Picasso.with(context).load(R.drawable.ic_launcher)
+                Picasso.with(context).load(R.drawable.thumb_colortrack)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
             case 4: // Color Tracker with OpenGL
-                Picasso.with(context).load(R.drawable.ic_launcher)
+                Picasso.with(context).load(R.drawable.thumb_colortrack)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
