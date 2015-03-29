@@ -47,7 +47,7 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             //getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
-        setContentView(R.layout.view_container);
+        setContentView(R.layout.layout_container);
         recyclerView = (RecyclerView) findViewById(R.id.container);
 
         //improves performance if we know that changes in content doesn't change layout
@@ -60,27 +60,27 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
         //specify the adapter we want to use
         adapter = new MainMenuAdapter(MainMenuActivity.this, dataSet, new MainMenuAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View v, int pos) {
+            public void onItemClick(View v, int pos, int scale) {
                 Intent intent = new Intent();
                 switch (pos) {
                     case 0: // Face Detection
                         intent = new Intent(MainMenuActivity.this, FaceDetection.class);
                         intent.putExtra("isAlternativeCamera", isAlternative()); //switchAlternative.isChecked()
-                        intent.putExtra("setScale", getSeekBarValue());
+                        intent.putExtra("setScale", scale);
                         break;
                     case 1: // Circle Detection
                         intent = new Intent(MainMenuActivity.this, CircleDetection.class);
-                        intent.putExtra("setScale", getSeekBarValue());
+                        intent.putExtra("setScale", scale);
                         break;
                     case 2: // Foreground Detection
                         intent = new Intent(MainMenuActivity.this, ForegroundDetection.class);
-                        intent.putExtra("setScale", getSeekBarValue());
+                        intent.putExtra("setScale", scale);
                         break;
-                    case 3: // Color Detection
+                    case 3: // Color Tracker
                         intent = new Intent(MainMenuActivity.this, Drawtivity.class);
-                        intent.putExtra("setScale", getSeekBarValue());
+                        intent.putExtra("setScale", scale);
                         break;
-                    case 4:
+                    case 4: // OpenGL Color Tracker
                         intent = new Intent(MainMenuActivity.this, TrackerOpenGL.class);
                     default:
                         Toast.makeText(getApplicationContext(), "Invalid function", Toast.LENGTH_SHORT).show();

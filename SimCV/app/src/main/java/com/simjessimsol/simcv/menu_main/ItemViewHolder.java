@@ -1,5 +1,6 @@
 package com.simjessimsol.simcv.menu_main;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -9,8 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.simjessimsol.simcv.R;
+import com.simjessimsol.simcv.colortracker.Drawtivity;
+import com.simjessimsol.simcv.detection.CircleDetection;
+import com.simjessimsol.simcv.detection.FaceDetection;
+import com.simjessimsol.simcv.detection.ForegroundDetection;
+import com.simjessimsol.simcv.nonopencv.noncvdrawwithgl.TrackerOpenGL;
 
 /**
  * Created by Simen on 25.02.2015.
@@ -43,5 +50,18 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         this.seekScale = (SeekBar) v.findViewById(R.id.seekScale);
         this.textScaleValue = (TextView) v.findViewById(R.id.textScaleValue);
         this.collapse_expand = (FrameLayout) v.findViewById(R.id.collapse_expand);
+
+        this.seekScale.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textScaleValue.setText("1/" + String.valueOf(progress + 1));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
     }
 }

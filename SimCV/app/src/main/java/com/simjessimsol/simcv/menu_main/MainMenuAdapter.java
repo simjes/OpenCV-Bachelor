@@ -33,20 +33,21 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     private String[] dataSet;
     private Context context;
-    private OnItemClickListener mOnItemClickListener;
+    private OnItemClickListener itemClickListener;
+    private int scale;
 
     private ItemViewHolder expandedView;
     private final int collapseExpandHeight;
     private int expandedPos;
 
     public interface OnItemClickListener {
-        public void onItemClick(View v, int pos);
+        public void onItemClick(View v, int pos, int scale);
     }
 
-    public MainMenuAdapter(Context context, String[] dataSet, OnItemClickListener mOnItemClickListener) {
+    public MainMenuAdapter(Context context, String[] dataSet, OnItemClickListener itemClickListener) {
         this.context = context;
         this.dataSet = dataSet;
-        this.mOnItemClickListener = mOnItemClickListener;
+        this.itemClickListener = itemClickListener;
 
         Resources res = this.context.getResources();
         collapseExpandHeight = (int) res.getDimension(R.dimen.collapse_expand_height);
@@ -55,7 +56,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.view_menu, null);
+                .inflate(R.layout.layout_menu, null);
         ItemViewHolder vh = new ItemViewHolder(v);
 
         return vh;
@@ -104,9 +105,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 break;
         }
 
-        // ChangeListener for scale value
-        setTextScaleValue(itemViewHolder.seekScale, itemViewHolder.textScaleValue);
-
         // ClickListener for expanded view
         itemViewHolder.collapse_expand.setClickable(true);
         itemViewHolder.collapse_expand.setOnClickListener(new View.OnClickListener() {
@@ -120,32 +118,15 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             }
         });
 
+        //scale = itemViewHolder.seekScale.getProgress() + 1;
+
         // Button
         Picasso.with(context).load(R.drawable.ic_fab_play)
                 .into(itemViewHolder.btnStart);
         itemViewHolder.btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClick(v, position);
-            }
-        });
-    }
-
-    public void setTextScaleValue(SeekBar seekBar, final TextView textScaleValue) {
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                textScaleValue.setText("1/" + String.valueOf(progress + 1));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
+                itemClickListener.onItemClick(v, position, itemViewHolder.seekScale.getProgress() + 1);
             }
         });
     }
