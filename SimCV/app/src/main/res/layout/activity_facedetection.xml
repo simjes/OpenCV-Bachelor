@@ -17,7 +17,7 @@
         android:layout_height="fill_parent"
         android:visibility="gone"
         android:id="@+id/NativeOpenCVCamView"
-        opencv:show_fps="true"
+        opencv:show_fps="false"
         opencv:camera_id="any" />
 
     <ImageButton
@@ -29,17 +29,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:onClick="changeCameraClick"
-        style="?android:attr/borderlessButtonStyle" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/nativeJavaSwitch"
-        android:src="@drawable/ic_launcher"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:onClick="nativeJavaSwitchClick"
         style="?android:attr/borderlessButtonStyle" />
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.simjessimsol.simcv.nonopencv.noncvdrawwithgl;
+package com.simjessimsol.simcv.nonopencv.drawwithgl;
 
 import android.opengl.GLES20;
 

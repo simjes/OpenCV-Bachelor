@@ -9,18 +9,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.simjessimsol.simcv.Performance;
 import com.simjessimsol.simcv.R;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
@@ -36,14 +36,11 @@ import org.opencv.imgproc.Moments;
 import java.io.File;
 
 
-public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class Drawtivity extends Activity implements CvCameraViewListener2 {
 
-    private static final String TAG = "colortracker";
     private static final String PHOTO_MIME_TYPE = "image/png";
     private static final String STATE_CAMERA_INDEX = "cameraIndex";
     private static final String STATE_BYTE_MAT = "matAsByte";
-
-    private Performance performanceCounter;
 
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
@@ -132,7 +129,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         cameraView.setCameraIndex(cameraIndex);
         cameraView.setCvCameraViewListener(this);
 
-        performanceCounter = new Performance();
     }
 
     @Override
@@ -159,10 +155,8 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     protected void onResume() {
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "OpenCV Manager used");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, loaderCallback);
         } else {
-            Log.d(TAG, "Found OpenCV lib in the package");
             loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
@@ -186,7 +180,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
         if (byteMat != null) {
             drawingMat.put(0, 0, byteMat);
         }
-        performanceCounter.startFPSCounter();
     }
 
     @Override
@@ -204,9 +197,7 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
     }
 
     @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        performanceCounter.start();
-        performanceCounter.addFrame();
+    public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         inOutFrame = inputFrame.rgba();
         if (isCameraFrontFacing) {
             Core.flip(inOutFrame, inOutFrame, 1);
@@ -218,12 +209,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             Core.inRange(hsvFrame, lowRed, highRed, storeRedPoints);
             Core.inRange(hsvFrame, lowBlue, highBlue, storeBluePoints);
             Core.inRange(hsvFrame, lowGreen, highGreen, storeGreenPoints);
-            //Imgproc.erode(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
-            //Imgproc.erode(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
-            //Imgproc.dilate(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8)));
-            //Imgproc.dilate(storeRedPoints, storeRedPoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8)));
-            //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
-            //Imgproc.erode(storeBluePoints, storeBluePoints, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)));
             findPositionAndDraw(storeRedPoints);
             findPositionAndDraw(storeGreenPoints);
             findPositionAndDraw(storeBluePoints);
@@ -247,7 +232,6 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
             takePhoto(inOutFrame);
             takePhotoClicked = false;
         }
-        performanceCounter.stop();
         return inOutFrame;
     }
 
@@ -307,29 +291,20 @@ public class Drawtivity extends Activity implements CameraBridgeViewBase.CvCamer
 
         File album = new File(albumPath);
         if (!album.isDirectory() && !album.mkdirs()) {
-            Log.e(TAG, "Failed to create album directory at " +
-                    albumPath);
             return;
         }
 
         Imgproc.cvtColor(mat, pictureToSave, Imgproc.COLOR_RGBA2BGR, 3);
-        if (!Highgui.imwrite(photoPath, pictureToSave)) {
-            Log.e(TAG, "Failed to save photo to " + photoPath);
-        }
-        Log.d(TAG, "Photo saved successfully to " + photoPath);
+        Highgui.imwrite(photoPath, pictureToSave);
 
         Uri uri;
 
         try {
             uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         } catch (final Exception e) {
-            Log.e(TAG, "Failed to insert photo into MediaStore");
             e.printStackTrace();
-            // Since the insertion failed, delete the photo.
             File photo = new File(photoPath);
-            if (!photo.delete()) {
-                Log.e(TAG, "Failed to delete non-inserted photo");
-            }
+            photo.delete();
         }
     }
 

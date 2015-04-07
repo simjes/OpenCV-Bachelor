@@ -1,4 +1,4 @@
-package com.simjessimsol.simcv.nonopencv.noncvdrawwithgl;
+package com.simjessimsol.simcv.nonopencv.drawwithgl;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,17 +7,14 @@ import android.hardware.Camera;
 import android.hardware.Camera.Size;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Parameters;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 public class CameraView extends SurfaceView implements Callback, PreviewCallback {
-    private final static String TAG = "noncvdrawwithgl";
 
     private Camera camera;
     private Parameters cameraParameters;
@@ -75,9 +72,7 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
         if (redCenterOfMass.x > 0 && redCenterOfMass.y > 0) {
             VertexPoint vertexPoint = pointToVertexPoint(redCenterOfMass);
             openGLSurfaceView.addPointsToDraw(vertexPoint);
-            //openGLSurfaceView.requestRender();
         }
-        Log.d(TAG, "camview hw acc: " + isHardwareAccelerated());
     }
 
     private VertexPoint pointToVertexPoint(Point point) {
@@ -93,12 +88,10 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
         } else {
             y = -((y * 2) - 1f);
         }
-        Log.i(TAG, "vertex point, x: " + x + ", y: " + y);
         return new VertexPoint(x, y);
     }
 
     private Point findRedCenterOfMass() {
-        Date first = new Date();
         Point average = new Point(0, 0);
         int nrOfPoints = 0;
         for (int i = 0; i < rgbFrame.length; i++) {
@@ -123,18 +116,15 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
             average.x /= nrOfPoints;
             average.y /= nrOfPoints;
         }
-        Log.d(TAG, "slutt: " + (new Date().getTime() - first.getTime()));
         return average;
     }
 
-    //TODO: flytt til annen klasse? statisk?
     private int[] findOptimalResolution() {
         List<Size> supportedCameraSizes = cameraParameters.getSupportedPreviewSizes();
         int optimalWidth = 0;
         int optimalHeight = 0;
 
         for (Size s : supportedCameraSizes) {
-            Log.d(TAG, "optimal, size width: " + s.width + ", size height: " + s.height);
 
             if (s.width <= getWidth() && s.height <= getHeight()) {
                 if (s.width >= optimalWidth && s.height >= optimalHeight) {
@@ -144,15 +134,12 @@ public class CameraView extends SurfaceView implements Callback, PreviewCallback
             }
         }
 
-        Log.d(TAG, "optimal width: " + optimalWidth + ", optimal height: " + optimalHeight);
         int[] optimalSize = new int[2];
         optimalSize[0] = optimalWidth;
         optimalSize[1] = optimalHeight;
         return optimalSize;
     }
 
-    //TODO: flytt til annen klasse? statisk?
-    //TODO: copied from http://stackoverflow.com/questions/12469730/confusion-on-yuv-nv21-conversion-to-rgb
     public static void YUV_NV21_TO_RGB(int[] argb, byte[] yuv, int width, int height) {
         final int frameSize = width * height;
 

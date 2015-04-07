@@ -67,7 +67,7 @@
 
         </activity>
         <activity
-            android:name=".nonopencv.noncvdrawwithgl.TrackerOpenGL"
+            android:name=".nonopencv.drawwithgl.TrackerOpenGL"
             android:label="@string/title_activity_tracker_open_gl"
             android:screenOrientation="landscape">
 

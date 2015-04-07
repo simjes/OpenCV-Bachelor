@@ -1,4 +1,4 @@
-package com.simjessimsol.simcv.nonopencv.noncvdrawwithgl;
+package com.simjessimsol.simcv.nonopencv.drawwithgl;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -25,7 +25,6 @@ public class TrackerOpenGL extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        //TODO: temp solution
         System.exit(0);
     }
 }

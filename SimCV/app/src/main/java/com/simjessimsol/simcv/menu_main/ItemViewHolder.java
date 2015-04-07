@@ -10,18 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.simjessimsol.simcv.R;
-import com.simjessimsol.simcv.colortracker.Drawtivity;
-import com.simjessimsol.simcv.detection.CircleDetection;
-import com.simjessimsol.simcv.detection.FaceDetection;
-import com.simjessimsol.simcv.detection.ForegroundDetection;
-import com.simjessimsol.simcv.nonopencv.noncvdrawwithgl.TrackerOpenGL;
-
-/**
- * Created by Simen on 25.02.2015.
- */
 public class ItemViewHolder extends RecyclerView.ViewHolder {
     protected ImageView thumbnail;
     protected TextView title;
