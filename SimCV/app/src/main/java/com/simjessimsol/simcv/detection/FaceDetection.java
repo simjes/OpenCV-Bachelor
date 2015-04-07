@@ -187,6 +187,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         if (nativeOrJava.equals("java")) {
             findFaces();
             return inputFrame;
+
         } else {
             NativeDetection.nativeDetectFace(inputFrame.getNativeObjAddr());
             return inputFrame;
