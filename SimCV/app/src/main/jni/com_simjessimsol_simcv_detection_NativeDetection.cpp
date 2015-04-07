@@ -41,10 +41,9 @@ JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_nat
     Mat &colorFrame = *(Mat*) jframeAddress;
 
     cvtColor(colorFrame, grayFrame, CV_RGBA2GRAY);
-    equalizeHist(grayFrame, grayFrame);
-
     sizeOfMat = grayFrame.size();
     resize(grayFrame, grayFrame, Size(sizeOfMat.width / scale, sizeOfMat.height / scale));
+    equalizeHist(grayFrame, grayFrame);
 
     cascadeFile.detectMultiScale(grayFrame, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50));
 

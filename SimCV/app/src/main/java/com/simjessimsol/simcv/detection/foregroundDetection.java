@@ -1,18 +1,13 @@
 package com.simjessimsol.simcv.detection;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.simjessimsol.simcv.R;
 
@@ -24,12 +19,7 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
-import org.opencv.imgproc.Imgproc;
 import org.opencv.video.BackgroundSubtractorMOG;
-
-import java.io.File;
-
 
 public class ForegroundDetection extends Activity implements CvCameraViewListener2 {
 
