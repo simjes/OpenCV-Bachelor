@@ -29,7 +29,6 @@ public class ForegroundDetection extends Activity implements CvCameraViewListene
     private int cameraIndex;
     private boolean isCameraFrontFacing;
 
-
     private Mat inOutFrame;
     private Mat foregroundImage;
 

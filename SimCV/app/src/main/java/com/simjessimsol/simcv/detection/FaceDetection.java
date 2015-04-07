@@ -46,12 +46,10 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
     private String nativeOrJava;
 
     private Mat inputFrame;
-    private Mat detectedImage;
     private Mat grayscaleImage;
     private CascadeClassifier detector;
     private int scale;
 
-    private boolean drop = false;
     private Rect[] lastRect;
 
     private boolean isAlternativeCamera;
@@ -171,14 +169,12 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
     @Override
     public void onCameraViewStarted(int width, int height) {
         inputFrame = new Mat();
-        detectedImage = new Mat();
         grayscaleImage = new Mat();
     }
 
     @Override
     public void onCameraViewStopped() {
         inputFrame.release();
-        detectedImage.release();
         grayscaleImage.release();
     }
 
@@ -189,17 +185,8 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
             Core.flip(inputFrame, inputFrame, 1);
         }
         if (nativeOrJava.equals("java")) {
-            if (!drop) {
-                drop = true;
-                detectedImage = findFaces();
-                return detectedImage;
-            } else {
-                for (Rect r : lastRect) {
-                    Core.rectangle(inputFrame, new Point(r.x * scale, r.y * scale), new Point((r.x + r.width) * scale, (r.y + r.height) * scale), new Scalar(0, 0, 255), 3);
-                }
-                drop = false;
-                return inputFrame;
-            }
+            findFaces();
+            return inputFrame;
         } else {
             NativeDetection.nativeDetectFace(inputFrame.getNativeObjAddr());
             return inputFrame;
@@ -214,7 +201,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         cameraView.enableView();
     }
 
-    private Mat findFaces() {
+    private void findFaces() {
         Imgproc.cvtColor(inputFrame, grayscaleImage, Imgproc.COLOR_RGBA2GRAY);
         Imgproc.resize(grayscaleImage, grayscaleImage, new Size(inputFrame.size().width / scale, inputFrame.size().height / scale));
         Imgproc.equalizeHist(grayscaleImage, grayscaleImage);
@@ -226,6 +213,5 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         for (Rect r : detectedFaces.toArray()) {
             Core.rectangle(inputFrame, new Point(r.x * scale, r.y * scale), new Point((r.x + r.width) * scale, (r.y + r.height) * scale), new Scalar(0, 0, 255), 3);
         }
-        return inputFrame;
     }
 }
