@@ -14,8 +14,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.simjessimsol.simcv.R;
 import com.squareup.picasso.Picasso;
@@ -95,8 +93,9 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
             case 4: // Color Tracker with OpenGL
-                Picasso.with(context).load(R.drawable.thumb_colortrack)
-                        .into(itemViewHolder.thumbnail);
+                //Picasso.with(context).load(R.drawable.thumb_colortrackopengl)
+                //        .into(itemViewHolder.thumbnail);
+                //itemViewHolder.thumbnail.setImageURI(R.drawable.thumb_colortrackopengl);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
             default:
