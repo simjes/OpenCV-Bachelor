@@ -275,7 +275,6 @@ public class Drawtivity extends Activity implements CvCameraViewListener2 {
         }
     }
 
-    //TODO: Copied from Android Application Programming with OpenCV.pdf
     private void takePhoto(Mat mat) {
         long currentTimeInMilliSec = System.currentTimeMillis();
         String appName = getString(R.string.app_name);
