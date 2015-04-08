@@ -128,11 +128,11 @@ public class ForegroundDetection extends Activity implements CvCameraViewListene
 
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        inOutFrame = inputFrame.rgba();
+        inOutFrame = inputFrame.gray();
         if (isCameraFrontFacing) {
             Core.flip(inOutFrame, inOutFrame, 1);
         }
-        backgroundSubtractorMog.apply(inputFrame.gray(), foregroundImage);
+        backgroundSubtractorMog.apply(inOutFrame, foregroundImage);
         return foregroundImage;
     }
 
