@@ -99,7 +99,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
             default:
-                Picasso.with(context).load(R.drawable.ic_launcher)
+                Picasso.with(context).load(R.drawable.thumb_colortrack)
                         .into(itemViewHolder.thumbnail);
                 break;
         }
