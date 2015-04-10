@@ -18,7 +18,7 @@ public class AboutDialogFragment extends DialogFragment {
 
         builder.setTitle(R.string.dialog_title_about)
                 .setMessage(R.string.dialog_msg_about)
-                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dismiss();

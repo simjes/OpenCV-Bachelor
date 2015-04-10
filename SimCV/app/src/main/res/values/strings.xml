@@ -26,10 +26,22 @@
     <string name="title_activity_tracker_open_gl">trackerOpenGL</string>
     <string name="action_help">Help</string>
     <string name="action_about">About</string>
-    <string name="dialog_title_help">Help</string>
-    <string name="dialog_msg_help">FAQ coming soon</string>
-    <string name="dialog_ok">OK</string>
+    <string name="ok">OK</string>
+    <string name="dialog_title_help">FAQ</string>
+    <string name="dialog_msg_help">
+        <b><u>Q1:</u> How do I start one of the functions?</b> \n <i><u>A1:</u> Press the white \"Play\"-button on the right side of the screen.</i> \n \n
+        <b><u>Q2:</u> What does the native camera do?</b> \n <i><u>A2:</u> It starts the camera without using Java wrappers.</i> \n \n
+        <b><u>Q3:</u> I can\'t enable native camera. Why is that?</b> \n <i><u>A3:</u> Native camera doesn\'t work with API21 and newer and is therefore disabled for those versions.</i> \n \n
+        <b><u>Q4:</u> I struggle with low FPS. Is there a way to fix that?</b> \n <i><u>A4:</u> In the expanded settings view you can use the seek bar to downscale the image and increase the FPS.</i> \n \n
+        <b><u>Q5:</u> Why doesn\'t Face Detection work properly?</b> \n <i><u>A5:</u> Make sure you hold your device in left side landscape mode. Portrait mode is not implemented.</i> \n \n
+        <b><u>Q6:</u> How do I use Color Tracking?</b> \n <i><u>A6:</u> After you have started the Color Tracking-camera you need to press the \"Play\"-button down in your left side corner.</i> \n \n
+    </string>
     <string name="dialog_title_about">About</string>
-    <string name="dialog_msg_about">About this app, coming soon</string>
+    <string name="dialog_msg_about">
+        SimCV is an application using the open source library OpenCV where CV is short for Computer Vision.
+        SimCV showcases the different possibilities you have with this library.
+        It uses the camera on your device to detect faces, circles, foreground and track colors. \n \n
+        SimCV is a product of a Bachelor Thesis from University of Stavanger written by Simon Jespersen and Simen Sollie.
+    </string>
 
 </resources>

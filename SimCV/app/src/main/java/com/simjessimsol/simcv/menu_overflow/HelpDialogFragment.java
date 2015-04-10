@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 
 import com.simjessimsol.simcv.R;
 
@@ -22,7 +21,7 @@ public class HelpDialogFragment extends DialogFragment {
 
         builder.setTitle(R.string.dialog_title_help)
                 .setMessage(R.string.dialog_msg_help)
-                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dismiss();
