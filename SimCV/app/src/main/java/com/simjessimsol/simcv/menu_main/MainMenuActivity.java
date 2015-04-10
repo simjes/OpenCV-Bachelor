@@ -1,5 +1,8 @@
 package com.simjessimsol.simcv.menu_main;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +23,8 @@ import com.simjessimsol.simcv.colortracker.Drawtivity;
 import com.simjessimsol.simcv.detection.FaceDetection;
 import com.simjessimsol.simcv.R;
 import com.simjessimsol.simcv.detection.ForegroundDetection;
+import com.simjessimsol.simcv.menu_overflow.AboutDialogFragment;
+import com.simjessimsol.simcv.menu_overflow.HelpDialogFragment;
 import com.simjessimsol.simcv.nonopencv.noncvdrawwithgl.TrackerOpenGL;
 
 /**
@@ -102,15 +107,15 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        FragmentManager fragmentManager = getFragmentManager();
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_SHORT).show();
-                return true;
             case R.id.action_help:
-                Toast.makeText(getApplicationContext(), "Help", Toast.LENGTH_SHORT).show();
+                HelpDialogFragment helpFragment = new HelpDialogFragment();
+                helpFragment.show(fragmentManager, String.valueOf(R.string.dialog_title_help));
                 return true;
             case R.id.action_about:
-                Toast.makeText(getApplicationContext(), "About", Toast.LENGTH_SHORT).show();
+                AboutDialogFragment aboutFragment = new AboutDialogFragment();
+                aboutFragment.show(fragmentManager, String.valueOf(R.string.dialog_title_about));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -120,10 +125,5 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
     public boolean isAlternative() {
         switchAlternative = (Switch) findViewById(R.id.switchAlternative);
         return switchAlternative.isChecked();
-    }
-
-    public int getSeekBarValue() {
-        seekbarValue = (SeekBar) findViewById(R.id.seekScale);
-        return seekbarValue.getProgress() + 1;
     }
 }
