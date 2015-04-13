@@ -1,8 +1,6 @@
 package com.simjessimsol.simcv.menu_main;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,7 +38,6 @@ public class MainMenuActivity extends ActionBarActivity { //ActionBarActivity
     private RecyclerView.LayoutManager layoutManager;
     private Toolbar toolbar;
     private Switch switchAlternative;
-    private SeekBar seekbarValue;
 
     private String[] dataSet = {"Face\nDetection", "Circle\nDetection", "Foreground\nDetection",
             "Color\nTracker", "OpenGL\nTracker"};
