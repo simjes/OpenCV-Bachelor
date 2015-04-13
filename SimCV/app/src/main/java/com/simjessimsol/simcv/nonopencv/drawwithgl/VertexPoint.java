@@ -1,4 +1,4 @@
-package com.simjessimsol.simcv.nonopencv.noncvdrawwithgl;
+package com.simjessimsol.simcv.nonopencv.drawwithgl;
 
 public class VertexPoint {
 

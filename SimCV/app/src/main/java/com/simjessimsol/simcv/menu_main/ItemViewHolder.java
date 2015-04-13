@@ -12,9 +12,6 @@ import android.widget.TextView;
 
 import com.simjessimsol.simcv.R;
 
-/**
- * Created by Simen on 25.02.2015.
- */
 public class ItemViewHolder extends RecyclerView.ViewHolder {
     protected ImageView thumbnail;
     protected TextView title;
