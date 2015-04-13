@@ -72,6 +72,7 @@ public class MainMenuActivity extends ActionBarActivity {
                         break;
                     case 4:
                         intent = new Intent(MainMenuActivity.this, TrackerOpenGL.class);
+                        break;
                     default:
                         Toast.makeText(getApplicationContext(), "Invalid function", Toast.LENGTH_SHORT).show();
                         break;
