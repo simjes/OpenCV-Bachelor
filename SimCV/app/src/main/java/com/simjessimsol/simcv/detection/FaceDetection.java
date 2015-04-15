@@ -216,7 +216,7 @@ public class FaceDetection extends Activity implements CvCameraViewListener2 {
         //TODO: skip detect on frames for better fps?
         if (nativeOrJava.equals("java")) {
             if (!drop) {
-                drop = true;
+                //drop = true;
                 findFaces();
                 performanceCounter.stop();
                 return inputFrame;
