@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.simjessimsol.scoreobjects.Bomb;
 import com.simjessimsol.scoreobjects.ScoreIncreaser;
 
@@ -40,9 +38,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         STOPPED
     }
 
-    //debug
-    //private ShapeRenderer shapeRenderer;
-
     @Override
     public void create() {
         currentState = GameState.RUN;
@@ -65,9 +60,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         spawner = new Spawner(scoreIncreasers);
 
         Gdx.input.setInputProcessor(this);
-
-        //debug
-        //shapeRenderer = new ShapeRenderer();
 
     }
 
@@ -104,7 +96,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                                 player.addToScore(s.getScoreModifier());
                             }
                             increasersToDelete.add(scoreIncreasers.indexOf(s));
-                        } else if (s.getY() < -20) { //TODO: endre?
+                        } else if (s.getY() < -20) {
                             increasersToDelete.add(scoreIncreasers.indexOf(s));
                         }
                     }
@@ -129,14 +121,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                 break;
         }
         batch.end();
-
-        //player hotbox debug
-        /*shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        Rectangle hitbox = player.getHitbox();
-        shapeRenderer.rect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
-        //shapeRenderer.rect(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-        shapeRenderer.end();*/
     }
 
     private void spawnPointIncreasers() {

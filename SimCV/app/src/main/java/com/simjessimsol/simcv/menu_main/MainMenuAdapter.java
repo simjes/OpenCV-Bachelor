@@ -18,9 +18,6 @@ import android.widget.LinearLayout;
 import com.simjessimsol.simcv.R;
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by Simen Sollie on 25.02.2015.
- */
 public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private static final float EXPAND_DECELERATION = 1f;
     private static final float COLLAPSE_DECELERATION = 0.7f;
@@ -32,7 +29,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private String[] dataSet;
     private Context context;
     private OnItemClickListener itemClickListener;
-    private int scale;
 
     private ItemViewHolder expandedView;
     private final int collapseExpandHeight;
@@ -66,45 +62,44 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             itemViewHolder.switchAlternative.setClickable(false);
         }
 
-        // Thumbnail and title
         switch (position) {
-            case 0: // Face Detection
+            case 0:
                 Picasso.with(context).load(R.drawable.thumb_facedetect)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setText("Native Camera");
                 break;
-            case 1: // Circle Detection
+            case 1:
                 Picasso.with(context).load(R.drawable.thumb_circledetect)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
-            case 2: // Foreground Detection
+            case 2:
                 Picasso.with(context).load(R.drawable.thumb_foregrounddetect)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
-            case 3: // Color Tracker
+            case 3:
                 Picasso.with(context).load(R.drawable.thumb_colortrack)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
                 break;
-            case 4: // Color Tracker with OpenGL
-                //Picasso.with(context).load(R.drawable.thumb_colortrackopengl)
-                //        .into(itemViewHolder.thumbnail);
-                //itemViewHolder.thumbnail.setImageURI(R.drawable.thumb_colortrackopengl);
+            case 4:
+                Picasso.with(context).load(R.drawable.thumb_colortrack)
+                        .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
                 itemViewHolder.switchAlternative.setVisibility(View.GONE);
+                itemViewHolder.seekScale.setVisibility(View.GONE);
+                break;
             default:
-                Picasso.with(context).load(R.drawable.thumb_colortrack)
+                Picasso.with(context).load(R.drawable.ic_launcher)
                         .into(itemViewHolder.thumbnail);
                 break;
         }
 
-        // ClickListener for expanded view
         itemViewHolder.collapse_expand.setClickable(true);
         itemViewHolder.collapse_expand.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,9 +112,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             }
         });
 
-        //scale = itemViewHolder.seekScale.getProgress() + 1;
-
-        // Button
         Picasso.with(context).load(R.drawable.ic_fab_play)
                 .into(itemViewHolder.btnStart);
         itemViewHolder.btnStart.setOnClickListener(new View.OnClickListener() {
@@ -135,9 +127,9 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         return dataSet.length;
     }
 
-    private void expandItem(final ItemViewHolder itemViewHolder, int pos){
+    private void expandItem(final ItemViewHolder itemViewHolder, int pos) {
 
-        if (expandedView != null && expandedView != itemViewHolder){
+        if (expandedView != null && expandedView != itemViewHolder) {
             collapseItem(expandedView);
         }
 
@@ -190,7 +182,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 });
                 animator.addListener(new Animator.AnimatorListener() {
                     @Override
-                    public void onAnimationStart(Animator animation) { }
+                    public void onAnimationStart(Animator animation) {
+                    }
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
@@ -203,10 +196,12 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                     }
 
                     @Override
-                    public void onAnimationCancel(Animator animation) { }
+                    public void onAnimationCancel(Animator animation) {
+                    }
 
                     @Override
-                    public void onAnimationRepeat(Animator animation) { }
+                    public void onAnimationRepeat(Animator animation) {
+                    }
                 });
                 animator.start();
 
@@ -260,7 +255,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 animator.setInterpolator(new DecelerateInterpolator(COLLAPSE_DECELERATION));
                 animator.addListener(new Animator.AnimatorListener() {
                     @Override
-                    public void onAnimationStart(Animator animation) { }
+                    public void onAnimationStart(Animator animation) {
+                    }
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
@@ -274,10 +270,12 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                     }
 
                     @Override
-                    public void onAnimationCancel(Animator animation) { }
+                    public void onAnimationCancel(Animator animation) {
+                    }
 
                     @Override
-                    public void onAnimationRepeat(Animator animation) { }
+                    public void onAnimationRepeat(Animator animation) {
+                    }
                 });
                 animator.start();
 
@@ -300,7 +298,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         }
     }
 
-    private void setImageButtonBackgroundColor (ImageButton imgButton, boolean expanded){
+    private void setImageButtonBackgroundColor(ImageButton imgButton, boolean expanded) {
         if (expanded) {
             imgButton.setBackgroundResource(R.color.colorPrimaryLight);
         } else {

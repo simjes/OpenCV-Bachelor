@@ -4,18 +4,18 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
-import com.simjessimsol.simcv.Performance;
 import com.simjessimsol.simcv.R;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
@@ -25,11 +25,8 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-public class CircleDetection extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
-    private final static String TAG = "detection";
+public class CircleDetection extends Activity implements CvCameraViewListener2 {
     private final static String STATE_CAMERA_INDEX = "cameraIndex";
-
-    private Performance performanceCounter;
 
     private CameraBridgeViewBase cameraView;
     private int cameraIndex;
@@ -46,7 +43,6 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
-                    Log.d(TAG, "OpenCV loaded successfully");
                     cameraView.enableView();
                     break;
                 default:
@@ -63,7 +59,6 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_circledetection);
         scale = getIntent().getIntExtra("setScale", 1);
-        Log.d(TAG, "CircleScale: " + scale);
 
         if (savedInstanceState != null) {
             cameraIndex = savedInstanceState.getInt(STATE_CAMERA_INDEX, 0);
@@ -91,8 +86,6 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
         cameraView.setVisibility(SurfaceView.VISIBLE);
         cameraView.setCameraIndex(cameraIndex);
         cameraView.setCvCameraViewListener(this);
-
-        performanceCounter = new Performance();
     }
 
     @Override
@@ -121,10 +114,8 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
     protected void onResume() {
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "OpenCV Manager used");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, loaderCallback);
         } else {
-            Log.d(TAG, "Found OpenCV lib in the package");
             loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
@@ -135,8 +126,6 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
         detectedImage = new Mat();
         grayscaleImage = new Mat();
         circles = new Mat();
-
-        performanceCounter.startFPSCounter();
     }
 
     @Override
@@ -148,15 +137,12 @@ public class CircleDetection extends Activity implements CameraBridgeViewBase.Cv
     }
 
     @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inFrame) {
-        performanceCounter.start();
-        performanceCounter.addFrame();
+    public Mat onCameraFrame(CvCameraViewFrame inFrame) {
         inputFrame = inFrame.rgba();
         if (isCameraFrontFacing) {
             Core.flip(inputFrame, inputFrame, 1);
         }
         detectedImage = findCircle(inputFrame);
-        performanceCounter.stop();
         return detectedImage;
     }
 

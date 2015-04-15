@@ -1,7 +1,6 @@
 package com.simjessimsol.simcvgame.android;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager.*;
 
@@ -27,7 +26,6 @@ import org.opencv.imgproc.Moments;
 
 
 public class AndroidLauncher extends AndroidApplication implements CvCameraViewListener2 {
-    private final static String TAG = "android";
 
     private CameraBridgeViewBase cameraView;
     private Player player;
@@ -48,7 +46,6 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
-                    Log.d(TAG, "OpenCV loaded successfully");
                     cameraView.enableView();
                     break;
                 default:
@@ -57,7 +54,6 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
             }
         }
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +89,8 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
     protected void onResume() {
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "OpenCV Manager used");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, loaderCallback);
         } else {
-            Log.d(TAG, "Found OpenCV lib in the package");
             loaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
@@ -113,11 +107,6 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         scaleY = ((float) gdxHeight) / height;
 
         player = myGdxGame.getPlayer();
-
-        Log.i(TAG, "lol opencv width: " + width + ", height: " + height);
-        Log.i(TAG, "lol width: " + Gdx.app.getGraphics().getWidth() + ", height: " + Gdx.app.getGraphics().getHeight());
-        Log.i(TAG, "lol scaleX: " + scaleX + ", scaleY: " + scaleY);
-        Log.i(TAG, "lol opencv with scale width: " + width * scaleX + ", height: " + height * scaleY);
     }
 
     @Override
