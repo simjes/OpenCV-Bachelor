@@ -11,6 +11,8 @@
     <string name="title_activity_circledetection">Circle Detection</string>
     <string name="face_detect_button">Face Detection</string>
     <string name="circle_detection_button">Circle Detection</string>
+    <string name="contentDescriptionThumbnail">Thumbnail</string>
+    <string name="contentDescriptionStart">Start function</string>
     <string name="draw_button">Draw</string>
     <string name="start_drawing_button">startDrawing</string>
     <string name="clear_drawing_button">clearDrawingButton</string>
@@ -19,11 +21,12 @@
     <string name="title_activity_pongtivity">Pongtivity</string>
     <string name="pongtivity_start_button">Game</string>
     <string name="change_camera_button">changeCameraButtonDesc</string>
-    <string name="title_activity_color_tracker_non_open_cv">ColorTrackerNonOpenCV</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_open_gltracker">openGLTracker</string>
     <string name="title_activity_main_activity2">MainActivity2Activity</string>
     <string name="title_activity_tracker_open_gl">trackerOpenGL</string>
+    <string name="nativeCamera">Native Camera</string>
+    <string name="downscale">Downscale</string>
+    <string name="downscaleValue">1/1</string>
     <string name="action_help">Help</string>
     <string name="action_about">About</string>
     <string name="ok">OK</string>
@@ -43,11 +46,6 @@
         It uses the camera on your device to detect faces, circles, foreground and track colors. \n \n
         SimCV is a product of a Bachelor Thesis from University of Stavanger written by Simon Jespersen and Simen Sollie.
     </string>
-    <string name="nativeCamera">Native Camera</string>
-    <string name="downscale">Downscale</string>
-    <string name="downscaleValue">1/1</string>
-    <string name="contentDescriptionThumbnail">Thumbnail</string>
-    <string name="contentDescriptionStart">Start function</string>
     <string name="face_description">Face Detection uses LBP cascade to find and detect faces.</string>
     <string name="circle_description">Circle Detection uses your camera to find circles by using the Hough Circle Transform.</string>
     <string name="foreground_description">Foreground Detection is used to distinguish the foreground from the background.</string>
