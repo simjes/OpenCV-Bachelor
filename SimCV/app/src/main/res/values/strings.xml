@@ -43,5 +43,15 @@
         It uses the camera on your device to detect faces, circles, foreground and track colors. \n \n
         SimCV is a product of a Bachelor Thesis from University of Stavanger written by Simon Jespersen and Simen Sollie.
     </string>
+    <string name="nativeCamera">Native Camera</string>
+    <string name="downscale">Downscale</string>
+    <string name="downscaleValue">1/1</string>
+    <string name="contentDescriptionThumbnail">Thumbnail</string>
+    <string name="contentDescriptionStart">Start function</string>
+    <string name="face_description">Face Detection uses LBP cascade to find and detect faces.</string>
+    <string name="circle_description">Circle Detection uses your camera to find circles by using the Hough Circle Transform.</string>
+    <string name="foreground_description">Foreground Detection is used to distinguish the foreground from the background.</string>
+    <string name="colortrack_description">Color Tracker detects and tracks colors which you can specify.</string>
+    <string name="opengl_description">OpenGL Tracker is created as an example of how you could make the Color Tracker without OpenCV.</string>
 
 </resources>
