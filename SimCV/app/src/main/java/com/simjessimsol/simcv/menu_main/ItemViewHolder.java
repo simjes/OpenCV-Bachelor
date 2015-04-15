@@ -19,12 +19,14 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     protected View arrow;
     protected View hairLine;
     protected View expandArea;
-    protected View collapseExpandArea;
+    protected FrameLayout collapse_expand;
     protected LinearLayout listItem;
+    protected LinearLayout seekbarLayout;
+    protected LinearLayout switchLayout;
     protected Switch switchAlternative;
     protected SeekBar seekScale;
     protected TextView textScaleValue;
-    protected FrameLayout collapse_expand;
+    protected TextView textDescription;
 
     public ItemViewHolder(View v) {
         super(v);
@@ -34,12 +36,14 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         this.arrow = v.findViewById(R.id.arrow);
         this.hairLine = v.findViewById(R.id.hairline);
         this.expandArea = v.findViewById(R.id.expand_area);
-        this.collapseExpandArea = v.findViewById(R.id.collapse_expand);
+        this.collapse_expand = (FrameLayout) v.findViewById(R.id.collapse_expand);
         this.listItem = (LinearLayout) v.findViewById(R.id.list_item);
+        this.seekbarLayout = (LinearLayout) v.findViewById(R.id.seekbarLayout);
+        this.switchLayout = (LinearLayout) v.findViewById(R.id.switchLayout);
         this.switchAlternative = (Switch) v.findViewById(R.id.switchAlternative);
         this.seekScale = (SeekBar) v.findViewById(R.id.seekScale);
         this.textScaleValue = (TextView) v.findViewById(R.id.textScaleValue);
-        this.collapse_expand = (FrameLayout) v.findViewById(R.id.collapse_expand);
+        this.textDescription = (TextView) v.findViewById(R.id.textDescription);
 
         this.seekScale.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

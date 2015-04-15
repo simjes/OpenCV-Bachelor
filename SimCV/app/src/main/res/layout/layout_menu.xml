@@ -19,14 +19,15 @@
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:contentDescription="@string/contentDescriptionThumbnail"/>
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-thin"
-            android:gravity="left"
+            android:gravity="start"
             android:textSize="35sp" />
 
         <Space
@@ -39,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
+            android:contentDescription="@string/contentDescriptionStart"
             android:background="@color/colorPrimary"
             android:theme="@style/ImageButtonTheme" />
 
@@ -61,16 +63,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp" />
 
+            <TextView
+                android:id="@+id/textDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <LinearLayout
                 android:id="@+id/switchLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <Switch
                     android:id="@+id/switchAlternative"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/nativeCamera"
                     android:checked="false"/>
 
             </LinearLayout>
@@ -80,16 +89,18 @@
                 android:layout_height="20dp" />
 
             <LinearLayout
+                android:id="@+id/seekbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textScale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
-                    android:text="Downscale" />
+                    android:text="@string/downscale"/>
 
                 <SeekBar
                     android:id="@+id/seekScale"
@@ -102,7 +113,7 @@
                     android:id="@+id/textScaleValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1/1"/>
+                    android:text="@string/downscaleValue"/>
 
             </LinearLayout>
 

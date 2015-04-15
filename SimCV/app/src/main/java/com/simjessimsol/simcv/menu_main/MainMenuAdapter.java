@@ -67,32 +67,34 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 Picasso.with(context).load(R.drawable.thumb_facedetect)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
-                itemViewHolder.switchAlternative.setText("Native Camera");
+                itemViewHolder.textDescription.setText(R.string.face_description);
+                itemViewHolder.switchLayout.setVisibility(View.VISIBLE);
+                itemViewHolder.seekbarLayout.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 Picasso.with(context).load(R.drawable.thumb_circledetect)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
-                itemViewHolder.switchAlternative.setVisibility(View.GONE);
+                itemViewHolder.textDescription.setText(R.string.circle_description);
+                itemViewHolder.seekbarLayout.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 Picasso.with(context).load(R.drawable.thumb_foregrounddetect)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
-                itemViewHolder.switchAlternative.setVisibility(View.GONE);
+                itemViewHolder.textDescription.setText(R.string.foreground_description);
                 break;
             case 3:
                 Picasso.with(context).load(R.drawable.thumb_colortrack)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
-                itemViewHolder.switchAlternative.setVisibility(View.GONE);
+                itemViewHolder.textDescription.setText(R.string.colortrack_description);
                 break;
             case 4:
                 Picasso.with(context).load(R.drawable.thumb_colortrack)
                         .into(itemViewHolder.thumbnail);
                 itemViewHolder.title.setText(dataSet[position]);
-                itemViewHolder.switchAlternative.setVisibility(View.GONE);
-                itemViewHolder.seekScale.setVisibility(View.GONE);
+                itemViewHolder.textDescription.setText(R.string.opengl_description);
                 break;
             default:
                 Picasso.with(context).load(R.drawable.ic_launcher)
@@ -152,7 +154,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
                 final int endingHeight = itemViewHolder.listItem.getHeight();
                 final int distance = endingHeight - startingHeight;
-                final int collapseHeight = itemViewHolder.collapseExpandArea.getHeight();
+                final int collapseHeight = itemViewHolder.collapse_expand.getHeight();
 
                 itemViewHolder.listItem.getLayoutParams().height = startingHeight;
 
