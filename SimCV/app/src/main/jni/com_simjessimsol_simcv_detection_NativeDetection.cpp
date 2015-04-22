@@ -45,7 +45,7 @@ JNIEXPORT void JNICALL Java_com_simjessimsol_simcv_detection_NativeDetection_nat
     resize(grayFrame, grayFrame, Size(sizeOfMat.width / scale, sizeOfMat.height / scale));
     equalizeHist(grayFrame, grayFrame);
 
-    cascadeFile.detectMultiScale(grayFrame, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50));
+    cascadeFile.detectMultiScale(grayFrame, faces, 1.1, 3, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50));
 
     for (size_t i = 0; i < faces.size(); i++)
     {

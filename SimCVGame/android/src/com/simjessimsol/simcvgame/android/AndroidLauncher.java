@@ -33,8 +33,8 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
 
     private Mat originalFrame;
     private Mat binaryFrame;
-    private Scalar lowRed = new Scalar(163, 191, 211);
-    private Scalar highRed = new Scalar(180, 255, 255);
+    private Scalar lowRed = new Scalar(38, 108, 125);
+    private Scalar highRed = new Scalar(73, 255, 255);
 
     private int gdxWidth;
     private int gdxHeight;
@@ -64,7 +64,7 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         myGdxGame = new MyGdxGame();
         initialize(myGdxGame, config);
-        cameraView = new JavaCameraView(this, 1);
+        cameraView = new JavaCameraView(this, 0);
         cameraView.setCvCameraViewListener(this);
         addContentView(cameraView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
@@ -119,7 +119,6 @@ public class AndroidLauncher extends AndroidApplication implements CvCameraViewL
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         if (myGdxGame.getCurrentState() == MyGdxGame.GameState.RUN) {
             originalFrame = inputFrame.rgba();
-            Core.flip(originalFrame, originalFrame, 1);
 
             Imgproc.cvtColor(originalFrame, originalFrame, Imgproc.COLOR_RGB2HSV);
             Core.inRange(originalFrame, lowRed, highRed, binaryFrame);
